@@ -8,7 +8,7 @@ export type OrderStatus =
   | 'cancelled'
   | 'overdue'
 
-export type PaymentMethod = 'cash' | 'transfer' | 'credit'
+export type PaymentMethod = 'cash' | 'qr_promptpay' | 'payroll_deduction' | 'invoice_billing'
 
 export type OrderItem = {
   id: string
@@ -35,9 +35,14 @@ export type Order = {
 
 export type CreateOrderPayload = {
   items: { product_id: string; quantity: number }[]
-  payment_method: PaymentMethod
-  address_id: string
-  note?: string
+  address: { address_id?: string; address?: string; lat?: number; lng?: number }
+  payment: PaymentMethod
+  source?: 'online' | 'pos_walkin' | 'pos_delivery' | 'phone' | 'agent'
+  purchase_right_id?: string
+  scheduled_date?: string
+  scheduled_time_slot?: string
+  delivery_notes?: string
+  discount_amount?: number
 }
 
 export type CancelOrderPayload = {

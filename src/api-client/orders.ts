@@ -2,7 +2,7 @@ import { get, post, patch } from './fetch'
 import type { Order } from '../types/order'
 
 export type OrderSource = 'pos_walkin' | 'pos_delivery' | 'online' | 'phone' | 'agent'
-export type PaymentMethod = 'cash' | 'transfer' | 'credit' | 'qr'
+export type PaymentMethod = 'cash' | 'qr_promptpay' | 'payroll_deduction' | 'invoice_billing'
 
 export type CreateOrderPayload = {
   items: { product_id: string; quantity: number }[]
