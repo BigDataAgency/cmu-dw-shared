@@ -2,20 +2,21 @@
   "name": "@cmu-dw/shared",
   "version": "0.1.0",
   "description": "Shared TypeScript types and API client for CMU Drinking Water apps",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.mts"
     },
     "./types": {
-      "import": "./dist/types/index.js",
-      "types": "./dist/types/index.d.ts"
+      "import": "./dist/types/index.mjs",
+      "types": "./dist/types/index.d.mts"
     },
     "./api-client": {
-      "import": "./dist/api-client/index.js",
-      "types": "./dist/api-client/index.d.ts"
+      "import": "./dist/api-client/index.mjs",
+      "types": "./dist/api-client/index.d.mts"
     }
   },
   "scripts": {
