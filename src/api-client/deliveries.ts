@@ -29,7 +29,7 @@ export type CancelDeliveryPayload = {
 }
 
 export type UpdateDeliveryStatusPayload = {
-  status: 'pending' | 'assigned' | 'in_progress' | 'completed' | 'cancelled'
+  status: 'pending_assign' | 'assigned' | 'picked_up' | 'in_transit' | 'delivered' | 'failed' | 'rejected' | 'force_delivered' | 'cancelled'
   metadata?: Record<string, unknown>
 }
 
