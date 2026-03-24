@@ -1,5 +1,28 @@
 import { get, post, patch } from './fetch'
-import type { Delivery, AssignDeliveryPayload, CompleteDeliveryPayload, UpdateDeliveryStatusPayload } from '../types/delivery'
+import type { Delivery } from '../types/delivery'
+
+export type AssignDeliveryPayload = {
+  order_id: string
+  driver_id: string
+  vehicle_id: string
+  items?: { order_item_id: string; quantity: number }[]
+  scheduled_date?: string
+}
+
+export type CompleteDeliveryPayload = {
+  photos?: string[]
+  signature?: string
+  qr_data?: Record<string, unknown>
+}
+
+export type CancelDeliveryPayload = {
+  reason: string
+}
+
+export type UpdateDeliveryStatusPayload = {
+  status: 'pending' | 'assigned' | 'in_progress' | 'completed' | 'cancelled'
+  metadata?: Record<string, unknown>
+}
 
 export type DeliveryFilters = {
   driver_id?: string
@@ -14,15 +37,15 @@ export const deliveriesApi = {
   getById: (id: string): Promise<Delivery> =>
     get(`/deliveries/${id}`),
 
-  assign: (payload: AssignDeliveryPayload): Promise<Delivery> =>
+  assign: (payload: AssignDeliveryPayload): Promise<string> =>
     post('/deliveries', payload),
 
   updateStatus: (id: string, payload: UpdateDeliveryStatusPayload): Promise<void> =>
     patch(`/deliveries/${id}/status`, payload),
 
-  complete: (id: string, payload: CompleteDeliveryPayload): Promise<void> =>
-    patch(`/deliveries/${id}/complete`, payload),
+  complete: (id: string, payload?: CompleteDeliveryPayload): Promise<void> =>
+    patch(`/deliveries/${id}/complete`, payload ?? {}),
 
-  cancel: (id: string): Promise<void> =>
-    patch(`/deliveries/${id}/cancel`),
+  cancel: (id: string, payload: CancelDeliveryPayload): Promise<void> =>
+    patch(`/deliveries/${id}/cancel`, payload),
 }
