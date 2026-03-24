@@ -1,4 +1,4 @@
-import { get, post, patch } from './fetch'
+import { get, post, patch, del } from './fetch'
 import type { RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload } from '../types/route'
 
 export type RouteFilters = {
@@ -7,12 +7,20 @@ export type RouteFilters = {
   status?: string
 }
 
+export type AddStopPayload = {
+  order_id: string
+  sequence?: number
+}
+
 export const routesApi = {
   list: (filters?: RouteFilters): Promise<RoutePlan[]> =>
     get('/routes', filters as Record<string, unknown>),
 
   getById: (id: string): Promise<RoutePlan> =>
     get(`/routes/${id}`),
+
+  getUnassignedOrders: (date?: string): Promise<unknown[]> =>
+    get('/routes/unassigned-orders', date ? { date } : undefined),
 
   generate: (payload: GenerateRoutePayload): Promise<RoutePlan[]> =>
     post('/routes/generate', payload),
@@ -25,4 +33,10 @@ export const routesApi = {
 
   moveStop: (id: string, payload: MoveStopPayload): Promise<void> =>
     post(`/routes/${id}/stops/move`, payload),
+
+  addStop: (id: string, payload: AddStopPayload): Promise<string> =>
+    post(`/routes/${id}/stops`, payload),
+
+  removeStop: (stopId: string): Promise<void> =>
+    del(`/routes/stops/${stopId}`),
 }

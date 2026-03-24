@@ -3,10 +3,19 @@ import type { Delivery } from '../types/delivery'
 
 export type AssignDeliveryPayload = {
   order_id: string
-  driver_id: string
-  vehicle_id: string
+  driver_id?: string | null
+  vehicle_id?: string | null
   items?: { order_item_id: string; quantity: number }[]
   scheduled_date?: string
+}
+
+export type AssignDriverPayload = {
+  driver_id: string | null
+  vehicle_id: string | null
+}
+
+export type UpdateDeliveredQtyPayload = {
+  delivered_qty: number
 }
 
 export type CompleteDeliveryPayload = {
@@ -48,4 +57,10 @@ export const deliveriesApi = {
 
   cancel: (id: string, payload: CancelDeliveryPayload): Promise<void> =>
     patch(`/deliveries/${id}/cancel`, payload),
+
+  updateItemQty: (itemId: string, payload: UpdateDeliveredQtyPayload): Promise<void> =>
+    patch(`/deliveries/items/${itemId}/qty`, payload),
+
+  assignDriver: (id: string, payload: AssignDriverPayload): Promise<void> =>
+    patch(`/deliveries/${id}/assign`, payload),
 }

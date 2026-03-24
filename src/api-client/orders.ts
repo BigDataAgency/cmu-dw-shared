@@ -32,6 +32,14 @@ export type ReturnBottlesPayload = {
 
 export type OrderFilters = {
   status?: string
+  source?: string
+  date_from?: string
+  date_to?: string
+}
+
+export type UpdateOrderStatusPayload = {
+  status: string
+  note?: string
 }
 
 export const ordersApi = {
@@ -46,6 +54,9 @@ export const ordersApi = {
 
   cancel: (id: string, payload: CancelOrderPayload): Promise<void> =>
     patch(`/orders/${id}/cancel`, payload),
+
+  updateStatus: (id: string, payload: UpdateOrderStatusPayload): Promise<unknown> =>
+    patch(`/orders/${id}/status`, payload),
 
   returnBottles: (id: string, payload: ReturnBottlesPayload): Promise<unknown> =>
     post(`/orders/${id}/return-bottles`, payload),

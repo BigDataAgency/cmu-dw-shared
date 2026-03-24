@@ -10,9 +10,15 @@ export type ProductPrice = {
 export type Product = {
   id: string
   name: string
+  sku: string | null
+  category: string | null
   description: string | null
   image_url: string | null
   is_active: boolean
+  stock_qty: number
+  low_stock_threshold: number | null
+  price: number | null
+  deposit_price: number | null
   prices: ProductPrice[]
   created_at: string
   updated_at: string
@@ -22,7 +28,8 @@ export type CreateProductPayload = {
   name: string
   description?: string
   image_url?: string
-  prices: Omit<ProductPrice, 'id'>[]
+  is_active?: boolean
+  prices?: Omit<ProductPrice, 'id'>[]
 }
 
 export type UpdateProductPayload = Partial<CreateProductPayload>

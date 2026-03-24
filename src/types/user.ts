@@ -7,9 +7,13 @@ export type UserRole = {
 
 export type Profile = {
   id: string
-  email: string
+  email: string | null
   full_name: string | null
-  phone: string | null
+  phone_number: string | null
+  avatar_url: string | null
+  billing_name: string | null
+  billing_address: string | null
+  billing_tax_id: string | null
   roles: UserRole[]
   created_at: string
   updated_at: string
@@ -17,7 +21,12 @@ export type Profile = {
 
 export type UpdateProfilePayload = {
   full_name?: string
-  phone?: string
+  phone_number?: string
+  email?: string
+  avatar_url?: string
+  billing_name?: string
+  billing_address?: string
+  billing_tax_id?: string
 }
 
 export type AddressPayload = {
