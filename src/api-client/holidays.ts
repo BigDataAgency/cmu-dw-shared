@@ -34,7 +34,19 @@ export type AddSundaysResult = {
   total: number
 }
 
+export type HolidaySettings = {
+  delivery_sunday_off?: boolean
+}
+
 export const holidaysApi = {
+  // Settings
+  getSettings: (): Promise<HolidaySettings> =>
+    get('/admin/holidays/settings'),
+
+  updateSettings: (settings: HolidaySettings): Promise<{ updated: boolean }> =>
+    patch('/admin/holidays/settings', settings),
+
+  // CRUD
   list: (params?: { year?: number }): Promise<Holiday[]> =>
     get('/admin/holidays', params as Record<string, unknown>),
 
