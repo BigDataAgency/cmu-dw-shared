@@ -1,12 +1,12 @@
-export type NotificationChannel = 'push' | 'email' | 'sms' | 'in_app'
+export type NotificationChannel = 'push' | 'email' | 'in_app'
 
 export type NotificationType =
-  | 'order_confirmed'
-  | 'order_delivering'
-  | 'order_delivered'
-  | 'order_cancelled'
-  | 'payment_due'
-  | 'route_assigned'
+  | 'order_update'
+  | 'delivery_update'
+  | 'payment_reminder'
+  | 'subscription_reminder'
+  | 'route_plan_ready'
+  | 'system'
 
 export type Notification = {
   id: string
@@ -22,10 +22,17 @@ export type Notification = {
 export type SendNotificationPayload = {
   user_id: string
   type: NotificationType
+  title: string
+  body: string
   channels?: NotificationChannel[]
   data?: Record<string, unknown>
 }
 
 export type MarkReadPayload = {
   notification_id: string
+}
+
+export type PushSubscriptionPayload = {
+  endpoint: string
+  keys: { p256dh: string; auth: string }
 }

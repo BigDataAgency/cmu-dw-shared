@@ -5,7 +5,7 @@ export type DeliveryStatus =
   | 'completed'
   | 'cancelled'
 
-export type PaymentMethod = 'cash' | 'qr_promptpay' | 'invoice_billing' | 'payroll_deduction'
+import type { PaymentMethod } from './order'
 
 export type DeliveryItem = {
   product_id: string
