@@ -1,23 +1,30 @@
 {
-  "name": "@cmu-dw/shared",
+  "name": "@bigdataagency/cmu-dw-shared",
   "version": "0.1.0",
   "description": "Shared TypeScript types and API client for CMU Drinking Water apps",
   "type": "module",
-  "main": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.mts"
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./types": {
-      "import": "./dist/types/index.mjs",
-      "types": "./dist/types/index.d.mts"
+      "import": "./dist/types/index.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./api-client": {
-      "import": "./dist/api-client/index.mjs",
-      "types": "./dist/api-client/index.d.mts"
+      "import": "./dist/api-client/index.js",
+      "types": "./dist/api-client/index.d.ts"
     }
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BigDataAgency/cmu-dw-shared.git"
   },
   "scripts": {
     "build": "tsup",
