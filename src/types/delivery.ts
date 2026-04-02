@@ -5,6 +5,8 @@ export type DeliveryStatus =
   | 'completed'
   | 'cancelled'
 
+export type PaymentMethod = 'cash' | 'qr_promptpay' | 'invoice_billing' | 'payroll_deduction'
+
 export type DeliveryItem = {
   product_id: string
   product_name: string
@@ -25,6 +27,29 @@ export type Delivery = {
   completed_at: string | null
   created_at: string
   updated_at: string
+}
+
+/** GET /deliveries/:id — expanded response with order info + product flags (v1.20.0) */
+export type DeliveryDetail = Delivery & {
+  orders: {
+    order_number: string
+    payment_method: PaymentMethod
+    order_type: string
+    delivery_address: string
+    delivery_recipient_name: string | null
+    delivery_phone: string | null
+    delivery_notes: string | null
+    delivery_lat: number | null
+    delivery_lng: number | null
+  } | null
+  delivery_items: Array<{
+    quantity: number
+    order_items: {
+      products: { name: string; is_returnable: boolean }
+    } | null
+  }>
+  payment_method: PaymentMethod | null
+  has_returnable_items: boolean
 }
 
 export type AssignDeliveryPayload = {

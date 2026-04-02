@@ -1,5 +1,5 @@
 import { get, post, patch } from './fetch'
-import type { Delivery } from '../types/delivery'
+import type { Delivery, DeliveryDetail } from '../types/delivery'
 
 export type AssignDeliveryPayload = {
   order_id: string
@@ -43,7 +43,7 @@ export const deliveriesApi = {
   list: (filters?: DeliveryFilters): Promise<Delivery[]> =>
     get('/deliveries', filters as Record<string, unknown>),
 
-  getById: (id: string): Promise<Delivery> =>
+  getById: (id: string): Promise<DeliveryDetail> =>
     get(`/deliveries/${id}`),
 
   assign: (payload: AssignDeliveryPayload): Promise<string> =>
