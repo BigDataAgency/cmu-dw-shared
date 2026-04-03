@@ -307,5 +307,19 @@ type PushSubscriptionPayload = {
         auth: string;
     };
 };
+type SendToAgencyPayload = {
+    agency_id: string;
+    type: string;
+    title: string;
+    body: string;
+    channels?: ('push' | 'in_app')[];
+    data?: Record<string, unknown>;
+};
+type SendToAgencyResult = {
+    sent_count: number;
+    skipped_count: number;
+    agency_id: string;
+    warning?: string;
+};
 
-export type { Address, AddressPayload, AppRole, ApproveVoidPayload, AssignDeliveryPayload, CancelOrderPayload, CompleteDeliveryPayload, ConfirmRoutePayload, CreateOrderPayload, CreateProductPayload, CustomerGroup, Delivery, DeliveryDetail, DeliveryItem, DeliveryStatus, Document, DocumentStatus, DocumentType, GenerateRoutePayload, MarkReadPayload, MoveStopPayload, Notification, NotificationChannel, NotificationType, Order, OrderItem, OrderStatus, PaymentMethod, Product, ProductPrice, Profile, PushSubscriptionPayload, RejectVoidPayload, ReorderStopsPayload, ReturnBottlesPayload, RoutePlan, RoutePlanStop, RouteStatus, SendNotificationPayload, SettleDebtPayload, Transaction, UpdateDeliveryStatusPayload, UpdateProductPayload, UpdateProfilePayload, UserRole, VoidRequest };
+export type { Address, AddressPayload, AppRole, ApproveVoidPayload, AssignDeliveryPayload, CancelOrderPayload, CompleteDeliveryPayload, ConfirmRoutePayload, CreateOrderPayload, CreateProductPayload, CustomerGroup, Delivery, DeliveryDetail, DeliveryItem, DeliveryStatus, Document, DocumentStatus, DocumentType, GenerateRoutePayload, MarkReadPayload, MoveStopPayload, Notification, NotificationChannel, NotificationType, Order, OrderItem, OrderStatus, PaymentMethod, Product, ProductPrice, Profile, PushSubscriptionPayload, RejectVoidPayload, ReorderStopsPayload, ReturnBottlesPayload, RoutePlan, RoutePlanStop, RouteStatus, SendNotificationPayload, SendToAgencyPayload, SendToAgencyResult, SettleDebtPayload, Transaction, UpdateDeliveryStatusPayload, UpdateProductPayload, UpdateProfilePayload, UserRole, VoidRequest };

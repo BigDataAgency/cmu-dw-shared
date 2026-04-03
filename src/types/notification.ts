@@ -36,3 +36,19 @@ export type PushSubscriptionPayload = {
   endpoint: string
   keys: { p256dh: string; auth: string }
 }
+
+export type SendToAgencyPayload = {
+  agency_id: string
+  type: string
+  title: string
+  body: string
+  channels?: ('push' | 'in_app')[]
+  data?: Record<string, unknown>
+}
+
+export type SendToAgencyResult = {
+  sent_count: number
+  skipped_count: number
+  agency_id: string
+  warning?: string
+}

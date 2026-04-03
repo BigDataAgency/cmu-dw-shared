@@ -1,5 +1,5 @@
 import { get, post, patch, del } from './fetch'
-import type { Notification, SendNotificationPayload, PushSubscriptionPayload } from '../types/notification'
+import type { Notification, SendNotificationPayload, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult } from '../types/notification'
 
 export const notificationsApi = {
   send: (payload: SendNotificationPayload): Promise<void> =>
@@ -16,4 +16,7 @@ export const notificationsApi = {
 
   unsubscribe: (endpoint: string): Promise<void> =>
     del('/notifications/subscribe', { endpoint }),
+
+  sendToAgency: (payload: SendToAgencyPayload): Promise<SendToAgencyResult> =>
+    post('/notifications/send-to-agency', payload),
 }

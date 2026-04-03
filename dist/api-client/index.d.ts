@@ -1,4 +1,4 @@
-import { Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, Document, SendNotificationPayload, Notification, PushSubscriptionPayload } from '../types/index.js';
+import { Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult } from '../types/index.js';
 
 declare function configure(options: {
     baseUrl: string;
@@ -189,6 +189,7 @@ declare const notificationsApi: {
     markRead: (id: string) => Promise<void>;
     subscribe: (payload: PushSubscriptionPayload) => Promise<void>;
     unsubscribe: (endpoint: string) => Promise<void>;
+    sendToAgency: (payload: SendToAgencyPayload) => Promise<SendToAgencyResult>;
 };
 
 type GeneratePdfPayload = {

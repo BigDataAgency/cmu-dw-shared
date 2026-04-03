@@ -136,7 +136,8 @@ var notificationsApi = {
   list: () => get("/notifications"),
   markRead: (id) => patch(`/notifications/${id}/read`),
   subscribe: (payload) => post("/notifications/subscribe", payload),
-  unsubscribe: (endpoint) => del("/notifications/subscribe", { endpoint })
+  unsubscribe: (endpoint) => del("/notifications/subscribe", { endpoint }),
+  sendToAgency: (payload) => post("/notifications/send-to-agency", payload)
 };
 
 // src/api-client/documents.ts
@@ -208,4 +209,4 @@ export {
   holidaysApi,
   settingsApi
 };
-//# sourceMappingURL=chunk-C54U6P6R.js.map
+//# sourceMappingURL=chunk-VDX2R73A.js.map
