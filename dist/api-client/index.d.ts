@@ -313,4 +313,40 @@ declare const holidaysApi: {
     syncGoogle: (year: number) => Promise<SyncGoogleResult>;
 };
 
-export { type AddSundaysResult, ApiError, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DriverCollectCustomer, type Holiday, type HolidaySettings, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationsApi, ordersApi, productsApi, routesApi, usersApi };
+interface SettingsMap {
+    [key: string]: unknown;
+    daily_order_limits?: Record<string, number>;
+    delivery_sunday_off?: boolean;
+    order_cutoff_time?: string;
+    min_order_quantity?: number;
+    route_plan_cutoff_time?: string;
+    route_plan_auto_generate?: boolean;
+    route_plan_target_days_ahead?: number;
+    office_contact?: Record<string, string>;
+    registration_contact?: Record<string, string>;
+    receipt_config?: Record<string, unknown>;
+    overdue_block_enabled?: boolean;
+    overdue_block_threshold_days?: number;
+    overdue_block_roles?: string[];
+    overdue_block_customer_groups?: string[];
+}
+interface UpdateSettingPayload {
+    key: string;
+    value: unknown;
+}
+declare const settingsApi: {
+    /** Admin: อ่าน settings ทั้งหมด (requires admin_property / executive / staff_property) */
+    getAdmin: () => Promise<SettingsMap>;
+    /** Admin: อัปเดต setting key เดียว */
+    patchAdmin: (key: string, value: unknown) => Promise<{
+        updated: boolean;
+    }>;
+    /** Vendor: อ่าน settings เฉพาะ vendor keys */
+    getVendor: () => Promise<SettingsMap>;
+    /** Vendor: อัปเดต vendor setting key เดียว */
+    patchVendor: (key: string, value: unknown) => Promise<{
+        updated: boolean;
+    }>;
+};
+
+export { type AddSundaysResult, ApiError, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DriverCollectCustomer, type Holiday, type HolidaySettings, type SettingsMap, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateSettingPayload, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationsApi, ordersApi, productsApi, routesApi, settingsApi, usersApi };

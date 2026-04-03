@@ -179,6 +179,18 @@ var holidaysApi = {
   syncGoogle: (year) => post("/holidays-sync", { year })
 };
 
+// src/api-client/settings.ts
+var settingsApi = {
+  /** Admin: อ่าน settings ทั้งหมด (requires admin_property / executive / staff_property) */
+  getAdmin: () => get("/admin/settings"),
+  /** Admin: อัปเดต setting key เดียว */
+  patchAdmin: (key, value) => patch("/admin/settings", { key, value }),
+  /** Vendor: อ่าน settings เฉพาะ vendor keys */
+  getVendor: () => get("/routes/settings"),
+  /** Vendor: อัปเดต vendor setting key เดียว */
+  patchVendor: (key, value) => patch("/routes/settings", { key, value })
+};
+
 export {
   configure,
   ApiError,
@@ -193,6 +205,7 @@ export {
   CONTAINER_QR_PATTERN,
   isValidContainerQR,
   containersApi,
-  holidaysApi
+  holidaysApi,
+  settingsApi
 };
-//# sourceMappingURL=chunk-Q7IV7DE6.js.map
+//# sourceMappingURL=chunk-C54U6P6R.js.map

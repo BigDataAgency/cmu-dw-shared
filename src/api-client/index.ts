@@ -21,3 +21,5 @@ export type {
 } from './containers'
 export { holidaysApi } from './holidays'
 export type { Holiday, CreateHolidayPayload, UpdateHolidayPayload, SyncGoogleResult, AddSundaysResult, HolidaySettings } from './holidays'
+export { settingsApi } from './settings'
+export type { SettingsMap, UpdateSettingPayload } from './settings'
