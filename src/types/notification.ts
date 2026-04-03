@@ -15,7 +15,7 @@ export type Notification = {
   title: string
   body: string
   data: Record<string, unknown> | null
-  is_read: boolean
+  read_at: string | null
   created_at: string
 }
 
