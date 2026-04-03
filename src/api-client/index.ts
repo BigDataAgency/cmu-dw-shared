@@ -7,6 +7,17 @@ export { usersApi } from './users'
 export { financeApi } from './finance'
 export { notificationsApi } from './notifications'
 export { documentsApi } from './documents'
-export { containersApi } from './containers'
+export { containersApi, CONTAINER_QR_PATTERN, isValidContainerQR } from './containers'
+export type {
+  ContainerScanType,
+  BatchScanPayload,
+  UpdateContainerStatusPayload,
+  DriverCollectCustomer,
+  UnloadPayload,
+  UnloadResult,
+  CreateContainersBatchPayload,
+  ContainerBatchResult,
+  ContainerQrData,
+} from './containers'
 export { holidaysApi } from './holidays'
 export type { Holiday, CreateHolidayPayload, UpdateHolidayPayload, SyncGoogleResult, AddSundaysResult, HolidaySettings } from './holidays'

@@ -1,20 +1,22 @@
 let _baseUrl = ''
 let _getToken: (() => Promise<string | null>) | null = null
+let _anonKey = ''
 
 export function configure(options: {
   baseUrl: string
   getToken: () => Promise<string | null>
+  anonKey?: string
 }) {
   _baseUrl = options.baseUrl
   _getToken = options.getToken
+  _anonKey = options.anonKey ?? ''
 }
 
 async function buildHeaders(): Promise<HeadersInit> {
-  const headers: HeadersInit = { 'Content-Type': 'application/json' }
-  if (_getToken) {
-    const token = await _getToken()
-    if (token) headers['Authorization'] = `Bearer ${token}`
-  }
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  if (_anonKey) headers['apikey'] = _anonKey
+  const token = _getToken ? await _getToken() : null
+  headers['Authorization'] = `Bearer ${token ?? _anonKey}`
   return headers
 }
 
@@ -63,10 +65,11 @@ export async function patch<T>(path: string, body?: unknown): Promise<T> {
   return handleResponse<T>(res)
 }
 
-export async function del<T>(path: string): Promise<T> {
+export async function del<T>(path: string, body?: unknown): Promise<T> {
   const res = await fetch(`${_baseUrl}${path}`, {
     method: 'DELETE',
     headers: await buildHeaders(),
+    body: body !== undefined ? JSON.stringify(body) : undefined,
   })
   return handleResponse<T>(res)
 }

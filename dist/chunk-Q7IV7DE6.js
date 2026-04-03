@@ -1,16 +1,17 @@
 // src/api-client/fetch.ts
 var _baseUrl = "";
 var _getToken = null;
+var _anonKey = "";
 function configure(options) {
   _baseUrl = options.baseUrl;
   _getToken = options.getToken;
+  _anonKey = options.anonKey ?? "";
 }
 async function buildHeaders() {
   const headers = { "Content-Type": "application/json" };
-  if (_getToken) {
-    const token = await _getToken();
-    if (token) headers["Authorization"] = `Bearer ${token}`;
-  }
+  if (_anonKey) headers["apikey"] = _anonKey;
+  const token = _getToken ? await _getToken() : null;
+  headers["Authorization"] = `Bearer ${token ?? _anonKey}`;
   return headers;
 }
 async function handleResponse(res) {
@@ -54,10 +55,11 @@ async function patch(path, body) {
   });
   return handleResponse(res);
 }
-async function del(path) {
+async function del(path, body) {
   const res = await fetch(`${_baseUrl}${path}`, {
     method: "DELETE",
-    headers: await buildHeaders()
+    headers: await buildHeaders(),
+    body: body !== void 0 ? JSON.stringify(body) : void 0
   });
   return handleResponse(res);
 }
@@ -134,7 +136,7 @@ var notificationsApi = {
   list: () => get("/notifications"),
   markRead: (id) => patch(`/notifications/${id}/read`),
   subscribe: (payload) => post("/notifications/subscribe", payload),
-  unsubscribe: (endpoint) => del(`/notifications/subscribe?endpoint=${encodeURIComponent(endpoint)}`)
+  unsubscribe: (endpoint) => del("/notifications/subscribe", { endpoint })
 };
 
 // src/api-client/documents.ts
@@ -144,12 +146,22 @@ var documentsApi = {
 };
 
 // src/api-client/containers.ts
+var CONTAINER_QR_PATTERN = /^TK-\d{5}$/;
+var isValidContainerQR = (qr) => CONTAINER_QR_PATTERN.test(qr);
 var containersApi = {
   list: () => get("/containers"),
   getSummary: () => get("/containers/summary"),
   getScanHistory: (id) => get(`/containers/${id}/scan-history`),
   scan: (payload) => post("/containers/scan", payload),
-  updateStatus: (id, payload) => patch(`/containers/${id}/status`, payload)
+  updateStatus: (id, payload) => patch(`/containers/${id}/status`, payload),
+  // v1.15.0 req-02: Vendor Gen QR batch
+  genQr: (payload) => post("/containers/gen-qr", payload),
+  // v1.15.0 req-03: Driver collect — รายชื่อลูกค้าที่มีถัง with_customer
+  getCollectCustomers: () => get("/containers/collect-customers"),
+  // v1.15.0 req-04: Unload at depot (auto-detect ON_TRUCK/RETURNED_EMPTY → AT_DEPOT)
+  unload: (payload) => post("/containers/unload", payload),
+  // v1.15.0: ดึงข้อมูล QR ต่อถัง (render QR label)
+  getQrData: (id) => get(`/containers/${id}/qr-data`)
 };
 
 // src/api-client/holidays.ts
@@ -178,7 +190,9 @@ export {
   financeApi,
   notificationsApi,
   documentsApi,
+  CONTAINER_QR_PATTERN,
+  isValidContainerQR,
   containersApi,
   holidaysApi
 };
-//# sourceMappingURL=chunk-IR754XLA.js.map
+//# sourceMappingURL=chunk-Q7IV7DE6.js.map

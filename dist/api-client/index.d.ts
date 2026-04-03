@@ -3,6 +3,7 @@ import { Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, Confi
 declare function configure(options: {
     baseUrl: string;
     getToken: () => Promise<string | null>;
+    anonKey?: string;
 }): void;
 declare class ApiError extends Error {
     status: number;
@@ -201,7 +202,7 @@ declare const documentsApi: {
     getById: (id: string) => Promise<Document>;
 };
 
-type ContainerScanType = 'load_truck' | 'deliver' | 'collect_return' | 'pos_return' | 'receive_depot' | 'audit';
+type ContainerScanType = 'load_truck' | 'deliver' | 'collect_return' | 'pos_return' | 'receive_depot' | 'audit' | 'unload_truck';
 type BatchScanPayload = {
     qr_codes: string[];
     scan_type: ContainerScanType;
@@ -212,12 +213,56 @@ type UpdateContainerStatusPayload = {
     new_status: string;
     notes?: string | null;
 };
+type DriverCollectCustomer = {
+    customer_id: string;
+    customer_name: string;
+    agency_name: string | null;
+    container_count: number;
+};
+type UnloadPayload = {
+    qr_codes: string[];
+    vehicle_id?: string | null;
+};
+type UnloadResult = {
+    container_id: string;
+    qr_code: string;
+    status_before: string;
+    status_after: string;
+    scan_type_used: string;
+    result_flag: string;
+};
+type CreateContainersBatchPayload = {
+    count: number;
+    product_id?: string | null;
+    notes?: string | null;
+};
+type ContainerBatchResult = {
+    container_id: string;
+    qr_code: string;
+    product_id: string | null;
+    status: string;
+    created_at: string;
+};
+type ContainerQrData = {
+    container_id: string;
+    qr_code: string;
+    product_name: string | null;
+    product_sku: string | null;
+    status: string;
+    registered_at: string;
+};
+declare const CONTAINER_QR_PATTERN: RegExp;
+declare const isValidContainerQR: (qr: string) => boolean;
 declare const containersApi: {
     list: () => Promise<unknown[]>;
     getSummary: () => Promise<unknown[]>;
     getScanHistory: (id: string) => Promise<unknown[]>;
     scan: (payload: BatchScanPayload) => Promise<unknown[]>;
     updateStatus: (id: string, payload: UpdateContainerStatusPayload) => Promise<void>;
+    genQr: (payload: CreateContainersBatchPayload) => Promise<ContainerBatchResult[]>;
+    getCollectCustomers: () => Promise<DriverCollectCustomer[]>;
+    unload: (payload: UnloadPayload) => Promise<UnloadResult[]>;
+    getQrData: (id: string) => Promise<ContainerQrData>;
 };
 
 type Holiday = {
@@ -268,4 +313,4 @@ declare const holidaysApi: {
     syncGoogle: (year: number) => Promise<SyncGoogleResult>;
 };
 
-export { type AddSundaysResult, ApiError, type CreateHolidayPayload, type Holiday, type HolidaySettings, type SyncGoogleResult, type UpdateHolidayPayload, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, notificationsApi, ordersApi, productsApi, routesApi, usersApi };
+export { type AddSundaysResult, ApiError, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DriverCollectCustomer, type Holiday, type HolidaySettings, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationsApi, ordersApi, productsApi, routesApi, usersApi };

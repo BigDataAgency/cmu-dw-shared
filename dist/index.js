@@ -1,26 +1,30 @@
 import "./chunk-RV5MKKBP.js";
 import {
   ApiError,
+  CONTAINER_QR_PATTERN,
   configure,
   containersApi,
   deliveriesApi,
   documentsApi,
   financeApi,
   holidaysApi,
+  isValidContainerQR,
   notificationsApi,
   ordersApi,
   productsApi,
   routesApi,
   usersApi
-} from "./chunk-IR754XLA.js";
+} from "./chunk-Q7IV7DE6.js";
 export {
   ApiError,
+  CONTAINER_QR_PATTERN,
   configure,
   containersApi,
   deliveriesApi,
   documentsApi,
   financeApi,
   holidaysApi,
+  isValidContainerQR,
   notificationsApi,
   ordersApi,
   productsApi,

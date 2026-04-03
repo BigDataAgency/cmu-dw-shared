@@ -15,5 +15,5 @@ export const notificationsApi = {
     post('/notifications/subscribe', payload),
 
   unsubscribe: (endpoint: string): Promise<void> =>
-    del(`/notifications/subscribe?endpoint=${encodeURIComponent(endpoint)}`),
+    del('/notifications/subscribe', { endpoint }),
 }
