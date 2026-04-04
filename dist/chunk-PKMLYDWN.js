@@ -192,6 +192,16 @@ var settingsApi = {
   patchVendor: (key, value) => patch("/routes/settings", { key, value })
 };
 
+// src/api-client/notification-configs.ts
+var notificationConfigsApi = {
+  /** List all notification configs */
+  list: () => get("/notification-configs"),
+  /** Get single notification config by ID */
+  getById: (id) => get(`/notification-configs/${id}`),
+  /** Update notification config */
+  update: (id, payload) => patch(`/notification-configs/${id}`, payload)
+};
+
 export {
   configure,
   ApiError,
@@ -207,6 +217,7 @@ export {
   isValidContainerQR,
   containersApi,
   holidaysApi,
-  settingsApi
+  settingsApi,
+  notificationConfigsApi
 };
-//# sourceMappingURL=chunk-VDX2R73A.js.map
+//# sourceMappingURL=chunk-PKMLYDWN.js.map

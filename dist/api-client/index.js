@@ -8,13 +8,14 @@ import {
   financeApi,
   holidaysApi,
   isValidContainerQR,
+  notificationConfigsApi,
   notificationsApi,
   ordersApi,
   productsApi,
   routesApi,
   settingsApi,
   usersApi
-} from "../chunk-VDX2R73A.js";
+} from "../chunk-PKMLYDWN.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,
@@ -25,6 +26,7 @@ export {
   financeApi,
   holidaysApi,
   isValidContainerQR,
+  notificationConfigsApi,
   notificationsApi,
   ordersApi,
   productsApi,

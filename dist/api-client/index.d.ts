@@ -1,4 +1,4 @@
-import { Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult } from '../types/index.js';
+import { Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, NotificationChannel } from '../types/index.js';
 
 declare function configure(options: {
     baseUrl: string;
@@ -350,4 +350,37 @@ declare const settingsApi: {
     }>;
 };
 
-export { type AddSundaysResult, ApiError, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DriverCollectCustomer, type Holiday, type HolidaySettings, type SettingsMap, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateSettingPayload, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationsApi, ordersApi, productsApi, routesApi, settingsApi, usersApi };
+type RecipientStrategy = 'trigger_user' | 'role_based' | 'agency_members';
+interface NotificationConfig {
+    id: string;
+    event_key: string;
+    notification_type: string;
+    enabled: boolean;
+    channels: NotificationChannel[];
+    recipient_strategy: RecipientStrategy;
+    recipient_roles: string[];
+    title_template: string;
+    body_template: string;
+    description: string | null;
+    is_system: boolean;
+    created_at: string;
+    updated_at: string;
+}
+interface UpdateNotificationConfigPayload {
+    enabled?: boolean;
+    channels?: NotificationChannel[];
+    recipient_strategy?: RecipientStrategy;
+    recipient_roles?: string[];
+    title_template?: string;
+    body_template?: string;
+}
+declare const notificationConfigsApi: {
+    /** List all notification configs */
+    list: () => Promise<NotificationConfig[]>;
+    /** Get single notification config by ID */
+    getById: (id: string) => Promise<NotificationConfig>;
+    /** Update notification config */
+    update: (id: string, payload: UpdateNotificationConfigPayload) => Promise<NotificationConfig>;
+};
+
+export { type AddSundaysResult, ApiError, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DriverCollectCustomer, type Holiday, type HolidaySettings, type NotificationConfig, type RecipientStrategy, type SettingsMap, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, productsApi, routesApi, settingsApi, usersApi };
