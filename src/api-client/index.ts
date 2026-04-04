@@ -23,3 +23,9 @@ export { holidaysApi } from './holidays'
 export type { Holiday, CreateHolidayPayload, UpdateHolidayPayload, SyncGoogleResult, AddSundaysResult, HolidaySettings } from './holidays'
 export { settingsApi } from './settings'
 export type { SettingsMap, UpdateSettingPayload } from './settings'
+export { notificationConfigsApi } from './notification-configs'
+export type {
+  NotificationConfig,
+  UpdateNotificationConfigPayload,
+  RecipientStrategy,
+} from './notification-configs'
