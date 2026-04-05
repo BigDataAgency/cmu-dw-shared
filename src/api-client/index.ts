@@ -23,6 +23,8 @@ export { holidaysApi } from './holidays'
 export type { Holiday, CreateHolidayPayload, UpdateHolidayPayload, SyncGoogleResult, AddSundaysResult, HolidaySettings } from './holidays'
 export { settingsApi } from './settings'
 export type { SettingsMap, UpdateSettingPayload } from './settings'
+export { paymentMethodsApi } from './payment-methods'
+export type { PaymentMethodConfig, UserPaymentMethodsResponse, AdminUserPaymentResponse, AgencyPaymentResponse } from './payment-methods'
 export { notificationConfigsApi } from './notification-configs'
 export type {
   NotificationConfig,

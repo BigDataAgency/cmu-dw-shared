@@ -1,4 +1,4 @@
-import { Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, NotificationChannel } from '../types/index.js';
+import { Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, PaymentMethod as PaymentMethod$1, NotificationChannel } from '../types/index.js';
 
 declare function configure(options: {
     baseUrl: string;
@@ -350,6 +350,45 @@ declare const settingsApi: {
     }>;
 };
 
+interface PaymentMethodConfig {
+    payment_method: PaymentMethod$1;
+    is_enabled: boolean;
+}
+interface UserPaymentMethodsResponse {
+    methods: PaymentMethod$1[];
+}
+interface AdminUserPaymentResponse {
+    user_id: string;
+    agency_id: string | null;
+    cmu_employee_id: string | null;
+    config: PaymentMethodConfig[];
+    resolved: PaymentMethod$1[];
+}
+interface AgencyPaymentResponse {
+    agency_id: string;
+    config: PaymentMethodConfig[];
+}
+declare const paymentMethodsApi: {
+    /** Customer: ดูว่าตัวเองใช้วิธีชำระอะไรได้ */
+    getMyMethods: () => Promise<UserPaymentMethodsResponse>;
+    /** Admin: ดู config + resolved methods ของ user */
+    getForUser: (userId: string) => Promise<AdminUserPaymentResponse>;
+    /** Admin: set user payment method overrides */
+    setForUser: (userId: string, methods: PaymentMethodConfig[]) => Promise<{
+        updated: boolean;
+    }>;
+    /** Admin: clear user overrides (fallback to agency/default) */
+    clearForUser: (userId: string) => Promise<{
+        cleared: boolean;
+    }>;
+    /** Admin: ดู agency payment config */
+    getForAgency: (agencyId: string) => Promise<AgencyPaymentResponse>;
+    /** Admin: set agency payment method config */
+    setForAgency: (agencyId: string, methods: PaymentMethodConfig[]) => Promise<{
+        updated: boolean;
+    }>;
+};
+
 type RecipientStrategy = 'trigger_user' | 'role_based' | 'agency_members';
 interface NotificationConfig {
     id: string;
@@ -383,4 +422,4 @@ declare const notificationConfigsApi: {
     update: (id: string, payload: UpdateNotificationConfigPayload) => Promise<NotificationConfig>;
 };
 
-export { type AddSundaysResult, ApiError, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DriverCollectCustomer, type Holiday, type HolidaySettings, type NotificationConfig, type RecipientStrategy, type SettingsMap, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, productsApi, routesApi, settingsApi, usersApi };
+export { type AddSundaysResult, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DriverCollectCustomer, type Holiday, type HolidaySettings, type NotificationConfig, type PaymentMethodConfig, type RecipientStrategy, type SettingsMap, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UserPaymentMethodsResponse, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, settingsApi, usersApi };

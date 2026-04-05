@@ -12,11 +12,12 @@ import {
   notificationConfigsApi,
   notificationsApi,
   ordersApi,
+  paymentMethodsApi,
   productsApi,
   routesApi,
   settingsApi,
   usersApi
-} from "./chunk-PKMLYDWN.js";
+} from "./chunk-W63CUNM2.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,
@@ -30,6 +31,7 @@ export {
   notificationConfigsApi,
   notificationsApi,
   ordersApi,
+  paymentMethodsApi,
   productsApi,
   routesApi,
   settingsApi,

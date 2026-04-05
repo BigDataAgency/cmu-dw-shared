@@ -192,6 +192,22 @@ var settingsApi = {
   patchVendor: (key, value) => patch("/routes/settings", { key, value })
 };
 
+// src/api-client/payment-methods.ts
+var paymentMethodsApi = {
+  /** Customer: ดูว่าตัวเองใช้วิธีชำระอะไรได้ */
+  getMyMethods: () => get("/users/me/payment-methods"),
+  /** Admin: ดู config + resolved methods ของ user */
+  getForUser: (userId) => get(`/admin/users/${userId}/payment-methods`),
+  /** Admin: set user payment method overrides */
+  setForUser: (userId, methods) => patch(`/admin/users/${userId}/payment-methods`, { methods }),
+  /** Admin: clear user overrides (fallback to agency/default) */
+  clearForUser: (userId) => del(`/admin/users/${userId}/payment-methods`),
+  /** Admin: ดู agency payment config */
+  getForAgency: (agencyId) => get(`/admin/agencies/${agencyId}/payment-methods`),
+  /** Admin: set agency payment method config */
+  setForAgency: (agencyId, methods) => patch(`/admin/agencies/${agencyId}/payment-methods`, { methods })
+};
+
 // src/api-client/notification-configs.ts
 var notificationConfigsApi = {
   /** List all notification configs */
@@ -218,6 +234,7 @@ export {
   containersApi,
   holidaysApi,
   settingsApi,
+  paymentMethodsApi,
   notificationConfigsApi
 };
-//# sourceMappingURL=chunk-PKMLYDWN.js.map
+//# sourceMappingURL=chunk-W63CUNM2.js.map
