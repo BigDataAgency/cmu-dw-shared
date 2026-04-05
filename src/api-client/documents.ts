@@ -7,7 +7,7 @@ export type GeneratePdfPayload = {
 }
 
 export const documentsApi = {
-  generatePdf: (payload: GeneratePdfPayload): Promise<{ url: string }> =>
+  generatePdf: (payload: GeneratePdfPayload): Promise<{ url: string; encrypted: boolean }> =>
     post('/documents/pdf', payload),
 
   getById: (id: string): Promise<Document> =>

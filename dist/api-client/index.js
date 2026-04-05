@@ -16,7 +16,7 @@ import {
   routesApi,
   settingsApi,
   usersApi
-} from "../chunk-W63CUNM2.js";
+} from "../chunk-QGRFWBJW.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,

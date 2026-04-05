@@ -16,6 +16,7 @@ export interface SettingsMap {
   overdue_block_threshold_days?: number
   overdue_block_roles?: string[]
   overdue_block_customer_groups?: string[]
+  pdf_encryption_enabled?: boolean
 }
 
 export interface UpdateSettingPayload {

@@ -243,6 +243,8 @@ type Document = {
     amount: number;
     issued_at: string;
     voided_at: string | null;
+    pdf_url: string | null;
+    pdf_encrypted: boolean;
     created_at: string;
 };
 type Transaction = {
