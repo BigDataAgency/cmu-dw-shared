@@ -127,7 +127,8 @@ var financeApi = {
   listReceipts: (filters) => get("/finance/receipts", filters),
   approveVoidReissue: (payload) => post("/finance/void-reissue/approve", payload),
   rejectVoidReissue: (payload) => post("/finance/void-reissue/reject", payload),
-  settleDebt: (payload) => post("/finance/settle-debt", payload)
+  settleDebt: (payload) => post("/finance/settle-debt", payload),
+  getSupportFees: (filters) => get("/finance/support-fees", filters)
 };
 
 // src/api-client/notifications.ts
@@ -237,4 +238,4 @@ export {
   paymentMethodsApi,
   notificationConfigsApi
 };
-//# sourceMappingURL=chunk-4JRJZ2XW.js.map
+//# sourceMappingURL=chunk-7ZBAPXGE.js.map

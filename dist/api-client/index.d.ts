@@ -175,12 +175,30 @@ type SettleDebtPayload = {
     amount: number;
     reference?: string;
 };
+type SupportFeeFilters = {
+    start_date?: string;
+    end_date?: string;
+    user_id?: string;
+    customer_group_id?: string;
+};
+type SupportFeeRow = {
+    user_id: string;
+    user_name: string;
+    customer_group_code: string;
+    customer_group_name: string;
+    month: string;
+    order_count: number;
+    total_support_fee: number;
+    gross_sales: number;
+    total_cost: number;
+};
 declare const financeApi: {
     listInvoices: (filters?: DocumentFilters) => Promise<Document[]>;
     listReceipts: (filters?: DocumentFilters) => Promise<Document[]>;
     approveVoidReissue: (payload: ApproveVoidPayload) => Promise<unknown>;
     rejectVoidReissue: (payload: RejectVoidPayload) => Promise<void>;
     settleDebt: (payload: SettleDebtPayload) => Promise<unknown>;
+    getSupportFees: (filters?: SupportFeeFilters) => Promise<SupportFeeRow[]>;
 };
 
 declare const notificationsApi: {
@@ -431,4 +449,4 @@ declare const notificationConfigsApi: {
     update: (id: string, payload: UpdateNotificationConfigPayload) => Promise<NotificationConfig>;
 };
 
-export { type AddSundaysResult, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type NotificationConfig, type PaymentMethodConfig, type RecipientStrategy, type SettingsMap, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UserPaymentMethodsResponse, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, settingsApi, usersApi };
+export { type AddSundaysResult, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type NotificationConfig, type PaymentMethodConfig, type RecipientStrategy, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UserPaymentMethodsResponse, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, settingsApi, usersApi };
