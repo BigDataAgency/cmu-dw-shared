@@ -315,12 +315,19 @@ declare const holidaysApi: {
     syncGoogle: (year: number) => Promise<SyncGoogleResult>;
 };
 
+type HolidayOrderPolicy = "skip" | "shift_next" | "shift_prev";
 interface SettingsMap {
     [key: string]: unknown;
     daily_order_limits?: Record<string, number>;
     delivery_sunday_off?: boolean;
     order_cutoff_time?: string;
     min_order_quantity?: number;
+    min_order_advance_days?: number;
+    max_order_advance_days?: number;
+    auto_approve_enabled?: boolean;
+    admin_same_day_order?: boolean;
+    holiday_order_policy?: HolidayOrderPolicy;
+    holiday_notify_days_before?: number;
     route_plan_cutoff_time?: string;
     route_plan_auto_generate?: boolean;
     route_plan_target_days_ahead?: number;
@@ -424,4 +431,4 @@ declare const notificationConfigsApi: {
     update: (id: string, payload: UpdateNotificationConfigPayload) => Promise<NotificationConfig>;
 };
 
-export { type AddSundaysResult, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DriverCollectCustomer, type Holiday, type HolidaySettings, type NotificationConfig, type PaymentMethodConfig, type RecipientStrategy, type SettingsMap, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UserPaymentMethodsResponse, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, settingsApi, usersApi };
+export { type AddSundaysResult, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type NotificationConfig, type PaymentMethodConfig, type RecipientStrategy, type SettingsMap, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UserPaymentMethodsResponse, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, settingsApi, usersApi };
