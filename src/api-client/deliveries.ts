@@ -33,6 +33,19 @@ export type UpdateDeliveryStatusPayload = {
   metadata?: Record<string, unknown>
 }
 
+export type BatchCompletePayload = {
+  delivery_ids: string[]
+  photos?: string[]
+  recipient_name: string
+}
+
+export type BatchCompleteResult = {
+  results: Array<{ id: string; status: 'ok' | 'error'; message?: string }>
+  total: number
+  success: number
+  failed: number
+}
+
 export type DeliveryFilters = {
   driver_id?: string
   status?: string
@@ -63,4 +76,7 @@ export const deliveriesApi = {
 
   assignDriver: (id: string, payload: AssignDriverPayload): Promise<void> =>
     patch(`/deliveries/${id}/assign`, payload),
+
+  completeBatch: (payload: BatchCompletePayload): Promise<BatchCompleteResult> =>
+    post('/deliveries/batch-complete', payload),
 }

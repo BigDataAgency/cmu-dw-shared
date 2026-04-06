@@ -1,6 +1,7 @@
 export { configure, ApiError } from "./fetch";
 export { ordersApi } from "./orders";
 export { deliveriesApi } from "./deliveries";
+export type { BatchCompletePayload, BatchCompleteResult } from "./deliveries";
 export { routesApi } from "./routes";
 export { productsApi } from "./products";
 export { usersApi } from "./users";
@@ -8,6 +9,7 @@ export { financeApi } from "./finance";
 export type { SupportFeeFilters, SupportFeeRow } from "./finance";
 export { notificationsApi } from "./notifications";
 export { documentsApi } from "./documents";
+export type { BatchPrintResult } from "./documents";
 export {
   containersApi,
   CONTAINER_QR_PATTERN,

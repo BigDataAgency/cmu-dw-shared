@@ -83,7 +83,8 @@ var deliveriesApi = {
   complete: (id, payload) => patch(`/deliveries/${id}/complete`, payload ?? {}),
   cancel: (id, payload) => patch(`/deliveries/${id}/cancel`, payload),
   updateItemQty: (itemId, payload) => patch(`/deliveries/items/${itemId}/qty`, payload),
-  assignDriver: (id, payload) => patch(`/deliveries/${id}/assign`, payload)
+  assignDriver: (id, payload) => patch(`/deliveries/${id}/assign`, payload),
+  completeBatch: (payload) => post("/deliveries/batch-complete", payload)
 };
 
 // src/api-client/routes.ts
@@ -144,7 +145,8 @@ var notificationsApi = {
 // src/api-client/documents.ts
 var documentsApi = {
   generatePdf: (payload) => post("/documents/pdf", payload),
-  getById: (id) => get(`/documents/${id}`)
+  getById: (id) => get(`/documents/${id}`),
+  batchPrint: (deliveryIds) => post("/documents/batch-print", { delivery_ids: deliveryIds })
 };
 
 // src/api-client/containers.ts
@@ -238,4 +240,4 @@ export {
   paymentMethodsApi,
   notificationConfigsApi
 };
-//# sourceMappingURL=chunk-7ZBAPXGE.js.map
+//# sourceMappingURL=chunk-VKGL3D3P.js.map

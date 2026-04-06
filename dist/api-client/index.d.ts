@@ -89,6 +89,21 @@ type UpdateDeliveryStatusPayload = {
     status: 'pending_assign' | 'assigned' | 'picked_up' | 'in_transit' | 'delivered' | 'failed' | 'rejected' | 'force_delivered' | 'cancelled';
     metadata?: Record<string, unknown>;
 };
+type BatchCompletePayload = {
+    delivery_ids: string[];
+    photos?: string[];
+    recipient_name: string;
+};
+type BatchCompleteResult = {
+    results: Array<{
+        id: string;
+        status: 'ok' | 'error';
+        message?: string;
+    }>;
+    total: number;
+    success: number;
+    failed: number;
+};
 type DeliveryFilters = {
     driver_id?: string;
     status?: string;
@@ -103,6 +118,7 @@ declare const deliveriesApi: {
     cancel: (id: string, payload: CancelDeliveryPayload) => Promise<void>;
     updateItemQty: (itemId: string, payload: UpdateDeliveredQtyPayload) => Promise<void>;
     assignDriver: (id: string, payload: AssignDriverPayload) => Promise<void>;
+    completeBatch: (payload: BatchCompletePayload) => Promise<BatchCompleteResult>;
 };
 
 type RouteFilters = {
@@ -214,12 +230,21 @@ type GeneratePdfPayload = {
     document_id: string;
     type: 'invoice' | 'receipt';
 };
+type BatchPrintResult = {
+    urls: string[];
+    errors: Array<{
+        id: string;
+        message: string;
+    }>;
+    total: number;
+};
 declare const documentsApi: {
     generatePdf: (payload: GeneratePdfPayload) => Promise<{
         url: string;
         encrypted: boolean;
     }>;
     getById: (id: string) => Promise<Document>;
+    batchPrint: (deliveryIds: string[]) => Promise<BatchPrintResult>;
 };
 
 type ContainerScanType = 'load_truck' | 'deliver' | 'collect_return' | 'pos_return' | 'receive_depot' | 'audit' | 'unload_truck';
@@ -449,4 +474,4 @@ declare const notificationConfigsApi: {
     update: (id: string, payload: UpdateNotificationConfigPayload) => Promise<NotificationConfig>;
 };
 
-export { type AddSundaysResult, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type NotificationConfig, type PaymentMethodConfig, type RecipientStrategy, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UserPaymentMethodsResponse, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, settingsApi, usersApi };
+export { type AddSundaysResult, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type NotificationConfig, type PaymentMethodConfig, type RecipientStrategy, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UserPaymentMethodsResponse, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, settingsApi, usersApi };
