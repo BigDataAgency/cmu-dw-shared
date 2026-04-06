@@ -50,6 +50,7 @@ export type DeliveryFilters = {
   driver_id?: string
   status?: string
   date?: string
+  order_id?: string
 }
 
 export const deliveriesApi = {

@@ -3,7 +3,8 @@ import type { Document } from '../types/finance'
 
 export type GeneratePdfPayload = {
   document_id: string
-  type: 'invoice' | 'receipt'
+  type: 'invoice' | 'receipt' | 'voucher' | 'delivery_note'
+  delivery_id?: string
 }
 
 export type BatchPrintResult = {

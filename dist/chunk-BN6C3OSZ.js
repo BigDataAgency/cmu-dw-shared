@@ -240,4 +240,4 @@ export {
   paymentMethodsApi,
   notificationConfigsApi
 };
-//# sourceMappingURL=chunk-VKGL3D3P.js.map
+//# sourceMappingURL=chunk-BN6C3OSZ.js.map

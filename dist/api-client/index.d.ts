@@ -108,6 +108,7 @@ type DeliveryFilters = {
     driver_id?: string;
     status?: string;
     date?: string;
+    order_id?: string;
 };
 declare const deliveriesApi: {
     list: (filters?: DeliveryFilters) => Promise<Delivery[]>;
@@ -228,7 +229,8 @@ declare const notificationsApi: {
 
 type GeneratePdfPayload = {
     document_id: string;
-    type: 'invoice' | 'receipt';
+    type: 'invoice' | 'receipt' | 'voucher' | 'delivery_note';
+    delivery_id?: string;
 };
 type BatchPrintResult = {
     urls: string[];
