@@ -1,4 +1,4 @@
-import { Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, PaymentMethod as PaymentMethod$1, NotificationChannel } from '../types/index.js';
+import { Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, PaymentMethod as PaymentMethod$1, NotificationChannel } from '../types/index.js';
 
 declare function configure(options: {
     baseUrl: string;
@@ -173,6 +173,7 @@ declare const usersApi: {
     updateAddress: (id: string, payload: Partial<AddressPayload>) => Promise<Address>;
     deleteAddress: (id: string) => Promise<void>;
     setDefaultAddress: (id: string) => Promise<void>;
+    exportMyData: () => Promise<ExportedData>;
 };
 
 type DocumentFilters = {

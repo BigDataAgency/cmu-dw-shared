@@ -54,6 +54,41 @@ type Address = {
     is_default: boolean;
     delivery_notes: string | null;
 };
+interface ExportedData {
+    exported_at: string;
+    profile: {
+        id: string;
+        full_name: string | null;
+        email: string | null;
+        phone_number: string | null;
+        avatar_url: string | null;
+        account_status: string;
+        created_at: string;
+    } | null;
+    addresses: {
+        label: string;
+        recipient_name: string | null;
+        recipient_phone: string | null;
+        address_line: string;
+        district: string | null;
+        province: string | null;
+        postal_code: string | null;
+    }[];
+    orders: {
+        id: string;
+        order_number: string;
+        status: string;
+        total_amount: number;
+        created_at: string;
+    }[];
+    consent_history: {
+        accepted_at: string;
+        ip_address: string | null;
+        consent_version: string;
+        consent_type: string;
+        consent_title: string;
+    }[];
+}
 
 type CustomerGroup = 'general' | 'university' | 'wholesale' | 'vip';
 type ProductPrice = {
@@ -324,4 +359,4 @@ type SendToAgencyResult = {
     warning?: string;
 };
 
-export type { Address, AddressPayload, AppRole, ApproveVoidPayload, AssignDeliveryPayload, CancelOrderPayload, CompleteDeliveryPayload, ConfirmRoutePayload, CreateOrderPayload, CreateProductPayload, CustomerGroup, Delivery, DeliveryDetail, DeliveryItem, DeliveryStatus, Document, DocumentStatus, DocumentType, GenerateRoutePayload, MarkReadPayload, MoveStopPayload, Notification, NotificationChannel, NotificationType, Order, OrderItem, OrderStatus, PaymentMethod, Product, ProductPrice, Profile, PushSubscriptionPayload, RejectVoidPayload, ReorderStopsPayload, ReturnBottlesPayload, RoutePlan, RoutePlanStop, RouteStatus, SendNotificationPayload, SendToAgencyPayload, SendToAgencyResult, SettleDebtPayload, Transaction, UpdateDeliveryStatusPayload, UpdateProductPayload, UpdateProfilePayload, UserRole, VoidRequest };
+export type { Address, AddressPayload, AppRole, ApproveVoidPayload, AssignDeliveryPayload, CancelOrderPayload, CompleteDeliveryPayload, ConfirmRoutePayload, CreateOrderPayload, CreateProductPayload, CustomerGroup, Delivery, DeliveryDetail, DeliveryItem, DeliveryStatus, Document, DocumentStatus, DocumentType, ExportedData, GenerateRoutePayload, MarkReadPayload, MoveStopPayload, Notification, NotificationChannel, NotificationType, Order, OrderItem, OrderStatus, PaymentMethod, Product, ProductPrice, Profile, PushSubscriptionPayload, RejectVoidPayload, ReorderStopsPayload, ReturnBottlesPayload, RoutePlan, RoutePlanStop, RouteStatus, SendNotificationPayload, SendToAgencyPayload, SendToAgencyResult, SettleDebtPayload, Transaction, UpdateDeliveryStatusPayload, UpdateProductPayload, UpdateProfilePayload, UserRole, VoidRequest };

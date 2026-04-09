@@ -119,7 +119,8 @@ var usersApi = {
   addAddress: (payload) => post("/users/me/addresses", payload),
   updateAddress: (id, payload) => patch(`/users/me/addresses/${id}`, payload),
   deleteAddress: (id) => del(`/users/me/addresses/${id}`),
-  setDefaultAddress: (id) => patch(`/users/me/addresses/${id}/set-default`, {})
+  setDefaultAddress: (id) => patch(`/users/me/addresses/${id}/set-default`, {}),
+  exportMyData: () => get("/users/me/export-data")
 };
 
 // src/api-client/finance.ts
@@ -240,4 +241,4 @@ export {
   paymentMethodsApi,
   notificationConfigsApi
 };
-//# sourceMappingURL=chunk-BN6C3OSZ.js.map
+//# sourceMappingURL=chunk-BLHDTMBH.js.map

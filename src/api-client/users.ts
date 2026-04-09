@@ -1,5 +1,5 @@
 import { get, post, patch, del } from './fetch'
-import type { Profile, UpdateProfilePayload, AddressPayload, Address } from '../types/user'
+import type { Profile, UpdateProfilePayload, AddressPayload, Address, ExportedData } from '../types/user'
 import type { Order } from '../types/order'
 
 export const usersApi = {
@@ -29,4 +29,7 @@ export const usersApi = {
 
   setDefaultAddress: (id: string): Promise<void> =>
     patch(`/users/me/addresses/${id}/set-default`, {}),
+
+  exportMyData: (): Promise<ExportedData> =>
+    get('/users/me/export-data'),
 }

@@ -59,3 +59,39 @@ export type Address = {
   is_default: boolean
   delivery_notes: string | null
 }
+
+export interface ExportedData {
+  exported_at: string
+  profile: {
+    id: string
+    full_name: string | null
+    email: string | null
+    phone_number: string | null
+    avatar_url: string | null
+    account_status: string
+    created_at: string
+  } | null
+  addresses: {
+    label: string
+    recipient_name: string | null
+    recipient_phone: string | null
+    address_line: string
+    district: string | null
+    province: string | null
+    postal_code: string | null
+  }[]
+  orders: {
+    id: string
+    order_number: string
+    status: string
+    total_amount: number
+    created_at: string
+  }[]
+  consent_history: {
+    accepted_at: string
+    ip_address: string | null
+    consent_version: string
+    consent_type: string
+    consent_title: string
+  }[]
+}
