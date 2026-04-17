@@ -54,3 +54,4 @@ export type {
   UpdateNotificationConfigPayload,
   RecipientStrategy,
 } from "./notification-configs";
+export { serverStatusApi } from "./server-status";
