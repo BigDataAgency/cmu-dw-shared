@@ -1,7 +1,8 @@
 import { get, post, patch } from './fetch'
 import type { Product, CreateProductPayload, UpdateProductPayload } from '../types/product'
+import type { PaginationParams, SearchParams, PaginatedResponse } from '../types/pagination'
 
-export type ProductFilters = {
+export type ProductFilters = PaginationParams & SearchParams & {
   category?: string
   is_active?: boolean
 }
@@ -13,7 +14,7 @@ export type UpdateStockPayload = {
 }
 
 export const productsApi = {
-  list: (filters?: ProductFilters): Promise<Product[]> =>
+  list: (filters?: ProductFilters): Promise<PaginatedResponse<Product>> =>
     get('/products', filters as Record<string, unknown>),
 
   getById: (id: string): Promise<Product> =>

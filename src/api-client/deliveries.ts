@@ -1,5 +1,6 @@
 import { get, post, patch } from './fetch'
 import type { Delivery, DeliveryDetail } from '../types/delivery'
+import type { PaginationParams, SearchParams, PaginatedResponse } from '../types/pagination'
 
 export type AssignDeliveryPayload = {
   order_id: string
@@ -46,7 +47,7 @@ export type BatchCompleteResult = {
   failed: number
 }
 
-export type DeliveryFilters = {
+export type DeliveryFilters = PaginationParams & SearchParams & {
   driver_id?: string
   status?: string
   date?: string
@@ -54,7 +55,7 @@ export type DeliveryFilters = {
 }
 
 export const deliveriesApi = {
-  list: (filters?: DeliveryFilters): Promise<Delivery[]> =>
+  list: (filters?: DeliveryFilters): Promise<PaginatedResponse<Delivery>> =>
     get('/deliveries', filters as Record<string, unknown>),
 
   getById: (id: string): Promise<DeliveryDetail> =>

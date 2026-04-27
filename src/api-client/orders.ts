@@ -1,5 +1,6 @@
 import { get, post, patch } from './fetch'
 import type { Order } from '../types/order'
+import type { PaginationParams, SearchParams, PaginatedResponse } from '../types/pagination'
 
 export type OrderSource = 'pos_walkin' | 'pos_delivery' | 'online' | 'phone' | 'agent'
 export type PaymentMethod = 'cash' | 'qr_promptpay' | 'payroll_deduction' | 'invoice_billing'
@@ -30,7 +31,7 @@ export type ReturnBottlesPayload = {
   customer_id?: string
 }
 
-export type OrderFilters = {
+export type OrderFilters = PaginationParams & SearchParams & {
   status?: string
   source?: string
   date_from?: string
@@ -43,7 +44,7 @@ export type UpdateOrderStatusPayload = {
 }
 
 export const ordersApi = {
-  list: (filters?: OrderFilters): Promise<Order[]> =>
+  list: (filters?: OrderFilters): Promise<PaginatedResponse<Order>> =>
     get('/orders', filters as Record<string, unknown>),
 
   getById: (id: string): Promise<Order> =>

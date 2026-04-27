@@ -1,5 +1,12 @@
 import { get, post } from './fetch'
 import type { Document } from '../types/finance'
+import type { PaginationParams, SearchParams, PaginatedResponse } from '../types/pagination'
+
+export type DocumentFilters = PaginationParams & SearchParams & {
+  type?: string         // accepts comma-list e.g. 'receipt,voucher'
+  date_from?: string
+  date_to?: string
+}
 
 export type GeneratePdfPayload = {
   document_id: string
@@ -14,6 +21,9 @@ export type BatchPrintResult = {
 }
 
 export const documentsApi = {
+  list: (filters?: DocumentFilters): Promise<PaginatedResponse<Document>> =>
+    get('/documents', filters as Record<string, unknown>),
+
   generatePdf: (payload: GeneratePdfPayload): Promise<{ url: string; encrypted: boolean }> =>
     post('/documents/pdf', payload),
 

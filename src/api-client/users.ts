@@ -1,8 +1,17 @@
 import { get, post, patch, del } from './fetch'
 import type { Profile, UpdateProfilePayload, AddressPayload, Address, ExportedData } from '../types/user'
 import type { Order } from '../types/order'
+import type { PaginationParams, SearchParams, PaginatedResponse } from '../types/pagination'
+
+export type UserFilters = PaginationParams & SearchParams & {
+  role?: string
+  status?: string
+}
 
 export const usersApi = {
+  list: (filters?: UserFilters): Promise<PaginatedResponse<Profile>> =>
+    get('/users', filters as Record<string, unknown>),
+
   getMe: (): Promise<Profile> =>
     get('/users/me'),
 

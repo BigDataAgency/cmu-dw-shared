@@ -1,6 +1,12 @@
 import { get, post, patch } from './fetch'
+import type { PaginationParams, SearchParams, PaginatedResponse } from '../types/pagination'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
+
+export type ContainerFilters = PaginationParams & SearchParams & {
+  status?: string
+  product_id?: string
+}
 
 export type ContainerScanType =
   | 'load_truck'
@@ -80,8 +86,8 @@ export const isValidContainerQR = (qr: string): boolean =>
 // ── API Client ────────────────────────────────────────────────────────────────
 
 export const containersApi = {
-  list: (): Promise<unknown[]> =>
-    get('/containers'),
+  list: (filters?: ContainerFilters): Promise<PaginatedResponse<unknown>> =>
+    get('/containers', filters as Record<string, unknown>),
 
   getSummary: (): Promise<unknown[]> =>
     get('/containers/summary'),
