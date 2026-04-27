@@ -111,6 +111,7 @@ var productsApi = {
 
 // src/api-client/users.ts
 var usersApi = {
+  list: (filters) => get("/users", filters),
   getMe: () => get("/users/me"),
   updateMe: (payload) => patch("/users/me", payload),
   getPurchaseRights: () => get("/users/me/purchase-rights"),
@@ -130,7 +131,8 @@ var financeApi = {
   approveVoidReissue: (payload) => post("/finance/void-reissue/approve", payload),
   rejectVoidReissue: (payload) => post("/finance/void-reissue/reject", payload),
   settleDebt: (payload) => post("/finance/settle-debt", payload),
-  getSupportFees: (filters) => get("/finance/support-fees", filters)
+  getSupportFees: (filters) => get("/finance/support-fees", filters),
+  listDebt: (filters) => get("/finance/debt", filters)
 };
 
 // src/api-client/notifications.ts
@@ -145,6 +147,7 @@ var notificationsApi = {
 
 // src/api-client/documents.ts
 var documentsApi = {
+  list: (filters) => get("/documents", filters),
   generatePdf: (payload) => post("/documents/pdf", payload),
   getById: (id) => get(`/documents/${id}`),
   batchPrint: (deliveryIds) => post("/documents/batch-print", { delivery_ids: deliveryIds })
@@ -154,7 +157,7 @@ var documentsApi = {
 var CONTAINER_QR_PATTERN = /^TK-\d{5}$/;
 var isValidContainerQR = (qr) => CONTAINER_QR_PATTERN.test(qr);
 var containersApi = {
-  list: () => get("/containers"),
+  list: (filters) => get("/containers", filters),
   getSummary: () => get("/containers/summary"),
   getScanHistory: (id) => get(`/containers/${id}/scan-history`),
   scan: (payload) => post("/containers/scan", payload),
@@ -222,6 +225,11 @@ var notificationConfigsApi = {
   update: (id, payload) => patch(`/notification-configs/${id}`, payload)
 };
 
+// src/api-client/server-status.ts
+var serverStatusApi = {
+  get: () => get("/server-status")
+};
+
 export {
   configure,
   ApiError,
@@ -239,6 +247,7 @@ export {
   holidaysApi,
   settingsApi,
   paymentMethodsApi,
-  notificationConfigsApi
+  notificationConfigsApi,
+  serverStatusApi
 };
-//# sourceMappingURL=chunk-BLHDTMBH.js.map
+//# sourceMappingURL=chunk-C72GT7EA.js.map

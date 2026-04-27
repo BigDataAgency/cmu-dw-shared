@@ -1,4 +1,4 @@
-import { Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, PaymentMethod as PaymentMethod$1, NotificationChannel } from '../types/index.js';
+import { PaginationParams, SearchParams, PaginatedResponse, Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, PaymentMethod as PaymentMethod$1, NotificationChannel, ServerStatus } from '../types/index.js';
 
 declare function configure(options: {
     baseUrl: string;
@@ -41,7 +41,7 @@ type ReturnBottlesPayload = {
     }[];
     customer_id?: string;
 };
-type OrderFilters = {
+type OrderFilters = PaginationParams & SearchParams & {
     status?: string;
     source?: string;
     date_from?: string;
@@ -52,7 +52,7 @@ type UpdateOrderStatusPayload = {
     note?: string;
 };
 declare const ordersApi: {
-    list: (filters?: OrderFilters) => Promise<Order[]>;
+    list: (filters?: OrderFilters) => Promise<PaginatedResponse<Order>>;
     getById: (id: string) => Promise<Order>;
     create: (payload: CreateOrderPayload) => Promise<Order>;
     cancel: (id: string, payload: CancelOrderPayload) => Promise<void>;
@@ -104,14 +104,14 @@ type BatchCompleteResult = {
     success: number;
     failed: number;
 };
-type DeliveryFilters = {
+type DeliveryFilters = PaginationParams & SearchParams & {
     driver_id?: string;
     status?: string;
     date?: string;
     order_id?: string;
 };
 declare const deliveriesApi: {
-    list: (filters?: DeliveryFilters) => Promise<Delivery[]>;
+    list: (filters?: DeliveryFilters) => Promise<PaginatedResponse<Delivery>>;
     getById: (id: string) => Promise<DeliveryDetail>;
     assign: (payload: AssignDeliveryPayload) => Promise<string>;
     updateStatus: (id: string, payload: UpdateDeliveryStatusPayload) => Promise<void>;
@@ -143,7 +143,7 @@ declare const routesApi: {
     removeStop: (stopId: string) => Promise<void>;
 };
 
-type ProductFilters = {
+type ProductFilters = PaginationParams & SearchParams & {
     category?: string;
     is_active?: boolean;
 };
@@ -153,14 +153,19 @@ type UpdateStockPayload = {
     notes?: string;
 };
 declare const productsApi: {
-    list: (filters?: ProductFilters) => Promise<Product[]>;
+    list: (filters?: ProductFilters) => Promise<PaginatedResponse<Product>>;
     getById: (id: string) => Promise<Product>;
     create: (payload: CreateProductPayload) => Promise<Product>;
     update: (id: string, payload: UpdateProductPayload) => Promise<Product>;
     updateStock: (id: string, payload: UpdateStockPayload) => Promise<void>;
 };
 
+type UserFilters = PaginationParams & SearchParams & {
+    role?: string;
+    status?: string;
+};
 declare const usersApi: {
+    list: (filters?: UserFilters) => Promise<PaginatedResponse<Profile>>;
     getMe: () => Promise<Profile>;
     updateMe: (payload: UpdateProfilePayload) => Promise<Profile>;
     getPurchaseRights: () => Promise<{
@@ -176,7 +181,16 @@ declare const usersApi: {
     exportMyData: () => Promise<ExportedData>;
 };
 
-type DocumentFilters = {
+type DebtRow = {
+    id: string;
+    name: string;
+    current_debt: number;
+    contact_person?: string | null;
+    phone?: string | null;
+    tax_id?: string | null;
+};
+type DebtFilters = PaginationParams & SearchParams;
+type DocumentFilters$1 = {
     customer_id?: string;
     status?: string;
 };
@@ -211,12 +225,13 @@ type SupportFeeRow = {
     total_cost: number;
 };
 declare const financeApi: {
-    listInvoices: (filters?: DocumentFilters) => Promise<Document[]>;
-    listReceipts: (filters?: DocumentFilters) => Promise<Document[]>;
+    listInvoices: (filters?: DocumentFilters$1) => Promise<Document[]>;
+    listReceipts: (filters?: DocumentFilters$1) => Promise<Document[]>;
     approveVoidReissue: (payload: ApproveVoidPayload) => Promise<unknown>;
     rejectVoidReissue: (payload: RejectVoidPayload) => Promise<void>;
     settleDebt: (payload: SettleDebtPayload) => Promise<unknown>;
     getSupportFees: (filters?: SupportFeeFilters) => Promise<SupportFeeRow[]>;
+    listDebt: (filters?: DebtFilters) => Promise<PaginatedResponse<DebtRow>>;
 };
 
 declare const notificationsApi: {
@@ -228,6 +243,11 @@ declare const notificationsApi: {
     sendToAgency: (payload: SendToAgencyPayload) => Promise<SendToAgencyResult>;
 };
 
+type DocumentFilters = PaginationParams & SearchParams & {
+    type?: string;
+    date_from?: string;
+    date_to?: string;
+};
 type GeneratePdfPayload = {
     document_id: string;
     type: 'invoice' | 'receipt' | 'voucher' | 'delivery_note';
@@ -242,6 +262,7 @@ type BatchPrintResult = {
     total: number;
 };
 declare const documentsApi: {
+    list: (filters?: DocumentFilters) => Promise<PaginatedResponse<Document>>;
     generatePdf: (payload: GeneratePdfPayload) => Promise<{
         url: string;
         encrypted: boolean;
@@ -250,6 +271,10 @@ declare const documentsApi: {
     batchPrint: (deliveryIds: string[]) => Promise<BatchPrintResult>;
 };
 
+type ContainerFilters = PaginationParams & SearchParams & {
+    status?: string;
+    product_id?: string;
+};
 type ContainerScanType = 'load_truck' | 'deliver' | 'collect_return' | 'pos_return' | 'receive_depot' | 'audit' | 'unload_truck';
 type BatchScanPayload = {
     qr_codes: string[];
@@ -302,7 +327,7 @@ type ContainerQrData = {
 declare const CONTAINER_QR_PATTERN: RegExp;
 declare const isValidContainerQR: (qr: string) => boolean;
 declare const containersApi: {
-    list: () => Promise<unknown[]>;
+    list: (filters?: ContainerFilters) => Promise<PaginatedResponse<unknown>>;
     getSummary: () => Promise<unknown[]>;
     getScanHistory: (id: string) => Promise<unknown[]>;
     scan: (payload: BatchScanPayload) => Promise<unknown[]>;
@@ -477,4 +502,8 @@ declare const notificationConfigsApi: {
     update: (id: string, payload: UpdateNotificationConfigPayload) => Promise<NotificationConfig>;
 };
 
-export { type AddSundaysResult, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type NotificationConfig, type PaymentMethodConfig, type RecipientStrategy, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UserPaymentMethodsResponse, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, settingsApi, usersApi };
+declare const serverStatusApi: {
+    get: () => Promise<ServerStatus>;
+};
+
+export { type AddSundaysResult, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DebtFilters, type DebtRow, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type NotificationConfig, type PaymentMethodConfig, type RecipientStrategy, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UserPaymentMethodsResponse, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersApi };

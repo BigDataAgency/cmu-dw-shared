@@ -359,4 +359,55 @@ type SendToAgencyResult = {
     warning?: string;
 };
 
-export type { Address, AddressPayload, AppRole, ApproveVoidPayload, AssignDeliveryPayload, CancelOrderPayload, CompleteDeliveryPayload, ConfirmRoutePayload, CreateOrderPayload, CreateProductPayload, CustomerGroup, Delivery, DeliveryDetail, DeliveryItem, DeliveryStatus, Document, DocumentStatus, DocumentType, ExportedData, GenerateRoutePayload, MarkReadPayload, MoveStopPayload, Notification, NotificationChannel, NotificationType, Order, OrderItem, OrderStatus, PaymentMethod, Product, ProductPrice, Profile, PushSubscriptionPayload, RejectVoidPayload, ReorderStopsPayload, ReturnBottlesPayload, RoutePlan, RoutePlanStop, RouteStatus, SendNotificationPayload, SendToAgencyPayload, SendToAgencyResult, SettleDebtPayload, Transaction, UpdateDeliveryStatusPayload, UpdateProductPayload, UpdateProfilePayload, UserRole, VoidRequest };
+interface ServerStatusBucket {
+    name: string;
+    size_bytes: number;
+    size_human: string;
+    file_count: number;
+}
+interface ServerStatusTable {
+    name: string;
+    size_bytes: number;
+    size_human: string;
+    row_estimate: number;
+}
+interface ServerStatus {
+    database: {
+        size_bytes: number;
+        size_human: string;
+        active_connections: number;
+        max_connections: number;
+        uptime_since: string;
+        cache_hit_ratio: number;
+    };
+    storage: {
+        total_bytes: number;
+        total_human: string;
+        buckets: ServerStatusBucket[];
+    };
+    tables: ServerStatusTable[];
+    timestamp: string;
+}
+
+declare const DEFAULT_PAGE_SIZE = 20;
+declare const MAX_PAGE_SIZE = 100;
+declare const PAGE_SIZE_OPTIONS: readonly [20, 50, 100];
+type PageSize = typeof PAGE_SIZE_OPTIONS[number];
+type PaginationParams = {
+    page?: number;
+    pageSize?: number;
+};
+type SearchParams = {
+    q?: string;
+};
+type PaginatedResponse<T> = {
+    data: T[];
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+};
+declare function clampPageSize(n: number | undefined): number;
+declare function todayISO(): string;
+
+export { type Address, type AddressPayload, type AppRole, type ApproveVoidPayload, type AssignDeliveryPayload, type CancelOrderPayload, type CompleteDeliveryPayload, type ConfirmRoutePayload, type CreateOrderPayload, type CreateProductPayload, type CustomerGroup, DEFAULT_PAGE_SIZE, type Delivery, type DeliveryDetail, type DeliveryItem, type DeliveryStatus, type Document, type DocumentStatus, type DocumentType, type ExportedData, type GenerateRoutePayload, MAX_PAGE_SIZE, type MarkReadPayload, type MoveStopPayload, type Notification, type NotificationChannel, type NotificationType, type Order, type OrderItem, type OrderStatus, PAGE_SIZE_OPTIONS, type PageSize, type PaginatedResponse, type PaginationParams, type PaymentMethod, type Product, type ProductPrice, type Profile, type PushSubscriptionPayload, type RejectVoidPayload, type ReorderStopsPayload, type ReturnBottlesPayload, type RoutePlan, type RoutePlanStop, type RouteStatus, type SearchParams, type SendNotificationPayload, type SendToAgencyPayload, type SendToAgencyResult, type ServerStatus, type ServerStatusBucket, type ServerStatusTable, type SettleDebtPayload, type Transaction, type UpdateDeliveryStatusPayload, type UpdateProductPayload, type UpdateProfilePayload, type UserRole, type VoidRequest, clampPageSize, todayISO };
