@@ -6,7 +6,7 @@ export { routesApi } from "./routes";
 export { productsApi } from "./products";
 export { usersApi } from "./users";
 export { financeApi } from "./finance";
-export type { SupportFeeFilters, SupportFeeRow } from "./finance";
+export type { SupportFeeFilters, SupportFeeRow, DebtRow, DebtFilters } from "./finance";
 export { notificationsApi } from "./notifications";
 export { documentsApi } from "./documents";
 export type { BatchPrintResult } from "./documents";

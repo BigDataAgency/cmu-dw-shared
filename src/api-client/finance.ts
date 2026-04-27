@@ -1,5 +1,17 @@
 import { get, post } from './fetch'
 import type { Document } from '../types/finance'
+import type { PaginationParams, SearchParams, PaginatedResponse } from '../types/pagination'
+
+export type DebtRow = {
+  id: string
+  name: string
+  current_debt: number
+  contact_person?: string | null
+  phone?: string | null
+  tax_id?: string | null
+}
+
+export type DebtFilters = PaginationParams & SearchParams
 
 export type DocumentFilters = {
   customer_id?: string
@@ -59,4 +71,7 @@ export const financeApi = {
 
   getSupportFees: (filters?: SupportFeeFilters): Promise<SupportFeeRow[]> =>
     get('/finance/support-fees', filters as Record<string, unknown>),
+
+  listDebt: (filters?: DebtFilters): Promise<PaginatedResponse<DebtRow>> =>
+    get('/finance/debt', filters as Record<string, unknown>),
 }
