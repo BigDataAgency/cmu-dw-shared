@@ -108,6 +108,8 @@ type DeliveryFilters = PaginationParams & SearchParams & {
     driver_id?: string;
     status?: string;
     date?: string;
+    date_from?: string;
+    date_to?: string;
     order_id?: string;
 };
 declare const deliveriesApi: {
