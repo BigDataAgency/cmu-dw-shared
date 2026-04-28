@@ -106,7 +106,8 @@ var productsApi = {
   getById: (id) => get(`/products/${id}`),
   create: (payload) => post("/products", payload),
   update: (id, payload) => patch(`/products/${id}`, payload),
-  updateStock: (id, payload) => patch(`/products/${id}/stock`, payload)
+  updateStock: (id, payload) => patch(`/products/${id}/stock`, payload),
+  internalUse: (id, payload) => post(`/products/${id}/internal-use`, payload)
 };
 
 // src/api-client/users.ts
@@ -250,4 +251,4 @@ export {
   notificationConfigsApi,
   serverStatusApi
 };
-//# sourceMappingURL=chunk-EH4IH2Q2.js.map
+//# sourceMappingURL=chunk-R4LDLQ3S.js.map

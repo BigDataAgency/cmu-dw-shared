@@ -4,6 +4,7 @@ import type { PaginationParams, SearchParams, PaginatedResponse } from '../types
 
 export type OrderSource = 'pos_walkin' | 'pos_delivery' | 'online' | 'phone' | 'agent'
 export type PaymentMethod = 'cash' | 'qr_promptpay' | 'payroll_deduction' | 'invoice_billing'
+export type DeliveryType = 'delivery' | 'pickup'
 
 export type CreateOrderPayload = {
   items: { product_id: string; quantity: number }[]
@@ -20,6 +21,7 @@ export type CreateOrderPayload = {
   scheduled_time_slot?: string
   delivery_notes?: string
   discount_amount?: number
+  delivery_type?: DeliveryType
 }
 
 export type CancelOrderPayload = {

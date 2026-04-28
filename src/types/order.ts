@@ -9,6 +9,7 @@ export type OrderStatus =
   | 'overdue'
 
 export type PaymentMethod = 'cash' | 'qr_promptpay' | 'payroll_deduction' | 'invoice_billing'
+export type DeliveryType = 'delivery' | 'pickup'
 
 export type OrderItem = {
   id: string
@@ -29,6 +30,7 @@ export type Order = {
   items: OrderItem[]
   total_amount: number
   note: string | null
+  delivery_type: DeliveryType
   created_at: string
   updated_at: string
 }
@@ -43,6 +45,7 @@ export type CreateOrderPayload = {
   scheduled_time_slot?: string
   delivery_notes?: string
   discount_amount?: number
+  delivery_type?: DeliveryType
 }
 
 export type CancelOrderPayload = {

@@ -12,6 +12,7 @@ declare class ApiError extends Error {
 
 type OrderSource = 'pos_walkin' | 'pos_delivery' | 'online' | 'phone' | 'agent';
 type PaymentMethod = 'cash' | 'qr_promptpay' | 'payroll_deduction' | 'invoice_billing';
+type DeliveryType = 'delivery' | 'pickup';
 type CreateOrderPayload = {
     items: {
         product_id: string;
@@ -30,6 +31,7 @@ type CreateOrderPayload = {
     scheduled_time_slot?: string;
     delivery_notes?: string;
     discount_amount?: number;
+    delivery_type?: DeliveryType;
 };
 type CancelOrderPayload = {
     reason: string;
@@ -151,8 +153,16 @@ type ProductFilters = PaginationParams & SearchParams & {
 };
 type UpdateStockPayload = {
     qty: number;
-    type: 'stock_in' | 'stock_out' | 'adjust' | 'return';
+    type: 'stock_in' | 'stock_out' | 'adjust' | 'return' | 'internal_use' | 'pickup_out';
     notes?: string;
+};
+type InternalUsePayload = {
+    qty: number;
+    reason: string;
+};
+type InternalUseResult = {
+    success: boolean;
+    product: Pick<Product, 'id' | 'sku' | 'name' | 'stock_qty'>;
 };
 declare const productsApi: {
     list: (filters?: ProductFilters) => Promise<PaginatedResponse<Product>>;
@@ -160,6 +170,7 @@ declare const productsApi: {
     create: (payload: CreateProductPayload) => Promise<Product>;
     update: (id: string, payload: UpdateProductPayload) => Promise<Product>;
     updateStock: (id: string, payload: UpdateStockPayload) => Promise<void>;
+    internalUse: (id: string, payload: InternalUsePayload) => Promise<InternalUseResult>;
 };
 
 type UserFilters = PaginationParams & SearchParams & {

@@ -9,8 +9,18 @@ export type ProductFilters = PaginationParams & SearchParams & {
 
 export type UpdateStockPayload = {
   qty: number
-  type: 'stock_in' | 'stock_out' | 'adjust' | 'return'
+  type: 'stock_in' | 'stock_out' | 'adjust' | 'return' | 'internal_use' | 'pickup_out'
   notes?: string
+}
+
+export type InternalUsePayload = {
+  qty: number
+  reason: string
+}
+
+export type InternalUseResult = {
+  success: boolean
+  product: Pick<Product, 'id' | 'sku' | 'name' | 'stock_qty'>
 }
 
 export const productsApi = {
@@ -28,4 +38,7 @@ export const productsApi = {
 
   updateStock: (id: string, payload: UpdateStockPayload): Promise<void> =>
     patch(`/products/${id}/stock`, payload),
+
+  internalUse: (id: string, payload: InternalUsePayload): Promise<InternalUseResult> =>
+    post(`/products/${id}/internal-use`, payload),
 }
