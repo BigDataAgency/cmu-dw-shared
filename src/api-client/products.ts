@@ -5,12 +5,18 @@ import type { PaginationParams, SearchParams, PaginatedResponse } from '../types
 export type ProductFilters = PaginationParams & SearchParams & {
   category?: string
   is_active?: boolean
+  pos_stock_exempt?: boolean
 }
 
 export type UpdateStockPayload = {
   qty: number
   type: 'stock_in' | 'stock_out' | 'adjust' | 'return' | 'internal_use' | 'pickup_out'
   notes?: string
+}
+
+export type AdjustStockPayload = {
+  qty: number
+  notes: string
 }
 
 export type InternalUsePayload = {
@@ -38,6 +44,9 @@ export const productsApi = {
 
   updateStock: (id: string, payload: UpdateStockPayload): Promise<void> =>
     patch(`/products/${id}/stock`, payload),
+
+  adjustStock: (id: string, payload: AdjustStockPayload): Promise<void> =>
+    patch(`/products/${id}/stock`, { qty: payload.qty, type: 'adjust', notes: payload.notes }),
 
   internalUse: (id: string, payload: InternalUsePayload): Promise<InternalUseResult> =>
     post(`/products/${id}/internal-use`, payload),

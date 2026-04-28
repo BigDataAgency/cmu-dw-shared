@@ -107,6 +107,7 @@ var productsApi = {
   create: (payload) => post("/products", payload),
   update: (id, payload) => patch(`/products/${id}`, payload),
   updateStock: (id, payload) => patch(`/products/${id}/stock`, payload),
+  adjustStock: (id, payload) => patch(`/products/${id}/stock`, { qty: payload.qty, type: "adjust", notes: payload.notes }),
   internalUse: (id, payload) => post(`/products/${id}/internal-use`, payload)
 };
 
@@ -251,4 +252,4 @@ export {
   notificationConfigsApi,
   serverStatusApi
 };
-//# sourceMappingURL=chunk-R4LDLQ3S.js.map
+//# sourceMappingURL=chunk-7U4LJBLD.js.map

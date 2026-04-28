@@ -109,6 +109,7 @@ type Product = {
     low_stock_threshold: number | null;
     price: number | null;
     deposit_price: number | null;
+    pos_stock_exempt?: boolean;
     prices: ProductPrice[];
     created_at: string;
     updated_at: string;

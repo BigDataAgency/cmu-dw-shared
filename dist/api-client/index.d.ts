@@ -150,11 +150,16 @@ declare const routesApi: {
 type ProductFilters = PaginationParams & SearchParams & {
     category?: string;
     is_active?: boolean;
+    pos_stock_exempt?: boolean;
 };
 type UpdateStockPayload = {
     qty: number;
     type: 'stock_in' | 'stock_out' | 'adjust' | 'return' | 'internal_use' | 'pickup_out';
     notes?: string;
+};
+type AdjustStockPayload = {
+    qty: number;
+    notes: string;
 };
 type InternalUsePayload = {
     qty: number;
@@ -170,6 +175,7 @@ declare const productsApi: {
     create: (payload: CreateProductPayload) => Promise<Product>;
     update: (id: string, payload: UpdateProductPayload) => Promise<Product>;
     updateStock: (id: string, payload: UpdateStockPayload) => Promise<void>;
+    adjustStock: (id: string, payload: AdjustStockPayload) => Promise<void>;
     internalUse: (id: string, payload: InternalUsePayload) => Promise<InternalUseResult>;
 };
 
