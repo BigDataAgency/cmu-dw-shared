@@ -1,19 +1,27 @@
-export type DocumentType = 'invoice' | 'receipt' | 'credit_note'
+export type DocumentType = 'invoice' | 'receipt' | 'voucher' | 'delivery_note'
 
-export type DocumentStatus = 'active' | 'voided' | 'pending_void'
+export type DocumentStatus = 'draft' | 'issued' | 'void'
 
 export type Document = {
   id: string
   document_number: string
   type: DocumentType
   status: DocumentStatus
-  order_id: string
-  customer_id: string
   amount: number
-  issued_at: string
-  voided_at: string | null
+  issued_to_name: string
+  issued_to_address: string | null
+  tax_id: string | null
+  agency_id: string | null
+  profile_id: string | null
+  order_id: string | null
+  delivery_id: string | null
+  template_id: string | null
+  issued_at: string | null
+  issued_by: string | null
   pdf_url: string | null
-  pdf_encrypted: boolean
+  void_reason: string | null
+  voided_document_id: string | null
+  reissue_reason: string | null
   created_at: string
 }
 
