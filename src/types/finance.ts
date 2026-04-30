@@ -1,4 +1,4 @@
-export type DocumentType = 'invoice' | 'receipt' | 'voucher' | 'delivery_note'
+export type DocumentType = 'invoice' | 'receipt' | 'voucher' | 'delivery_note' | 'sticker'
 
 export type DocumentStatus = 'draft' | 'issued' | 'void'
 

@@ -152,7 +152,7 @@ var documentsApi = {
   list: (filters) => get("/documents", filters),
   generatePdf: (payload) => post("/documents/pdf", payload),
   getById: (id) => get(`/documents/${id}`),
-  batchPrint: (deliveryIds) => post("/documents/batch-print", { delivery_ids: deliveryIds })
+  batchPrint: (deliveryIds, docType = "delivery_note") => post("/documents/batch-print", { delivery_ids: deliveryIds, doc_type: docType })
 };
 
 // src/api-client/containers.ts
@@ -252,4 +252,4 @@ export {
   notificationConfigsApi,
   serverStatusApi
 };
-//# sourceMappingURL=chunk-7U4LJBLD.js.map
+//# sourceMappingURL=chunk-QG2O7SIL.js.map

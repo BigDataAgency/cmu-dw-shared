@@ -1,4 +1,4 @@
-import { PaginationParams, SearchParams, PaginatedResponse, Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, PaymentMethod as PaymentMethod$1, NotificationChannel, ServerStatus } from '../types/index.js';
+import { PaginationParams, SearchParams, PaginatedResponse, Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, DocumentType, PaymentMethod as PaymentMethod$1, NotificationChannel, ServerStatus } from '../types/index.js';
 
 declare function configure(options: {
     baseUrl: string;
@@ -269,7 +269,7 @@ type DocumentFilters = PaginationParams & SearchParams & {
 };
 type GeneratePdfPayload = {
     document_id: string;
-    type: 'invoice' | 'receipt' | 'voucher' | 'delivery_note';
+    type: DocumentType;
     delivery_id?: string;
 };
 type BatchPrintResult = {
@@ -280,6 +280,7 @@ type BatchPrintResult = {
     }>;
     total: number;
 };
+type BatchPrintDocType = 'delivery_note' | 'sticker';
 declare const documentsApi: {
     list: (filters?: DocumentFilters) => Promise<PaginatedResponse<Document>>;
     generatePdf: (payload: GeneratePdfPayload) => Promise<{
@@ -287,7 +288,7 @@ declare const documentsApi: {
         encrypted: boolean;
     }>;
     getById: (id: string) => Promise<Document>;
-    batchPrint: (deliveryIds: string[]) => Promise<BatchPrintResult>;
+    batchPrint: (deliveryIds: string[], docType?: BatchPrintDocType) => Promise<BatchPrintResult>;
 };
 
 type ContainerFilters = PaginationParams & SearchParams & {

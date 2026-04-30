@@ -1,5 +1,5 @@
 import { get, post } from './fetch'
-import type { Document } from '../types/finance'
+import type { Document, DocumentType } from '../types/finance'
 import type { PaginationParams, SearchParams, PaginatedResponse } from '../types/pagination'
 
 export type DocumentFilters = PaginationParams & SearchParams & {
@@ -10,7 +10,7 @@ export type DocumentFilters = PaginationParams & SearchParams & {
 
 export type GeneratePdfPayload = {
   document_id: string
-  type: 'invoice' | 'receipt' | 'voucher' | 'delivery_note'
+  type: DocumentType
   delivery_id?: string
 }
 
@@ -19,6 +19,8 @@ export type BatchPrintResult = {
   errors: Array<{ id: string; message: string }>
   total: number
 }
+
+export type BatchPrintDocType = 'delivery_note' | 'sticker'
 
 export const documentsApi = {
   list: (filters?: DocumentFilters): Promise<PaginatedResponse<Document>> =>
@@ -30,6 +32,9 @@ export const documentsApi = {
   getById: (id: string): Promise<Document> =>
     get(`/documents/${id}`),
 
-  batchPrint: (deliveryIds: string[]): Promise<BatchPrintResult> =>
-    post('/documents/batch-print', { delivery_ids: deliveryIds }),
+  batchPrint: (
+    deliveryIds: string[],
+    docType: BatchPrintDocType = 'delivery_note',
+  ): Promise<BatchPrintResult> =>
+    post('/documents/batch-print', { delivery_ids: deliveryIds, doc_type: docType }),
 }

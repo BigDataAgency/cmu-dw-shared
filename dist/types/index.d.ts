@@ -270,7 +270,7 @@ type MoveStopPayload = {
     target_route_plan_id: string;
 };
 
-type DocumentType = 'invoice' | 'receipt' | 'voucher' | 'delivery_note';
+type DocumentType = 'invoice' | 'receipt' | 'voucher' | 'delivery_note' | 'sticker';
 type DocumentStatus = 'draft' | 'issued' | 'void';
 type Document = {
     id: string;
