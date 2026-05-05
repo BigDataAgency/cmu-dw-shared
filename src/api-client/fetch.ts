@@ -22,8 +22,10 @@ async function buildHeaders(): Promise<HeadersInit> {
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ message: res.statusText }))
-    throw new ApiError(res.status, error.message ?? res.statusText)
+    const body = await res.json().catch(() => null)
+    // backend `err()` helper returns { error: "..." }; some endpoints use { message: "..." }
+    const message = body?.error ?? body?.message ?? res.statusText
+    throw new ApiError(res.status, message)
   }
   if (res.status === 204) return undefined as T
   return res.json() as Promise<T>

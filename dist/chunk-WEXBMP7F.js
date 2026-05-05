@@ -16,8 +16,9 @@ async function buildHeaders() {
 }
 async function handleResponse(res) {
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ message: res.statusText }));
-    throw new ApiError(res.status, error.message ?? res.statusText);
+    const body = await res.json().catch(() => null);
+    const message = body?.error ?? body?.message ?? res.statusText;
+    throw new ApiError(res.status, message);
   }
   if (res.status === 204) return void 0;
   return res.json();
@@ -256,4 +257,4 @@ export {
   notificationConfigsApi,
   serverStatusApi
 };
-//# sourceMappingURL=chunk-WCYPP2DD.js.map
+//# sourceMappingURL=chunk-WEXBMP7F.js.map
