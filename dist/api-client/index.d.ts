@@ -280,7 +280,7 @@ type BatchPrintResult = {
     }>;
     total: number;
 };
-type BatchPrintDocType = 'delivery_note' | 'sticker';
+type BatchPrintDocType = 'delivery_note';
 declare const documentsApi: {
     list: (filters?: DocumentFilters) => Promise<PaginatedResponse<Document>>;
     generatePdf: (payload: GeneratePdfPayload) => Promise<{
@@ -289,6 +289,7 @@ declare const documentsApi: {
     }>;
     getById: (id: string) => Promise<Document>;
     batchPrint: (deliveryIds: string[], docType?: BatchPrintDocType) => Promise<BatchPrintResult>;
+    printContainerLabels: (containerIds: string[]) => Promise<BatchPrintResult>;
 };
 
 type ContainerFilters = PaginationParams & SearchParams & {
@@ -344,6 +345,18 @@ type ContainerQrData = {
     status: string;
     registered_at: string;
 };
+type OutstandingContainer = {
+    container_id: string;
+    qr_code: string;
+    product_name: string | null;
+    current_customer_id: string | null;
+    customer_name: string | null;
+    agency_name: string | null;
+    current_driver_id: string | null;
+    driver_name: string | null;
+    last_scanned_at: string | null;
+    days_outstanding: number;
+};
 declare const CONTAINER_QR_PATTERN: RegExp;
 declare const isValidContainerQR: (qr: string) => boolean;
 declare const containersApi: {
@@ -356,6 +369,7 @@ declare const containersApi: {
     getCollectCustomers: () => Promise<DriverCollectCustomer[]>;
     unload: (payload: UnloadPayload) => Promise<UnloadResult[]>;
     getQrData: (id: string) => Promise<ContainerQrData>;
+    getOutstanding: (daysMin?: number) => Promise<OutstandingContainer[]>;
 };
 
 type Holiday = {

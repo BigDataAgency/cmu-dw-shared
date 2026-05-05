@@ -152,7 +152,9 @@ var documentsApi = {
   list: (filters) => get("/documents", filters),
   generatePdf: (payload) => post("/documents/pdf", payload),
   getById: (id) => get(`/documents/${id}`),
-  batchPrint: (deliveryIds, docType = "delivery_note") => post("/documents/batch-print", { delivery_ids: deliveryIds, doc_type: docType })
+  batchPrint: (deliveryIds, docType = "delivery_note") => post("/documents/batch-print", { delivery_ids: deliveryIds, doc_type: docType }),
+  // v1.39.0: per-container TK label print (sticker pivot)
+  printContainerLabels: (containerIds) => post("/documents/print-container-labels", { container_ids: containerIds })
 };
 
 // src/api-client/containers.ts
@@ -171,7 +173,9 @@ var containersApi = {
   // v1.15.0 req-04: Unload at depot (auto-detect ON_TRUCK/RETURNED_EMPTY → AT_DEPOT)
   unload: (payload) => post("/containers/unload", payload),
   // v1.15.0: ดึงข้อมูล QR ต่อถัง (render QR label)
-  getQrData: (id) => get(`/containers/${id}/qr-data`)
+  getQrData: (id) => get(`/containers/${id}/qr-data`),
+  // v1.39.0 REQ-04: ถังค้างกับลูกค้า (status=with_customer)
+  getOutstanding: (daysMin) => get("/containers/outstanding", daysMin !== void 0 ? { days_min: daysMin } : void 0)
 };
 
 // src/api-client/holidays.ts
@@ -252,4 +256,4 @@ export {
   notificationConfigsApi,
   serverStatusApi
 };
-//# sourceMappingURL=chunk-QG2O7SIL.js.map
+//# sourceMappingURL=chunk-WCYPP2DD.js.map

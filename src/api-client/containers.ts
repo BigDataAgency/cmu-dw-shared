@@ -77,6 +77,20 @@ export type ContainerQrData = {
   registered_at: string
 }
 
+// v1.39.0 REQ-04: Outstanding containers (status=with_customer)
+export type OutstandingContainer = {
+  container_id: string
+  qr_code: string
+  product_name: string | null
+  current_customer_id: string | null
+  customer_name: string | null
+  agency_name: string | null
+  current_driver_id: string | null
+  driver_name: string | null
+  last_scanned_at: string | null
+  days_outstanding: number
+}
+
 // ── QR Validation (BL-01) ─────────────────────────────────────────────────────
 
 export const CONTAINER_QR_PATTERN = /^TK-\d{5}$/
@@ -116,4 +130,8 @@ export const containersApi = {
   // v1.15.0: ดึงข้อมูล QR ต่อถัง (render QR label)
   getQrData: (id: string): Promise<ContainerQrData> =>
     get(`/containers/${id}/qr-data`),
+
+  // v1.39.0 REQ-04: ถังค้างกับลูกค้า (status=with_customer)
+  getOutstanding: (daysMin?: number): Promise<OutstandingContainer[]> =>
+    get('/containers/outstanding', daysMin !== undefined ? { days_min: daysMin } : undefined),
 }

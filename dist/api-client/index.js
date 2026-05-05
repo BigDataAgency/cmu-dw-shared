@@ -17,7 +17,7 @@ import {
   serverStatusApi,
   settingsApi,
   usersApi
-} from "../chunk-QG2O7SIL.js";
+} from "../chunk-WCYPP2DD.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,

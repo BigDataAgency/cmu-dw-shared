@@ -20,7 +20,8 @@ export type BatchPrintResult = {
   total: number
 }
 
-export type BatchPrintDocType = 'delivery_note' | 'sticker'
+// v1.39.0: sticker pivoted to per-container — batch-print only supports delivery_note
+export type BatchPrintDocType = 'delivery_note'
 
 export const documentsApi = {
   list: (filters?: DocumentFilters): Promise<PaginatedResponse<Document>> =>
@@ -37,4 +38,8 @@ export const documentsApi = {
     docType: BatchPrintDocType = 'delivery_note',
   ): Promise<BatchPrintResult> =>
     post('/documents/batch-print', { delivery_ids: deliveryIds, doc_type: docType }),
+
+  // v1.39.0: per-container TK label print (sticker pivot)
+  printContainerLabels: (containerIds: string[]): Promise<BatchPrintResult> =>
+    post('/documents/print-container-labels', { container_ids: containerIds }),
 }
