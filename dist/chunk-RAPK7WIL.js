@@ -237,6 +237,30 @@ var serverStatusApi = {
   get: () => get("/server-status")
 };
 
+// src/api-client/disbursements.ts
+var disbursementsApi = {
+  // ── Eligible receivables ───────────────────────────────────────────────
+  listEligible: (filters) => get("/finance/disbursement/eligible", filters),
+  // ── Groups ─────────────────────────────────────────────────────────────
+  listGroups: (filters) => get("/finance/disbursement/groups", filters),
+  getGroup: (id) => get(`/finance/disbursement/groups/${id}`),
+  getTimeline: (id) => get(`/finance/disbursement/groups/${id}/timeline`),
+  createGroup: (payload) => post("/finance/disbursement/groups", payload),
+  submit: (id) => post(`/finance/disbursement/groups/${id}/submit`, {}),
+  approve: (id, payload) => post(`/finance/disbursement/groups/${id}/approve`, payload ?? {}),
+  reject: (id, payload) => post(`/finance/disbursement/groups/${id}/reject`, payload),
+  unlock: (id) => post(`/finance/disbursement/groups/${id}/unlock`, {}),
+  // ── Treasury ───────────────────────────────────────────────────────────
+  treasuryExport: (payload) => post("/finance/disbursement/treasury/export", payload),
+  finalApprove: (id) => post(`/finance/disbursement/groups/${id}/final-approve`, {}),
+  finalReject: (id, payload) => post(`/finance/disbursement/groups/${id}/final-reject`, payload),
+  treasuryHistory: (filters) => get("/finance/disbursement/treasury/history", filters),
+  // ── Faculty creditor master (super_admin) ──────────────────────────────
+  listFacultyCreditors: () => get("/finance/disbursement/faculty-creditors"),
+  upsertFacultyCreditor: (payload) => post("/finance/disbursement/faculty-creditors", payload),
+  deleteFacultyCreditor: (id) => del(`/finance/disbursement/faculty-creditors/${id}`)
+};
+
 export {
   configure,
   ApiError,
@@ -255,6 +279,7 @@ export {
   settingsApi,
   paymentMethodsApi,
   notificationConfigsApi,
-  serverStatusApi
+  serverStatusApi,
+  disbursementsApi
 };
-//# sourceMappingURL=chunk-WEXBMP7F.js.map
+//# sourceMappingURL=chunk-RAPK7WIL.js.map

@@ -422,4 +422,171 @@ type PaginatedResponse<T> = {
 declare function clampPageSize(n: number | undefined): number;
 declare function todayISO(): string;
 
-export { type Address, type AddressPayload, type AppRole, type ApproveVoidPayload, type AssignDeliveryPayload, type CancelOrderPayload, type CompleteDeliveryPayload, type ConfirmRoutePayload, type CreateOrderPayload, type CreateProductPayload, type CustomerGroup, DEFAULT_PAGE_SIZE, type Delivery, type DeliveryDetail, type DeliveryItem, type DeliveryStatus, type DeliveryType, type Document, type DocumentStatus, type DocumentType, type ExportedData, type GenerateRoutePayload, MAX_PAGE_SIZE, type MarkReadPayload, type MoveStopPayload, type Notification, type NotificationChannel, type NotificationType, type Order, type OrderItem, type OrderStatus, PAGE_SIZE_OPTIONS, type PageSize, type PaginatedResponse, type PaginationParams, type PaymentMethod, type Product, type ProductPrice, type Profile, type PushSubscriptionPayload, type RejectVoidPayload, type ReorderStopsPayload, type ReturnBottlesPayload, type RoutePlan, type RoutePlanStop, type RouteStatus, type SearchParams, type SendNotificationPayload, type SendToAgencyPayload, type SendToAgencyResult, type ServerStatus, type ServerStatusBucket, type ServerStatusTable, type SettleDebtPayload, type Transaction, type UpdateDeliveryStatusPayload, type UpdateProductPayload, type UpdateProfilePayload, type UserRole, type VoidRequest, clampPageSize, todayISO };
+type AgencyKind = 'faculty' | 'office' | 'external';
+type DisbursementKind = 'faculty' | 'office';
+type DisbursementStatus = 'draft' | 'submitted' | 'faculty_approved' | 'office_head_approved' | 'office_director_approved' | 'treasury_review' | 'exported' | 'treasury_approved' | 'rejected_to_preparer' | 'treasury_rejected';
+type DisbursementEventType = 'created' | 'submitted' | 'approved' | 'rejected' | 'exported' | 'treasury_approved' | 'treasury_rejected' | 'debtor_cleared' | 'unlocked_to_draft' | 'creditor_code_changed';
+/** Backend `app_role` enum (DB-side) — distinct from frontend AppRole in `./user` */
+type DbAppRole = 'guest' | 'member_email' | 'member_cmu' | 'org_cmu' | 'staff_property' | 'admin_property' | 'executive' | 'admin_vendor' | 'delivery' | 'super_admin';
+/** 7-segment 3D accounting code per office disbursement item */
+type AccountingCode7Seg = {
+    fund_code?: string | null;
+    organization_code?: string | null;
+    work_plan_code?: string | null;
+    account_code?: string | null;
+    curriculum_code?: string | null;
+    budget_code?: string | null;
+    funding_source_code?: string | null;
+};
+type EligibleReceivable = {
+    document_id: string;
+    document_number: string;
+    document_type: 'invoice' | 'receipt' | 'voucher';
+    document_status: 'draft' | 'issued' | 'void';
+    amount: number;
+    issued_at: string;
+    order_id: string;
+    order_number: string;
+    agency_id: string;
+    agency_name: string;
+    agency_kind: AgencyKind;
+};
+type DisbursementItem = AccountingCode7Seg & {
+    id: string;
+    group_id: string;
+    order_id: string;
+    document_id: string | null;
+    amount: number;
+    accounting_code_combined: string | null;
+    description: string | null;
+    position: number;
+    created_at: string;
+    order?: {
+        id: string;
+        order_number: string;
+        total_amount: number;
+    } | null;
+};
+type DisbursementGroup = {
+    id: string;
+    group_number: string;
+    kind: DisbursementKind;
+    status: DisbursementStatus;
+    agency_id: string;
+    prepared_by: string;
+    prepared_at: string;
+    faculty_creditor_account_id: string | null;
+    faculty_creditor_snapshot: string | null;
+    treasury_export_batch_id: string | null;
+    cleared_at: string | null;
+    external_edoc_id: string | null;
+    total_amount: number;
+    item_count: number;
+    current_assignee_role: DbAppRole | null;
+    last_reject_reason: string | null;
+    rejected_from_group_id: string | null;
+    created_at: string;
+    updated_at: string;
+    agency?: {
+        id: string;
+        name: string;
+        kind: AgencyKind;
+    } | null;
+    creditor?: {
+        id: string;
+        creditor_code: string;
+        label: string | null;
+    } | null;
+    items?: DisbursementItem[];
+};
+type DisbursementTimelineEvent = {
+    id: string;
+    event_type: DisbursementEventType;
+    actor_user_id: string | null;
+    actor_name: string | null;
+    actor_role: DbAppRole | null;
+    from_status: DisbursementStatus | null;
+    to_status: DisbursementStatus | null;
+    item_count: number | null;
+    comment: string | null;
+    metadata: Record<string, unknown> | null;
+    created_at: string;
+};
+type DisbursementExportBatch = {
+    id: string;
+    batch_number: string;
+    exported_by: string;
+    exported_at: string;
+    kind: DisbursementKind;
+    group_count: number;
+    total_amount: number;
+    file_path: string | null;
+    filter_snapshot: Record<string, unknown> | null;
+    created_at: string;
+    exported_by_profile?: {
+        id: string;
+        full_name: string;
+    } | null;
+};
+type FacultyCreditorAccount = {
+    id: string;
+    agency_id: string;
+    creditor_code: string;
+    label: string | null;
+    is_active: boolean;
+    created_by: string | null;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+    agency?: {
+        id: string;
+        name: string;
+        kind: AgencyKind;
+    } | null;
+};
+type CreateDisbursementGroupItem = AccountingCode7Seg & {
+    order_id: string;
+    document_id?: string | null;
+    amount: number;
+    description?: string | null;
+};
+type CreateDisbursementGroupPayload = {
+    kind: DisbursementKind;
+    agency_id: string;
+    external_edoc_id?: string | null;
+    items: CreateDisbursementGroupItem[];
+};
+type ApproveDisbursementPayload = {
+    comment?: string | null;
+};
+type RejectDisbursementPayload = {
+    reason: string;
+};
+type TreasuryExportPayload = {
+    group_ids: string[];
+    filter?: Record<string, unknown> | null;
+};
+type TreasuryExportResult = {
+    batch: DisbursementExportBatch;
+    file_base64: string | null;
+};
+type FacultyCreditorUpsertPayload = {
+    id?: string | null;
+    agency_id: string;
+    creditor_code: string;
+    label?: string | null;
+    is_active?: boolean;
+};
+type DisbursementGroupListFilters = {
+    status?: DisbursementStatus;
+    kind?: DisbursementKind;
+    agency_id?: string;
+};
+type EligibleReceivablesFilters = {
+    kind?: DisbursementKind;
+    agency_id?: string;
+    date_from?: string;
+    date_to?: string;
+};
+
+export { type AccountingCode7Seg, type Address, type AddressPayload, type AgencyKind, type AppRole, type ApproveDisbursementPayload, type ApproveVoidPayload, type AssignDeliveryPayload, type CancelOrderPayload, type CompleteDeliveryPayload, type ConfirmRoutePayload, type CreateDisbursementGroupItem, type CreateDisbursementGroupPayload, type CreateOrderPayload, type CreateProductPayload, type CustomerGroup, DEFAULT_PAGE_SIZE, type DbAppRole, type Delivery, type DeliveryDetail, type DeliveryItem, type DeliveryStatus, type DeliveryType, type DisbursementEventType, type DisbursementExportBatch, type DisbursementGroup, type DisbursementGroupListFilters, type DisbursementItem, type DisbursementKind, type DisbursementStatus, type DisbursementTimelineEvent, type Document, type DocumentStatus, type DocumentType, type EligibleReceivable, type EligibleReceivablesFilters, type ExportedData, type FacultyCreditorAccount, type FacultyCreditorUpsertPayload, type GenerateRoutePayload, MAX_PAGE_SIZE, type MarkReadPayload, type MoveStopPayload, type Notification, type NotificationChannel, type NotificationType, type Order, type OrderItem, type OrderStatus, PAGE_SIZE_OPTIONS, type PageSize, type PaginatedResponse, type PaginationParams, type PaymentMethod, type Product, type ProductPrice, type Profile, type PushSubscriptionPayload, type RejectDisbursementPayload, type RejectVoidPayload, type ReorderStopsPayload, type ReturnBottlesPayload, type RoutePlan, type RoutePlanStop, type RouteStatus, type SearchParams, type SendNotificationPayload, type SendToAgencyPayload, type SendToAgencyResult, type ServerStatus, type ServerStatusBucket, type ServerStatusTable, type SettleDebtPayload, type Transaction, type TreasuryExportPayload, type TreasuryExportResult, type UpdateDeliveryStatusPayload, type UpdateProductPayload, type UpdateProfilePayload, type UserRole, type VoidRequest, clampPageSize, todayISO };

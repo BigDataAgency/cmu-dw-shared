@@ -1,4 +1,4 @@
-import { PaginationParams, SearchParams, PaginatedResponse, Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, DocumentType, PaymentMethod as PaymentMethod$1, NotificationChannel, ServerStatus } from '../types/index.js';
+import { PaginationParams, SearchParams, PaginatedResponse, Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, DocumentType, PaymentMethod as PaymentMethod$1, NotificationChannel, ServerStatus, EligibleReceivablesFilters, EligibleReceivable, DisbursementGroupListFilters, DisbursementGroup, DisbursementTimelineEvent, CreateDisbursementGroupPayload, ApproveDisbursementPayload, RejectDisbursementPayload, TreasuryExportPayload, TreasuryExportResult, DisbursementExportBatch, FacultyCreditorAccount, FacultyCreditorUpsertPayload } from '../types/index.js';
 
 declare function configure(options: {
     baseUrl: string;
@@ -540,4 +540,27 @@ declare const serverStatusApi: {
     get: () => Promise<ServerStatus>;
 };
 
-export { type AddSundaysResult, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DebtFilters, type DebtRow, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type NotificationConfig, type PaymentMethodConfig, type RecipientStrategy, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UserPaymentMethodsResponse, configure, containersApi, deliveriesApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersApi };
+declare const disbursementsApi: {
+    listEligible: (filters?: EligibleReceivablesFilters) => Promise<EligibleReceivable[]>;
+    listGroups: (filters?: DisbursementGroupListFilters & PaginationParams) => Promise<PaginatedResponse<DisbursementGroup>>;
+    getGroup: (id: string) => Promise<DisbursementGroup>;
+    getTimeline: (id: string) => Promise<DisbursementTimelineEvent[]>;
+    createGroup: (payload: CreateDisbursementGroupPayload) => Promise<DisbursementGroup>;
+    submit: (id: string) => Promise<DisbursementGroup>;
+    approve: (id: string, payload?: ApproveDisbursementPayload) => Promise<DisbursementGroup>;
+    reject: (id: string, payload: RejectDisbursementPayload) => Promise<DisbursementGroup>;
+    unlock: (id: string) => Promise<DisbursementGroup>;
+    treasuryExport: (payload: TreasuryExportPayload) => Promise<TreasuryExportResult>;
+    finalApprove: (id: string) => Promise<DisbursementGroup>;
+    finalReject: (id: string, payload: RejectDisbursementPayload) => Promise<DisbursementGroup>;
+    treasuryHistory: (filters?: {
+        kind?: "faculty" | "office";
+    } & PaginationParams) => Promise<PaginatedResponse<DisbursementExportBatch>>;
+    listFacultyCreditors: () => Promise<FacultyCreditorAccount[]>;
+    upsertFacultyCreditor: (payload: FacultyCreditorUpsertPayload) => Promise<FacultyCreditorAccount>;
+    deleteFacultyCreditor: (id: string) => Promise<{
+        deleted: boolean;
+    }>;
+};
+
+export { type AddSundaysResult, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DebtFilters, type DebtRow, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type NotificationConfig, type PaymentMethodConfig, type RecipientStrategy, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UserPaymentMethodsResponse, configure, containersApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersApi };

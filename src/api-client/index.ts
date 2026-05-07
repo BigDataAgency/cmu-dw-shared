@@ -55,3 +55,4 @@ export type {
   RecipientStrategy,
 } from "./notification-configs";
 export { serverStatusApi } from "./server-status";
+export { disbursementsApi } from "./disbursements";

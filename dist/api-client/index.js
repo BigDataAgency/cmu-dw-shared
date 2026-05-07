@@ -4,6 +4,7 @@ import {
   configure,
   containersApi,
   deliveriesApi,
+  disbursementsApi,
   documentsApi,
   financeApi,
   holidaysApi,
@@ -17,13 +18,14 @@ import {
   serverStatusApi,
   settingsApi,
   usersApi
-} from "../chunk-WEXBMP7F.js";
+} from "../chunk-RAPK7WIL.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,
   configure,
   containersApi,
   deliveriesApi,
+  disbursementsApi,
   documentsApi,
   financeApi,
   holidaysApi,
