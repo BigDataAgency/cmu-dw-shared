@@ -258,7 +258,12 @@ var disbursementsApi = {
   // ── Faculty creditor master (super_admin) ──────────────────────────────
   listFacultyCreditors: () => get("/finance/disbursement/faculty-creditors"),
   upsertFacultyCreditor: (payload) => post("/finance/disbursement/faculty-creditors", payload),
-  deleteFacultyCreditor: (id) => del(`/finance/disbursement/faculty-creditors/${id}`)
+  deleteFacultyCreditor: (id) => del(`/finance/disbursement/faculty-creditors/${id}`),
+  // ── v1.41 — Approval Config + Email Outbox ─────────────────────────────
+  listApprovalConfig: (agencyId) => get("/finance/disbursement/approval-config", agencyId ? { agency_id: agencyId } : void 0),
+  upsertApprovalConfig: (payload) => post("/finance/disbursement/approval-config", payload),
+  deleteApprovalConfig: (id) => del(`/finance/disbursement/approval-config/${id}`),
+  listEmailOutbox: (filters) => get("/finance/disbursement/email-outbox", filters)
 };
 
 export {
@@ -282,4 +287,4 @@ export {
   serverStatusApi,
   disbursementsApi
 };
-//# sourceMappingURL=chunk-RAPK7WIL.js.map
+//# sourceMappingURL=chunk-FC5R257L.js.map

@@ -199,3 +199,46 @@ export type EligibleReceivablesFilters = {
   date_from?: string
   date_to?: string
 }
+
+// ─── v1.41 — Approval Config + Email Outbox ───────────────────────────────
+
+export type DisbursementApprovalStep = 'faculty_approver' | 'office_head' | 'office_director'
+
+export type EmailOutboxStatus = 'queued' | 'sent' | 'failed'
+
+export type DisbursementApprovalConfig = {
+  id: string
+  agency_id: string
+  agency_name: string
+  step: DisbursementApprovalStep
+  approver_user_id: string
+  approver_full_name: string
+  approver_email: string | null
+  cc_emails: string[]
+  is_active: boolean
+  updated_at: string
+}
+
+export type DisbursementApprovalConfigUpsertPayload = {
+  id?: string | null
+  agency_id: string
+  step: DisbursementApprovalStep
+  approver_user_id: string
+  cc_emails?: string[]
+  is_active?: boolean
+}
+
+export type DisbursementEmailOutboxRow = {
+  id: string
+  to_email: string
+  cc_emails: string[]
+  subject: string
+  body: string
+  related_group_id: string | null
+  event_type: string
+  status: EmailOutboxStatus
+  attempts: number
+  last_error: string | null
+  created_at: string
+  sent_at: string | null
+}

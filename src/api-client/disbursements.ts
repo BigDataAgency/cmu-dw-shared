@@ -15,6 +15,10 @@ import type {
   DisbursementTimelineEvent,
   DisbursementExportBatch,
   FacultyCreditorAccount,
+  DisbursementApprovalConfig,
+  DisbursementApprovalConfigUpsertPayload,
+  DisbursementEmailOutboxRow,
+  EmailOutboxStatus,
 } from '../types/disbursement'
 import type { PaginatedResponse, PaginationParams } from '../types/pagination'
 
@@ -74,4 +78,21 @@ export const disbursementsApi = {
 
   deleteFacultyCreditor: (id: string): Promise<{ deleted: boolean }> =>
     del(`/finance/disbursement/faculty-creditors/${id}`),
+
+  // ── v1.41 — Approval Config + Email Outbox ─────────────────────────────
+  listApprovalConfig: (agencyId?: string): Promise<DisbursementApprovalConfig[]> =>
+    get('/finance/disbursement/approval-config', agencyId ? { agency_id: agencyId } : undefined),
+
+  upsertApprovalConfig: (
+    payload: DisbursementApprovalConfigUpsertPayload,
+  ): Promise<DisbursementApprovalConfig> =>
+    post('/finance/disbursement/approval-config', payload),
+
+  deleteApprovalConfig: (id: string): Promise<{ deleted: boolean }> =>
+    del(`/finance/disbursement/approval-config/${id}`),
+
+  listEmailOutbox: (
+    filters?: { status?: EmailOutboxStatus; limit?: number },
+  ): Promise<DisbursementEmailOutboxRow[]> =>
+    get('/finance/disbursement/email-outbox', filters as Record<string, unknown>),
 }
