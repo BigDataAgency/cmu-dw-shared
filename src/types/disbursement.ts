@@ -210,10 +210,12 @@ export type DisbursementApprovalConfig = {
   id: string
   agency_id: string
   agency_name: string
+  agency_kind?: AgencyKind | null
   step: DisbursementApprovalStep
-  approver_user_id: string
-  approver_full_name: string
+  approver_user_id: string | null
+  approver_full_name: string | null
   approver_email: string | null
+  approver_email_override: string | null
   cc_emails: string[]
   is_active: boolean
   updated_at: string
@@ -223,7 +225,8 @@ export type DisbursementApprovalConfigUpsertPayload = {
   id?: string | null
   agency_id: string
   step: DisbursementApprovalStep
-  approver_user_id: string
+  approver_user_id?: string | null
+  approver_email_override?: string | null
   cc_emails?: string[]
   is_active?: boolean
 }
