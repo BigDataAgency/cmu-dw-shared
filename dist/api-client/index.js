@@ -17,8 +17,9 @@ import {
   routesApi,
   serverStatusApi,
   settingsApi,
+  usersAdminApi,
   usersApi
-} from "../chunk-FC5R257L.js";
+} from "../chunk-J2ITD2RF.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,
@@ -38,6 +39,7 @@ export {
   routesApi,
   serverStatusApi,
   settingsApi,
+  usersAdminApi,
   usersApi
 };
 //# sourceMappingURL=index.js.map

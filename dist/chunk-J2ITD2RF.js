@@ -127,6 +127,21 @@ var usersApi = {
   exportMyData: () => get("/users/me/export-data")
 };
 
+// src/api-client/users-admin.ts
+var usersAdminApi = {
+  updateStatus: (userId, payload) => patch(
+    `/users/admin/${userId}/status`,
+    payload
+  ),
+  listRoles: (userId) => get(`/users/admin/${userId}/roles`),
+  assignRole: (userId, role) => post(`/users/admin/${userId}/roles`, { role }),
+  revokeRole: (userId, role) => del(`/users/admin/${userId}/roles/${role}`),
+  listPurchaseRights: (userId) => get(`/users/admin/${userId}/purchase-rights`),
+  assignPurchaseRight: (userId, payload) => post(`/users/admin/${userId}/purchase-rights`, payload),
+  revokePurchaseRight: (userId, customerGroupId) => del(`/users/admin/${userId}/purchase-rights/${customerGroupId}`),
+  mapUser: (userId, payload) => post(`/users/admin/${userId}/map`, payload)
+};
+
 // src/api-client/finance.ts
 var financeApi = {
   listInvoices: (filters) => get("/finance/invoices", filters),
@@ -274,6 +289,7 @@ export {
   routesApi,
   productsApi,
   usersApi,
+  usersAdminApi,
   financeApi,
   notificationsApi,
   documentsApi,
@@ -287,4 +303,4 @@ export {
   serverStatusApi,
   disbursementsApi
 };
-//# sourceMappingURL=chunk-FC5R257L.js.map
+//# sourceMappingURL=chunk-J2ITD2RF.js.map

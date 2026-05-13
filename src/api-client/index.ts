@@ -5,6 +5,16 @@ export type { BatchCompletePayload, BatchCompleteResult } from "./deliveries";
 export { routesApi } from "./routes";
 export { productsApi } from "./products";
 export { usersApi } from "./users";
+export { usersAdminApi } from "./users-admin";
+export type {
+  AdminAppRole,
+  AccountStatus,
+  UpdateStatusPayload,
+  AssignPurchaseRightPayload,
+  UserPurchaseRightRow,
+  MapUserPayload,
+  MapUserResult,
+} from "./users-admin";
 export { financeApi } from "./finance";
 export type { SupportFeeFilters, SupportFeeRow, DebtRow, DebtFilters } from "./finance";
 export { notificationsApi } from "./notifications";

@@ -1,4 +1,4 @@
-import { PaginationParams, SearchParams, PaginatedResponse, Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, DocumentType, PaymentMethod as PaymentMethod$1, NotificationChannel, ServerStatus, EligibleReceivablesFilters, EligibleReceivable, DisbursementGroupListFilters, DisbursementGroup, DisbursementTimelineEvent, CreateDisbursementGroupPayload, ApproveDisbursementPayload, RejectDisbursementPayload, TreasuryExportPayload, TreasuryExportResult, DisbursementExportBatch, FacultyCreditorAccount, FacultyCreditorUpsertPayload, DisbursementApprovalConfig, DisbursementApprovalConfigUpsertPayload, EmailOutboxStatus, DisbursementEmailOutboxRow } from '../types/index.js';
+import { PaginationParams, SearchParams, PaginatedResponse, Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, DbAppRole, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, DocumentType, PaymentMethod as PaymentMethod$1, NotificationChannel, ServerStatus, EligibleReceivablesFilters, EligibleReceivable, DisbursementGroupListFilters, DisbursementGroup, DisbursementTimelineEvent, CreateDisbursementGroupPayload, ApproveDisbursementPayload, RejectDisbursementPayload, TreasuryExportPayload, TreasuryExportResult, DisbursementExportBatch, FacultyCreditorAccount, FacultyCreditorUpsertPayload, DisbursementApprovalConfig, DisbursementApprovalConfigUpsertPayload, EmailOutboxStatus, DisbursementEmailOutboxRow } from '../types/index.js';
 
 declare function configure(options: {
     baseUrl: string;
@@ -198,6 +198,63 @@ declare const usersApi: {
     deleteAddress: (id: string) => Promise<void>;
     setDefaultAddress: (id: string) => Promise<void>;
     exportMyData: () => Promise<ExportedData>;
+};
+
+type AdminAppRole = DbAppRole;
+type AccountStatus = 'pending_approval' | 'active' | 'suspended';
+interface UpdateStatusPayload {
+    status: AccountStatus;
+    reason?: string;
+}
+interface AssignPurchaseRightPayload {
+    customer_group_id: string;
+    billing_name?: string;
+    billing_address?: string;
+    billing_tax_id?: string;
+    is_default?: boolean;
+}
+interface UserPurchaseRightRow {
+    right_id: string;
+    group_id: string;
+    group_name: string;
+    group_code: string;
+    billing_name: string | null;
+    billing_address: string | null;
+    billing_tax_id: string | null;
+    document_preference: string | null;
+    is_default: boolean;
+}
+interface MapUserPayload {
+    approve?: boolean;
+    roles?: AdminAppRole[];
+    rights?: AssignPurchaseRightPayload[];
+}
+interface MapUserResult {
+    user_id: string;
+    approved: boolean;
+    roles: AdminAppRole[];
+    rights: string[];
+}
+declare const usersAdminApi: {
+    updateStatus: (userId: string, payload: UpdateStatusPayload) => Promise<{
+        user_id: string;
+        account_status: AccountStatus;
+    }>;
+    listRoles: (userId: string) => Promise<{
+        role: AdminAppRole;
+        created_at: string;
+    }[]>;
+    assignRole: (userId: string, role: AdminAppRole) => Promise<{
+        user_id: string;
+        role: AdminAppRole;
+    }>;
+    revokeRole: (userId: string, role: AdminAppRole) => Promise<void>;
+    listPurchaseRights: (userId: string) => Promise<UserPurchaseRightRow[]>;
+    assignPurchaseRight: (userId: string, payload: AssignPurchaseRightPayload) => Promise<{
+        id: string;
+    }>;
+    revokePurchaseRight: (userId: string, customerGroupId: string) => Promise<void>;
+    mapUser: (userId: string, payload: MapUserPayload) => Promise<MapUserResult>;
 };
 
 type DebtRow = {
@@ -572,4 +629,4 @@ declare const disbursementsApi: {
     }) => Promise<DisbursementEmailOutboxRow[]>;
 };
 
-export { type AddSundaysResult, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DebtFilters, type DebtRow, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type NotificationConfig, type PaymentMethodConfig, type RecipientStrategy, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UserPaymentMethodsResponse, configure, containersApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersApi };
+export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type AssignPurchaseRightPayload, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DebtFilters, type DebtRow, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type MapUserPayload, type MapUserResult, type NotificationConfig, type PaymentMethodConfig, type RecipientStrategy, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, type UserPaymentMethodsResponse, type UserPurchaseRightRow, configure, containersApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersAdminApi, usersApi };
