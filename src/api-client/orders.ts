@@ -22,6 +22,8 @@ export type CreateOrderPayload = {
   delivery_notes?: string
   discount_amount?: number
   delivery_type?: DeliveryType
+  /** Admin proxy: when set, order is created on behalf of this user. Caller must have staff_property/admin_property/super_admin role. */
+  target_user_id?: string
 }
 
 export type CancelOrderPayload = {

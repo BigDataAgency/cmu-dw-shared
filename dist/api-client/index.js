@@ -19,7 +19,7 @@ import {
   settingsApi,
   usersAdminApi,
   usersApi
-} from "../chunk-J2ITD2RF.js";
+} from "../chunk-DETQGE4O.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,
