@@ -1,6 +1,6 @@
 {
   "name": "@bigdataagency/cmu-dw-shared",
-  "version": "1.18.0",
+  "version": "1.19.0",
   "description": "Shared TypeScript types and API client for CMU Drinking Water apps",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,7 +1,15 @@
 import { get, post, patch, del } from './fetch'
 import type { Profile, UpdateProfilePayload, AddressPayload, Address, ExportedData } from '../types/user'
+import type { UserPurchaseRightRow } from './users-admin'
 import type { Order } from '../types/order'
 import type { PaginationParams, SearchParams, PaginatedResponse } from '../types/pagination'
+
+export interface BillingInfoRow {
+  billing_name: string | null
+  billing_address: string | null
+  billing_tax_id: string | null
+  document_preference: 'receipt' | 'voucher'
+}
 
 export type UserFilters = PaginationParams & SearchParams & {
   role?: string
@@ -41,4 +49,11 @@ export const usersApi = {
 
   exportMyData: (): Promise<ExportedData> =>
     get('/users/me/export-data'),
+
+  // POS / Admin proxy — read another user's purchase rights (staff_property+)
+  getPurchaseRightsFor: (userId: string): Promise<UserPurchaseRightRow[]> =>
+    get(`/users/${userId}/purchase-rights`),
+
+  resolveBillingFor: (userId: string, rightId: string): Promise<BillingInfoRow | null> =>
+    get(`/users/${userId}/billing-info`, { right_id: rightId }),
 }

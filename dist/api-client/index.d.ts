@@ -1,4 +1,4 @@
-import { PaginationParams, SearchParams, PaginatedResponse, Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, DbAppRole, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, DocumentType, PaymentMethod as PaymentMethod$1, NotificationChannel, ServerStatus, EligibleReceivablesFilters, EligibleReceivable, DisbursementGroupListFilters, DisbursementGroup, DisbursementTimelineEvent, CreateDisbursementGroupPayload, ApproveDisbursementPayload, RejectDisbursementPayload, TreasuryExportPayload, TreasuryExportResult, DisbursementExportBatch, FacultyCreditorAccount, FacultyCreditorUpsertPayload, DisbursementApprovalConfig, DisbursementApprovalConfigUpsertPayload, EmailOutboxStatus, DisbursementEmailOutboxRow } from '../types/index.js';
+import { PaginationParams, SearchParams, PaginatedResponse, Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, DbAppRole, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, DocumentType, PaymentMethod as PaymentMethod$1, NotificationChannel, ServerStatus, EligibleReceivablesFilters, EligibleReceivable, DisbursementGroupListFilters, DisbursementGroup, DisbursementTimelineEvent, CreateDisbursementGroupPayload, ApproveDisbursementPayload, RejectDisbursementPayload, TreasuryExportPayload, TreasuryExportResult, DisbursementExportBatch, FacultyCreditorAccount, FacultyCreditorUpsertPayload, DisbursementApprovalConfig, DisbursementApprovalConfigUpsertPayload, EmailOutboxStatus, DisbursementEmailOutboxRow } from '../types/index.js';
 
 declare function configure(options: {
     baseUrl: string;
@@ -181,27 +181,6 @@ declare const productsApi: {
     internalUse: (id: string, payload: InternalUsePayload) => Promise<InternalUseResult>;
 };
 
-type UserFilters = PaginationParams & SearchParams & {
-    role?: string;
-    status?: string;
-};
-declare const usersApi: {
-    list: (filters?: UserFilters) => Promise<PaginatedResponse<Profile>>;
-    getMe: () => Promise<Profile>;
-    updateMe: (payload: UpdateProfilePayload) => Promise<Profile>;
-    getPurchaseRights: () => Promise<{
-        can_purchase: boolean;
-        reason?: string;
-    }>;
-    getMyOrders: () => Promise<Order[]>;
-    getAddresses: () => Promise<Address[]>;
-    addAddress: (payload: AddressPayload) => Promise<Address>;
-    updateAddress: (id: string, payload: Partial<AddressPayload>) => Promise<Address>;
-    deleteAddress: (id: string) => Promise<void>;
-    setDefaultAddress: (id: string) => Promise<void>;
-    exportMyData: () => Promise<ExportedData>;
-};
-
 type AdminAppRole = DbAppRole;
 type AccountStatus = 'pending_approval' | 'active' | 'suspended';
 interface UpdateStatusPayload {
@@ -257,6 +236,35 @@ declare const usersAdminApi: {
     }>;
     revokePurchaseRight: (userId: string, customerGroupId: string) => Promise<void>;
     mapUser: (userId: string, payload: MapUserPayload) => Promise<MapUserResult>;
+};
+
+interface BillingInfoRow {
+    billing_name: string | null;
+    billing_address: string | null;
+    billing_tax_id: string | null;
+    document_preference: 'receipt' | 'voucher';
+}
+type UserFilters = PaginationParams & SearchParams & {
+    role?: string;
+    status?: string;
+};
+declare const usersApi: {
+    list: (filters?: UserFilters) => Promise<PaginatedResponse<Profile>>;
+    getMe: () => Promise<Profile>;
+    updateMe: (payload: UpdateProfilePayload) => Promise<Profile>;
+    getPurchaseRights: () => Promise<{
+        can_purchase: boolean;
+        reason?: string;
+    }>;
+    getMyOrders: () => Promise<Order[]>;
+    getAddresses: () => Promise<Address[]>;
+    addAddress: (payload: AddressPayload) => Promise<Address>;
+    updateAddress: (id: string, payload: Partial<AddressPayload>) => Promise<Address>;
+    deleteAddress: (id: string) => Promise<void>;
+    setDefaultAddress: (id: string) => Promise<void>;
+    exportMyData: () => Promise<ExportedData>;
+    getPurchaseRightsFor: (userId: string) => Promise<UserPurchaseRightRow[]>;
+    resolveBillingFor: (userId: string, rightId: string) => Promise<BillingInfoRow | null>;
 };
 
 type DebtRow = {

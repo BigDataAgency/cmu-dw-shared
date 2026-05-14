@@ -124,7 +124,10 @@ var usersApi = {
   updateAddress: (id, payload) => patch(`/users/me/addresses/${id}`, payload),
   deleteAddress: (id) => del(`/users/me/addresses/${id}`),
   setDefaultAddress: (id) => patch(`/users/me/addresses/${id}/set-default`, {}),
-  exportMyData: () => get("/users/me/export-data")
+  exportMyData: () => get("/users/me/export-data"),
+  // POS / Admin proxy — read another user's purchase rights (staff_property+)
+  getPurchaseRightsFor: (userId) => get(`/users/${userId}/purchase-rights`),
+  resolveBillingFor: (userId, rightId) => get(`/users/${userId}/billing-info`, { right_id: rightId })
 };
 
 // src/api-client/users-admin.ts
@@ -303,4 +306,4 @@ export {
   serverStatusApi,
   disbursementsApi
 };
-//# sourceMappingURL=chunk-DETQGE4O.js.map
+//# sourceMappingURL=chunk-DMHTSVJX.js.map
