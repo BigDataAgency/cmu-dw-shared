@@ -275,6 +275,11 @@ declare const usersApi: {
         can_purchase: boolean;
         reason?: string;
     }>;
+    getMyPurchaseRightsList: () => Promise<UserPurchaseRightRow[]>;
+    setDefaultPurchaseRight: (customerGroupId: string) => Promise<{
+        right_id: string;
+        customer_group_id: string;
+    }>;
     getMyOrders: () => Promise<Order[]>;
     getAddresses: () => Promise<Address[]>;
     addAddress: (payload: AddressPayload) => Promise<Address>;

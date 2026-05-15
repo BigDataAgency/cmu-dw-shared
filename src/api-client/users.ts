@@ -29,6 +29,14 @@ export const usersApi = {
   getPurchaseRights: (): Promise<{ can_purchase: boolean; reason?: string }> =>
     get('/users/me/purchase-rights'),
 
+  // v1.43 — user reads own rights list (for Profile preference page)
+  getMyPurchaseRightsList: (): Promise<import('./users-admin').UserPurchaseRightRow[]> =>
+    get('/users/me/purchase-rights-list'),
+
+  // v1.43 — user sets their own default customer_group for ordering
+  setDefaultPurchaseRight: (customerGroupId: string): Promise<{ right_id: string; customer_group_id: string }> =>
+    patch('/users/me/default-right', { customer_group_id: customerGroupId }),
+
   getMyOrders: (): Promise<Order[]> =>
     get('/users/me/orders'),
 

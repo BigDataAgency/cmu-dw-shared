@@ -118,6 +118,10 @@ var usersApi = {
   getMe: () => get("/users/me"),
   updateMe: (payload) => patch("/users/me", payload),
   getPurchaseRights: () => get("/users/me/purchase-rights"),
+  // v1.43 — user reads own rights list (for Profile preference page)
+  getMyPurchaseRightsList: () => get("/users/me/purchase-rights-list"),
+  // v1.43 — user sets their own default customer_group for ordering
+  setDefaultPurchaseRight: (customerGroupId) => patch("/users/me/default-right", { customer_group_id: customerGroupId }),
   getMyOrders: () => get("/users/me/orders"),
   getAddresses: () => get("/users/me/addresses"),
   addAddress: (payload) => post("/users/me/addresses", payload),
@@ -311,4 +315,4 @@ export {
   serverStatusApi,
   disbursementsApi
 };
-//# sourceMappingURL=chunk-42MP6SJB.js.map
+//# sourceMappingURL=chunk-2DIYQBT2.js.map
