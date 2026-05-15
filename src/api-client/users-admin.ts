@@ -52,7 +52,24 @@ export interface MapUserResult {
   agency_id?: string | null
 }
 
+export interface AdminUpdateProfilePayload {
+  full_name?: string
+  phone_number?: string
+  email?: string
+  avatar_url?: string
+  billing_name?: string
+  billing_address?: string
+  billing_tax_id?: string
+}
+
 export const usersAdminApi = {
+  // v1.43 — admin edits another user's profile fields
+  updateProfile: (userId: string, payload: AdminUpdateProfilePayload) =>
+    patch<{ user_id: string } & AdminUpdateProfilePayload>(
+      `/users/admin/${userId}/profile`,
+      payload,
+    ),
+
   updateStatus: (userId: string, payload: UpdateStatusPayload) =>
     patch<{ user_id: string; account_status: AccountStatus }>(
       `/users/admin/${userId}/status`,

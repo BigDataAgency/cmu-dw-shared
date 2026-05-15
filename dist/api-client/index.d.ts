@@ -223,7 +223,19 @@ interface MapUserResult {
     rights: string[];
     agency_id?: string | null;
 }
+interface AdminUpdateProfilePayload {
+    full_name?: string;
+    phone_number?: string;
+    email?: string;
+    avatar_url?: string;
+    billing_name?: string;
+    billing_address?: string;
+    billing_tax_id?: string;
+}
 declare const usersAdminApi: {
+    updateProfile: (userId: string, payload: AdminUpdateProfilePayload) => Promise<{
+        user_id: string;
+    } & AdminUpdateProfilePayload>;
     updateStatus: (userId: string, payload: UpdateStatusPayload) => Promise<{
         user_id: string;
         account_status: AccountStatus;

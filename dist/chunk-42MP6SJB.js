@@ -132,6 +132,11 @@ var usersApi = {
 
 // src/api-client/users-admin.ts
 var usersAdminApi = {
+  // v1.43 — admin edits another user's profile fields
+  updateProfile: (userId, payload) => patch(
+    `/users/admin/${userId}/profile`,
+    payload
+  ),
   updateStatus: (userId, payload) => patch(
     `/users/admin/${userId}/status`,
     payload
@@ -306,4 +311,4 @@ export {
   serverStatusApi,
   disbursementsApi
 };
-//# sourceMappingURL=chunk-EYOIIO2A.js.map
+//# sourceMappingURL=chunk-42MP6SJB.js.map
