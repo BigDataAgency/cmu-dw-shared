@@ -236,6 +236,14 @@ declare const usersAdminApi: {
     }>;
     revokePurchaseRight: (userId: string, customerGroupId: string) => Promise<void>;
     mapUser: (userId: string, payload: MapUserPayload) => Promise<MapUserResult>;
+    getAgency: (userId: string) => Promise<{
+        user_id: string;
+        agency_id: string | null;
+    }>;
+    setAgency: (userId: string, agencyId: string | null) => Promise<{
+        user_id: string;
+        agency_id: string | null;
+    }>;
 };
 
 interface BillingInfoRow {
