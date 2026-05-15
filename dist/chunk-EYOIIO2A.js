@@ -142,13 +142,7 @@ var usersAdminApi = {
   listPurchaseRights: (userId) => get(`/users/admin/${userId}/purchase-rights`),
   assignPurchaseRight: (userId, payload) => post(`/users/admin/${userId}/purchase-rights`, payload),
   revokePurchaseRight: (userId, customerGroupId) => del(`/users/admin/${userId}/purchase-rights/${customerGroupId}`),
-  mapUser: (userId, payload) => post(`/users/admin/${userId}/map`, payload),
-  // v1.43 — read/set profile.agency_id (disbursement scope)
-  getAgency: (userId) => get(`/users/admin/${userId}/agency`),
-  setAgency: (userId, agencyId) => patch(
-    `/users/admin/${userId}/agency`,
-    { agency_id: agencyId }
-  )
+  mapUser: (userId, payload) => post(`/users/admin/${userId}/map`, payload)
 };
 
 // src/api-client/finance.ts
@@ -312,4 +306,4 @@ export {
   serverStatusApi,
   disbursementsApi
 };
-//# sourceMappingURL=chunk-HBMT7J6T.js.map
+//# sourceMappingURL=chunk-EYOIIO2A.js.map

@@ -36,6 +36,12 @@ export interface MapUserPayload {
   approve?: boolean
   roles?: AdminAppRole[]
   rights?: AssignPurchaseRightPayload[]
+  /**
+   * v1.43.0 Option G — pick a customer_group whose agency_id will be copied to
+   * profiles.agency_id (disbursement scope). Pass `null` to clear. Omit to leave
+   * the existing primary employer untouched.
+   */
+  primary_employer_group_id?: string | null
 }
 
 export interface MapUserResult {
@@ -43,6 +49,7 @@ export interface MapUserResult {
   approved: boolean
   roles: AdminAppRole[]
   rights: string[]
+  agency_id?: string | null
 }
 
 export const usersAdminApi = {
@@ -72,14 +79,4 @@ export const usersAdminApi = {
 
   mapUser: (userId: string, payload: MapUserPayload) =>
     post<MapUserResult>(`/users/admin/${userId}/map`, payload),
-
-  // v1.43 — read/set profile.agency_id (disbursement scope)
-  getAgency: (userId: string) =>
-    get<{ user_id: string; agency_id: string | null }>(`/users/admin/${userId}/agency`),
-
-  setAgency: (userId: string, agencyId: string | null) =>
-    patch<{ user_id: string; agency_id: string | null }>(
-      `/users/admin/${userId}/agency`,
-      { agency_id: agencyId },
-    ),
 }

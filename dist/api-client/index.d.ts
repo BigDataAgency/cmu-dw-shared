@@ -209,12 +209,19 @@ interface MapUserPayload {
     approve?: boolean;
     roles?: AdminAppRole[];
     rights?: AssignPurchaseRightPayload[];
+    /**
+     * v1.43.0 Option G — pick a customer_group whose agency_id will be copied to
+     * profiles.agency_id (disbursement scope). Pass `null` to clear. Omit to leave
+     * the existing primary employer untouched.
+     */
+    primary_employer_group_id?: string | null;
 }
 interface MapUserResult {
     user_id: string;
     approved: boolean;
     roles: AdminAppRole[];
     rights: string[];
+    agency_id?: string | null;
 }
 declare const usersAdminApi: {
     updateStatus: (userId: string, payload: UpdateStatusPayload) => Promise<{
@@ -236,14 +243,6 @@ declare const usersAdminApi: {
     }>;
     revokePurchaseRight: (userId: string, customerGroupId: string) => Promise<void>;
     mapUser: (userId: string, payload: MapUserPayload) => Promise<MapUserResult>;
-    getAgency: (userId: string) => Promise<{
-        user_id: string;
-        agency_id: string | null;
-    }>;
-    setAgency: (userId: string, agencyId: string | null) => Promise<{
-        user_id: string;
-        agency_id: string | null;
-    }>;
 };
 
 interface BillingInfoRow {
