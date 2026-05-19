@@ -62,6 +62,23 @@ declare const ordersApi: {
     cancel: (id: string, payload: CancelOrderPayload) => Promise<void>;
     updateStatus: (id: string, payload: UpdateOrderStatusPayload) => Promise<unknown>;
     returnBottles: (id: string, payload: ReturnBottlesPayload) => Promise<unknown>;
+    listCreditNotes: (id: string) => Promise<OrderCreditNote[]>;
+    createCreditNote: (id: string, payload: CreateCreditNotePayload) => Promise<OrderCreditNote>;
+};
+type CreateCreditNotePayload = {
+    reason: string;
+    external_ref?: string | null;
+    amount: number;
+};
+type OrderCreditNote = {
+    id: string;
+    order_id: string;
+    disbursement_group_id: string | null;
+    reason: string;
+    external_ref: string | null;
+    amount: number;
+    created_by: string;
+    created_at: string;
 };
 
 type AssignDeliveryPayload = {

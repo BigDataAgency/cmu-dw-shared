@@ -147,6 +147,9 @@ type Order = {
     delivery_type: DeliveryType;
     created_at: string;
     updated_at: string;
+    cancellation_reason?: string | null;
+    cancelled_at?: string | null;
+    cancelled_by?: string | null;
 };
 type CreateOrderPayload = {
     items: {

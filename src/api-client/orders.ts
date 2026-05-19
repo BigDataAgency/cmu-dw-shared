@@ -65,4 +65,29 @@ export const ordersApi = {
 
   returnBottles: (id: string, payload: ReturnBottlesPayload): Promise<unknown> =>
     post(`/orders/${id}/return-bottles`, payload),
+
+  // v1.46 — Credit notes (manual ใบลดหนี้ after billing)
+  listCreditNotes: (id: string): Promise<OrderCreditNote[]> =>
+    get(`/orders/${id}/credit-notes`),
+
+  createCreditNote: (id: string, payload: CreateCreditNotePayload): Promise<OrderCreditNote> =>
+    post(`/orders/${id}/credit-notes`, payload),
+}
+
+// v1.46 — types kept inline; promote to types/order.ts if reused elsewhere
+export type CreateCreditNotePayload = {
+  reason: string
+  external_ref?: string | null
+  amount: number
+}
+
+export type OrderCreditNote = {
+  id: string
+  order_id: string
+  disbursement_group_id: string | null
+  reason: string
+  external_ref: string | null
+  amount: number
+  created_by: string
+  created_at: string
 }

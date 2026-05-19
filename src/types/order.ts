@@ -33,6 +33,10 @@ export type Order = {
   delivery_type: DeliveryType
   created_at: string
   updated_at: string
+  // v1.46 — cancellation tracking (NULL until cancelled)
+  cancellation_reason?: string | null
+  cancelled_at?: string | null
+  cancelled_by?: string | null
 }
 
 export type CreateOrderPayload = {

@@ -72,7 +72,10 @@ var ordersApi = {
   create: (payload) => post("/orders", payload),
   cancel: (id, payload) => patch(`/orders/${id}/cancel`, payload),
   updateStatus: (id, payload) => patch(`/orders/${id}/status`, payload),
-  returnBottles: (id, payload) => post(`/orders/${id}/return-bottles`, payload)
+  returnBottles: (id, payload) => post(`/orders/${id}/return-bottles`, payload),
+  // v1.46 — Credit notes (manual ใบลดหนี้ after billing)
+  listCreditNotes: (id) => get(`/orders/${id}/credit-notes`),
+  createCreditNote: (id, payload) => post(`/orders/${id}/credit-notes`, payload)
 };
 
 // src/api-client/deliveries.ts
@@ -370,4 +373,4 @@ export {
   configureApproveClient,
   approveApi
 };
-//# sourceMappingURL=chunk-NM23HR5E.js.map
+//# sourceMappingURL=chunk-KWKIVPAU.js.map
