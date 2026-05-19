@@ -142,6 +142,13 @@ export type FacultyCreditorAccount = {
   created_at: string
   updated_at: string
   deleted_at: string | null
+  // v1.45.8 — full 7-segment template (NULL = use university-wide defaults at export)
+  fund_code: string | null
+  organization_code: string | null
+  work_plan_code: string | null
+  curriculum_code: string | null
+  budget_code: string | null
+  funding_source_code: string | null
   agency?: { id: string; name: string; kind: AgencyKind } | null
 }
 
@@ -185,6 +192,13 @@ export type FacultyCreditorUpsertPayload = {
   creditor_code: string
   label?: string | null
   is_active?: boolean
+  // v1.45.8 — per-faculty 7-segment override (defaults apply server-side if NULL)
+  fund_code?: string | null
+  organization_code?: string | null
+  work_plan_code?: string | null
+  curriculum_code?: string | null
+  budget_code?: string | null
+  funding_source_code?: string | null
 }
 
 export type DisbursementGroupListFilters = {

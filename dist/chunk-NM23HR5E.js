@@ -290,7 +290,60 @@ var disbursementsApi = {
   listApprovalConfig: (agencyId) => get("/finance/disbursement/approval-config", agencyId ? { agency_id: agencyId } : void 0),
   upsertApprovalConfig: (payload) => post("/finance/disbursement/approval-config", payload),
   deleteApprovalConfig: (id) => del(`/finance/disbursement/approval-config/${id}`),
-  listEmailOutbox: (filters) => get("/finance/disbursement/email-outbox", filters)
+  listEmailOutbox: (filters) => get("/finance/disbursement/email-outbox", filters),
+  // ── v1.45 — Dynamic Per-Document Approval Chain ────────────────────────
+  listPendingDeliveries: (filters) => get("/finance/disbursement/pending-deliveries", filters),
+  createGroupV2: (payload) => post("/finance/disbursement/groups/v2", payload),
+  submitV2: (id) => post(`/finance/disbursement/groups/${id}/submit/v2`, {}),
+  delegateApprover: (id, payload) => post(`/finance/disbursement/groups/${id}/delegate-approver`, payload),
+  previewPdf: (id) => get(`/finance/disbursement/groups/${id}/preview-pdf`)
+};
+
+// src/api-client/approve.ts
+var _baseUrl2 = "";
+var _anonKey2 = "";
+function configureApproveClient(options) {
+  _baseUrl2 = options.baseUrl;
+  _anonKey2 = options.anonKey;
+}
+function publicHeaders() {
+  const h = { "Content-Type": "application/json" };
+  if (_anonKey2) {
+    h["apikey"] = _anonKey2;
+    h["Authorization"] = `Bearer ${_anonKey2}`;
+  }
+  return h;
+}
+async function handle(res) {
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    const message = body?.error ?? body?.message ?? res.statusText;
+    throw new ApiError(res.status, message);
+  }
+  if (res.status === 204) return void 0;
+  return res.json();
+}
+var approveApi = {
+  /**
+   * Fetch the approver-safe summary for a magic-link token.
+   * Side effect: marks the approver row as 'opened' on first call.
+   */
+  getByToken: async (token) => {
+    const res = await fetch(`${_baseUrl2}/approve/${encodeURIComponent(token)}`, {
+      method: "GET",
+      headers: publicHeaders()
+    });
+    return handle(res);
+  },
+  /** Submit approve or reject decision. Single-use — server rejects replays with 410. */
+  decide: async (token, payload) => {
+    const res = await fetch(`${_baseUrl2}/approve/${encodeURIComponent(token)}/decide`, {
+      method: "POST",
+      headers: publicHeaders(),
+      body: JSON.stringify(payload)
+    });
+    return handle(res);
+  }
 };
 
 export {
@@ -313,6 +366,8 @@ export {
   paymentMethodsApi,
   notificationConfigsApi,
   serverStatusApi,
-  disbursementsApi
+  disbursementsApi,
+  configureApproveClient,
+  approveApi
 };
-//# sourceMappingURL=chunk-2DIYQBT2.js.map
+//# sourceMappingURL=chunk-NM23HR5E.js.map

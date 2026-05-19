@@ -66,3 +66,12 @@ export type {
 } from "./notification-configs";
 export { serverStatusApi } from "./server-status";
 export { disbursementsApi } from "./disbursements";
+export type {
+  PendingDelivery,
+  ApproverInput,
+  CreateDisbursementGroupV2Payload,
+  DelegateApproverPayload,
+  DisbursementApproverRow,
+} from "./disbursements";
+export { approveApi, configureApproveClient } from "./approve";
+export type { ApproveSummary, DecisionPayload, DecisionResult } from "./approve";

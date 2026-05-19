@@ -538,6 +538,12 @@ type FacultyCreditorAccount = {
     created_at: string;
     updated_at: string;
     deleted_at: string | null;
+    fund_code: string | null;
+    organization_code: string | null;
+    work_plan_code: string | null;
+    curriculum_code: string | null;
+    budget_code: string | null;
+    funding_source_code: string | null;
     agency?: {
         id: string;
         name: string;
@@ -576,6 +582,12 @@ type FacultyCreditorUpsertPayload = {
     creditor_code: string;
     label?: string | null;
     is_active?: boolean;
+    fund_code?: string | null;
+    organization_code?: string | null;
+    work_plan_code?: string | null;
+    curriculum_code?: string | null;
+    budget_code?: string | null;
+    funding_source_code?: string | null;
 };
 type DisbursementGroupListFilters = {
     status?: DisbursementStatus;

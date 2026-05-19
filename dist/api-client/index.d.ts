@@ -661,6 +661,111 @@ declare const disbursementsApi: {
         status?: EmailOutboxStatus;
         limit?: number;
     }) => Promise<DisbursementEmailOutboxRow[]>;
+    listPendingDeliveries: (filters: {
+        customer_group_id: string;
+        agency_id?: string | null;
+    }) => Promise<PendingDelivery[]>;
+    createGroupV2: (payload: CreateDisbursementGroupV2Payload) => Promise<DisbursementGroup>;
+    submitV2: (id: string) => Promise<DisbursementGroup>;
+    delegateApprover: (id: string, payload: DelegateApproverPayload) => Promise<{
+        new_approver_id: string;
+    }>;
+    previewPdf: (id: string) => Promise<{
+        pdf_url: string;
+        encrypted: boolean;
+    }>;
+};
+type PendingDelivery = {
+    delivery_id: string;
+    delivery_note_number: string;
+    delivered_at: string | null;
+    order_id: string;
+    order_number: string;
+    order_total_amount: number;
+    delivery_item_count: number;
+};
+type ApproverInput = {
+    name: string;
+    position: string;
+    email: string;
+};
+type CreateDisbursementGroupV2Payload = {
+    kind: 'faculty' | 'office';
+    customer_group_id: string;
+    agency_id: string;
+    delivery_ids: string[];
+    approvers: ApproverInput[];
+    external_edoc_id?: string | null;
+};
+type DelegateApproverPayload = {
+    step_number: number;
+    new_name: string;
+    new_position: string;
+    new_email: string;
+};
+type DisbursementApproverRow = {
+    id: string;
+    group_id: string;
+    step_number: number;
+    approver_name: string;
+    approver_position: string;
+    approver_email: string;
+    approver_user_id: string | null;
+    delegated_from_id: string | null;
+    status: 'pending' | 'sent' | 'opened' | 'approved' | 'rejected' | 'expired' | 'delegated';
+    magic_token_expires_at: string | null;
+    sent_at: string | null;
+    opened_at: string | null;
+    decided_at: string | null;
+    decision_comment: string | null;
+    created_at: string;
 };
 
-export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type AssignPurchaseRightPayload, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateHolidayPayload, type DebtFilters, type DebtRow, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type MapUserPayload, type MapUserResult, type NotificationConfig, type PaymentMethodConfig, type RecipientStrategy, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, type UserPaymentMethodsResponse, type UserPurchaseRightRow, configure, containersApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersAdminApi, usersApi };
+/**
+ * Initialize the public approve client.
+ * Call once at app startup. Anon key is sent in apikey header for Supabase Edge runtime.
+ */
+declare function configureApproveClient(options: {
+    baseUrl: string;
+    anonKey: string;
+}): void;
+type ApproveSummary = {
+    group_number: string;
+    group_kind: 'faculty' | 'office';
+    total_amount: number;
+    item_count: number;
+    agency_name: string;
+    customer_group_name: string | null;
+    my_step: number;
+    my_name: string;
+    my_position: string;
+    total_steps: number;
+    all_approvers: Array<{
+        step: number;
+        name: string;
+        position: string;
+        status: string;
+        decided_at: string | null;
+    }>;
+    expires_at: string;
+};
+type DecisionPayload = {
+    decision: 'approve' | 'reject';
+    comment?: string | null;
+};
+type DecisionResult = {
+    result: 'advanced' | 'fully_approved' | 'rejected';
+    next_step?: number;
+    group_status?: string;
+};
+declare const approveApi: {
+    /**
+     * Fetch the approver-safe summary for a magic-link token.
+     * Side effect: marks the approver row as 'opened' on first call.
+     */
+    getByToken: (token: string) => Promise<ApproveSummary>;
+    /** Submit approve or reject decision. Single-use — server rejects replays with 410. */
+    decide: (token: string, payload: DecisionPayload) => Promise<DecisionResult>;
+};
+
+export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateDisbursementGroupV2Payload, type CreateHolidayPayload, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, type DisbursementApproverRow, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type MapUserPayload, type MapUserResult, type NotificationConfig, type PaymentMethodConfig, type PendingDelivery, type RecipientStrategy, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, configure, configureApproveClient, containersApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersAdminApi, usersApi };

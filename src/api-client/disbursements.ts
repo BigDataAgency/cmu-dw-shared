@@ -95,4 +95,77 @@ export const disbursementsApi = {
     filters?: { status?: EmailOutboxStatus; limit?: number },
   ): Promise<DisbursementEmailOutboxRow[]> =>
     get('/finance/disbursement/email-outbox', filters as Record<string, unknown>),
+
+  // ── v1.45 — Dynamic Per-Document Approval Chain ────────────────────────
+  listPendingDeliveries: (filters: {
+    customer_group_id: string
+    agency_id?: string | null
+  }): Promise<PendingDelivery[]> =>
+    get('/finance/disbursement/pending-deliveries', filters as Record<string, unknown>),
+
+  createGroupV2: (payload: CreateDisbursementGroupV2Payload): Promise<DisbursementGroup> =>
+    post('/finance/disbursement/groups/v2', payload),
+
+  submitV2: (id: string): Promise<DisbursementGroup> =>
+    post(`/finance/disbursement/groups/${id}/submit/v2`, {}),
+
+  delegateApprover: (
+    id: string,
+    payload: DelegateApproverPayload,
+  ): Promise<{ new_approver_id: string }> =>
+    post(`/finance/disbursement/groups/${id}/delegate-approver`, payload),
+
+  previewPdf: (id: string): Promise<{ pdf_url: string; encrypted: boolean }> =>
+    get(`/finance/disbursement/groups/${id}/preview-pdf`),
+}
+
+// v1.45 types — kept inline for now; promote to types/disbursement.ts if reused elsewhere
+export type PendingDelivery = {
+  delivery_id: string
+  delivery_note_number: string
+  delivered_at: string | null
+  order_id: string
+  order_number: string
+  order_total_amount: number
+  delivery_item_count: number
+}
+
+export type ApproverInput = {
+  name: string
+  position: string
+  email: string
+}
+
+export type CreateDisbursementGroupV2Payload = {
+  kind: 'faculty' | 'office'
+  customer_group_id: string
+  agency_id: string
+  delivery_ids: string[]
+  approvers: ApproverInput[]
+  external_edoc_id?: string | null
+}
+
+export type DelegateApproverPayload = {
+  step_number: number
+  new_name: string
+  new_position: string
+  new_email: string
+}
+
+export type DisbursementApproverRow = {
+  id: string
+  group_id: string
+  step_number: number
+  approver_name: string
+  approver_position: string
+  approver_email: string
+  approver_user_id: string | null
+  delegated_from_id: string | null
+  status: 'pending' | 'sent' | 'opened' | 'approved' | 'rejected' | 'expired' | 'delegated'
+  magic_token_expires_at: string | null
+  sent_at: string | null
+  opened_at: string | null
+  decided_at: string | null
+  decision_comment: string | null
+  created_at: string
 }
