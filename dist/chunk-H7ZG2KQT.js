@@ -121,6 +121,8 @@ var usersApi = {
   getMe: () => get("/users/me"),
   updateMe: (payload) => patch("/users/me", payload),
   getPurchaseRights: () => get("/users/me/purchase-rights"),
+  // v1.49 — anti-scrape: check whether the current user is mapped (has access)
+  getMyAccess: () => get("/users/me/access"),
   // v1.43 — user reads own rights list (for Profile preference page)
   getMyPurchaseRightsList: () => get("/users/me/purchase-rights-list"),
   // v1.43 — user sets their own default customer_group for ordering
@@ -238,8 +240,8 @@ var settingsApi = {
 
 // src/api-client/payment-methods.ts
 var paymentMethodsApi = {
-  /** Customer: ดูว่าตัวเองใช้วิธีชำระอะไรได้ */
-  getMyMethods: () => get("/users/me/payment-methods"),
+  /** Customer: ดูว่าตัวเองใช้วิธีชำระอะไรได้ (v1.48: ตาม context/customer_group ที่เลือก) */
+  getMyMethods: (customerGroupId) => get("/users/me/payment-methods", customerGroupId ? { customer_group_id: customerGroupId } : void 0),
   /** Admin: ดู config + resolved methods ของ user */
   getForUser: (userId) => get(`/admin/users/${userId}/payment-methods`),
   /** Admin: set user payment method overrides */
@@ -249,7 +251,11 @@ var paymentMethodsApi = {
   /** Admin: ดู agency payment config */
   getForAgency: (agencyId) => get(`/admin/agencies/${agencyId}/payment-methods`),
   /** Admin: set agency payment method config */
-  setForAgency: (agencyId, methods) => patch(`/admin/agencies/${agencyId}/payment-methods`, { methods })
+  setForAgency: (agencyId, methods) => patch(`/admin/agencies/${agencyId}/payment-methods`, { methods }),
+  /** v1.48 Admin: ดู payment config ของ customer_group (context-bound) */
+  getForCustomerGroup: (groupId) => get(`/admin/customer-groups/${groupId}/payment-methods`),
+  /** v1.48 Admin: set payment config ของ customer_group (e.g. คณะ → invoice_billing only) */
+  setForCustomerGroup: (groupId, methods) => patch(`/admin/customer-groups/${groupId}/payment-methods`, { methods })
 };
 
 // src/api-client/notification-configs.ts
@@ -373,4 +379,4 @@ export {
   configureApproveClient,
   approveApi
 };
-//# sourceMappingURL=chunk-KWKIVPAU.js.map
+//# sourceMappingURL=chunk-H7ZG2KQT.js.map

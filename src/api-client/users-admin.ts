@@ -42,6 +42,13 @@ export interface MapUserPayload {
    * the existing primary employer untouched.
    */
   primary_employer_group_id?: string | null
+  /**
+   * v1.48 — "เปิดการใช้งานสั่ง order ส่วนบุคคล". true → create/keep a per-user personal
+   * customer_group under personal_parent_group_id + assign right. false → revoke + deactivate.
+   * Omit to leave personal ordering untouched.
+   */
+  personal_order_enabled?: boolean
+  personal_parent_group_id?: string | null
 }
 
 export interface MapUserResult {
@@ -50,6 +57,7 @@ export interface MapUserResult {
   roles: AdminAppRole[]
   rights: string[]
   agency_id?: string | null
+  personal_group_id?: string | null
 }
 
 export interface AdminUpdateProfilePayload {

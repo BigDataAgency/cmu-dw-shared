@@ -232,6 +232,13 @@ interface MapUserPayload {
      * the existing primary employer untouched.
      */
     primary_employer_group_id?: string | null;
+    /**
+     * v1.48 — "เปิดการใช้งานสั่ง order ส่วนบุคคล". true → create/keep a per-user personal
+     * customer_group under personal_parent_group_id + assign right. false → revoke + deactivate.
+     * Omit to leave personal ordering untouched.
+     */
+    personal_order_enabled?: boolean;
+    personal_parent_group_id?: string | null;
 }
 interface MapUserResult {
     user_id: string;
@@ -239,6 +246,7 @@ interface MapUserResult {
     roles: AdminAppRole[];
     rights: string[];
     agency_id?: string | null;
+    personal_group_id?: string | null;
 }
 interface AdminUpdateProfilePayload {
     full_name?: string;
@@ -291,6 +299,9 @@ declare const usersApi: {
     getPurchaseRights: () => Promise<{
         can_purchase: boolean;
         reason?: string;
+    }>;
+    getMyAccess: () => Promise<{
+        can_access: boolean;
     }>;
     getMyPurchaseRightsList: () => Promise<UserPurchaseRightRow[]>;
     setDefaultPurchaseRight: (customerGroupId: string) => Promise<{
@@ -591,8 +602,8 @@ interface AgencyPaymentResponse {
     config: PaymentMethodConfig[];
 }
 declare const paymentMethodsApi: {
-    /** Customer: ดูว่าตัวเองใช้วิธีชำระอะไรได้ */
-    getMyMethods: () => Promise<UserPaymentMethodsResponse>;
+    /** Customer: ดูว่าตัวเองใช้วิธีชำระอะไรได้ (v1.48: ตาม context/customer_group ที่เลือก) */
+    getMyMethods: (customerGroupId?: string) => Promise<UserPaymentMethodsResponse>;
     /** Admin: ดู config + resolved methods ของ user */
     getForUser: (userId: string) => Promise<AdminUserPaymentResponse>;
     /** Admin: set user payment method overrides */
@@ -607,6 +618,15 @@ declare const paymentMethodsApi: {
     getForAgency: (agencyId: string) => Promise<AgencyPaymentResponse>;
     /** Admin: set agency payment method config */
     setForAgency: (agencyId: string, methods: PaymentMethodConfig[]) => Promise<{
+        updated: boolean;
+    }>;
+    /** v1.48 Admin: ดู payment config ของ customer_group (context-bound) */
+    getForCustomerGroup: (groupId: string) => Promise<{
+        customer_group_id: string;
+        config: PaymentMethodConfig[];
+    }>;
+    /** v1.48 Admin: set payment config ของ customer_group (e.g. คณะ → invoice_billing only) */
+    setForCustomerGroup: (groupId: string, methods: PaymentMethodConfig[]) => Promise<{
         updated: boolean;
     }>;
 };

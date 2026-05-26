@@ -29,6 +29,10 @@ export const usersApi = {
   getPurchaseRights: (): Promise<{ can_purchase: boolean; reason?: string }> =>
     get('/users/me/purchase-rights'),
 
+  // v1.49 — anti-scrape: check whether the current user is mapped (has access)
+  getMyAccess: (): Promise<{ can_access: boolean }> =>
+    get('/users/me/access'),
+
   // v1.43 — user reads own rights list (for Profile preference page)
   getMyPurchaseRightsList: (): Promise<import('./users-admin').UserPurchaseRightRow[]> =>
     get('/users/me/purchase-rights-list'),
