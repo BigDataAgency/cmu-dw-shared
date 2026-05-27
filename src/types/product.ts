@@ -20,6 +20,8 @@ export type Product = {
   price: number | null
   deposit_price: number | null
   pos_stock_exempt?: boolean
+  size?: string | null        // ขนาดสินค้า (v1.50)
+  unit?: string | null         // หน่วยนับ กล่อง/แพค/โหล/ลัง/ถัง (v1.50)
   prices: ProductPrice[]
   created_at: string
   updated_at: string
@@ -30,6 +32,8 @@ export type CreateProductPayload = {
   description?: string
   image_url?: string
   is_active?: boolean
+  size?: string | null
+  unit?: string | null
   prices?: Omit<ProductPrice, 'id'>[]
 }
 

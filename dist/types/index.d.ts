@@ -110,6 +110,8 @@ type Product = {
     price: number | null;
     deposit_price: number | null;
     pos_stock_exempt?: boolean;
+    size?: string | null;
+    unit?: string | null;
     prices: ProductPrice[];
     created_at: string;
     updated_at: string;
@@ -119,6 +121,8 @@ type CreateProductPayload = {
     description?: string;
     image_url?: string;
     is_active?: boolean;
+    size?: string | null;
+    unit?: string | null;
     prices?: Omit<ProductPrice, 'id'>[];
 };
 type UpdateProductPayload = Partial<CreateProductPayload>;
