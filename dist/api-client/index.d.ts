@@ -233,12 +233,12 @@ interface MapUserPayload {
      */
     primary_employer_group_id?: string | null;
     /**
-     * v1.48 — "เปิดการใช้งานสั่ง order ส่วนบุคคล". true → create/keep a per-user personal
-     * customer_group under personal_parent_group_id + assign right. false → revoke + deactivate.
-     * Omit to leave personal ordering untouched.
+     * v1.50 — "เปิดการใช้งานสั่ง order ส่วนบุคคล". true → create/keep a per-user personal
+     * customer_group (standalone, parent_id NULL) + assign right. false → revoke + deactivate.
+     * Omit to leave personal ordering untouched. Faculty/agency rights are managed
+     * separately via the `rights[]` cascade — personal vs agency are independent.
      */
     personal_order_enabled?: boolean;
-    personal_parent_group_id?: string | null;
 }
 interface MapUserResult {
     user_id: string;
@@ -805,4 +805,96 @@ declare const approveApi: {
     decide: (token: string, payload: DecisionPayload) => Promise<DecisionResult>;
 };
 
-export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateDisbursementGroupV2Payload, type CreateHolidayPayload, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, type DisbursementApproverRow, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type MapUserPayload, type MapUserResult, type NotificationConfig, type PaymentMethodConfig, type PendingDelivery, type RecipientStrategy, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, configure, configureApproveClient, containersApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersAdminApi, usersApi };
+type DocumentPreference = 'receipt' | 'voucher';
+type ApprovalRule = 'auto_approve' | 'require_admin' | 'require_agency_admin';
+interface CustomerGroupRow {
+    id: string;
+    name: string;
+    code: string;
+    description: string | null;
+    is_default: boolean | null;
+    is_active: boolean | null;
+    sort_order: number | null;
+    billing_name: string | null;
+    billing_address: string | null;
+    billing_tax_id: string | null;
+    document_preference: DocumentPreference | null;
+    parent_id: string | null;
+    is_prepay: boolean | null;
+    is_discount: boolean | null;
+    sale_map_allowed: boolean | null;
+    is_personal: boolean | null;
+    owner_user_id: string | null;
+    agency_id: string | null;
+    approval_rule: ApprovalRule | null;
+    created_at?: string;
+    updated_at?: string;
+}
+interface CustomerGroupWithStats extends CustomerGroupRow {
+    memberCount?: number;
+    productCount?: number;
+}
+interface CustomerGroupLite {
+    id: string;
+    name: string;
+    code: string;
+    parent_id: string | null;
+    is_active: boolean | null;
+    is_personal: boolean | null;
+    is_default: boolean | null;
+    agency_id: string | null;
+    sort_order: number | null;
+}
+type CustomerGroupListParams = PaginationParams & SearchParams & {
+    parent_id?: string | 'null';
+    only_mains?: boolean;
+    include_personal?: boolean;
+    active_only?: boolean;
+    with_stats?: boolean;
+};
+type CustomerGroupLiteParams = {
+    include_personal?: boolean;
+    active_only?: boolean;
+};
+type CreateCustomerGroupPayload = {
+    name: string;
+    code: string;
+    description?: string | null;
+    is_default?: boolean;
+    is_active?: boolean;
+    sort_order?: number;
+    parent_id?: string | null;
+    is_prepay?: boolean;
+    is_discount?: boolean;
+    sale_map_allowed?: boolean;
+    is_personal?: boolean;
+    owner_user_id?: string | null;
+    agency_id?: string | null;
+    approval_rule?: ApprovalRule;
+    billing_name?: string | null;
+    billing_address?: string | null;
+    billing_tax_id?: string | null;
+    document_preference?: DocumentPreference;
+};
+type UpdateCustomerGroupPayload = Partial<CreateCustomerGroupPayload>;
+interface CustomerGroupProductRow {
+    product_id: string;
+    name: string;
+    price: number;
+    default_price: number;
+}
+declare const customerGroupsApi: {
+    list: (params?: CustomerGroupListParams) => Promise<PaginatedResponse<CustomerGroupWithStats>>;
+    lite: (params?: CustomerGroupLiteParams) => Promise<{
+        rows: CustomerGroupLite[];
+        total: number;
+    }>;
+    getById: (id: string) => Promise<CustomerGroupRow>;
+    getProducts: (id: string) => Promise<{
+        rows: CustomerGroupProductRow[];
+    }>;
+    create: (payload: CreateCustomerGroupPayload) => Promise<CustomerGroupRow>;
+    update: (id: string, payload: UpdateCustomerGroupPayload) => Promise<CustomerGroupRow>;
+};
+
+export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApprovalRule, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateCustomerGroupPayload, type CreateDisbursementGroupV2Payload, type CreateHolidayPayload, type CustomerGroupListParams, type CustomerGroupLite, type CustomerGroupLiteParams, type CustomerGroupProductRow, type CustomerGroupRow, type CustomerGroupWithStats, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, type DisbursementApproverRow, type DocumentPreference, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type MapUserPayload, type MapUserResult, type NotificationConfig, type PaymentMethodConfig, type PendingDelivery, type RecipientStrategy, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateCustomerGroupPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, configure, configureApproveClient, containersApi, customerGroupsApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersAdminApi, usersApi };

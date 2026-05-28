@@ -5,6 +5,7 @@ import {
   configure,
   configureApproveClient,
   containersApi,
+  customerGroupsApi,
   deliveriesApi,
   disbursementsApi,
   documentsApi,
@@ -21,7 +22,7 @@ import {
   settingsApi,
   usersAdminApi,
   usersApi
-} from "../chunk-H7ZG2KQT.js";
+} from "../chunk-WN74PZPX.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,
@@ -29,6 +30,7 @@ export {
   configure,
   configureApproveClient,
   containersApi,
+  customerGroupsApi,
   deliveriesApi,
   disbursementsApi,
   documentsApi,

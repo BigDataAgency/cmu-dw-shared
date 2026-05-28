@@ -355,6 +355,16 @@ var approveApi = {
   }
 };
 
+// src/api-client/customer-groups.ts
+var customerGroupsApi = {
+  list: (params) => get("/customer-groups", params),
+  lite: (params) => get("/customer-groups/lite", params),
+  getById: (id) => get(`/customer-groups/${id}`),
+  getProducts: (id) => get(`/customer-groups/${id}/products`),
+  create: (payload) => post("/customer-groups", payload),
+  update: (id, payload) => patch(`/customer-groups/${id}`, payload)
+};
+
 export {
   configure,
   ApiError,
@@ -377,6 +387,7 @@ export {
   serverStatusApi,
   disbursementsApi,
   configureApproveClient,
-  approveApi
+  approveApi,
+  customerGroupsApi
 };
-//# sourceMappingURL=chunk-H7ZG2KQT.js.map
+//# sourceMappingURL=chunk-WN74PZPX.js.map

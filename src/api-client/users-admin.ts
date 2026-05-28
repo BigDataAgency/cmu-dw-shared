@@ -43,12 +43,12 @@ export interface MapUserPayload {
    */
   primary_employer_group_id?: string | null
   /**
-   * v1.48 — "เปิดการใช้งานสั่ง order ส่วนบุคคล". true → create/keep a per-user personal
-   * customer_group under personal_parent_group_id + assign right. false → revoke + deactivate.
-   * Omit to leave personal ordering untouched.
+   * v1.50 — "เปิดการใช้งานสั่ง order ส่วนบุคคล". true → create/keep a per-user personal
+   * customer_group (standalone, parent_id NULL) + assign right. false → revoke + deactivate.
+   * Omit to leave personal ordering untouched. Faculty/agency rights are managed
+   * separately via the `rights[]` cascade — personal vs agency are independent.
    */
   personal_order_enabled?: boolean
-  personal_parent_group_id?: string | null
 }
 
 export interface MapUserResult {

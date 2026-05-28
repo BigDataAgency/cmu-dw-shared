@@ -75,3 +75,16 @@ export type {
 } from "./disbursements";
 export { approveApi, configureApproveClient } from "./approve";
 export type { ApproveSummary, DecisionPayload, DecisionResult } from "./approve";
+export { customerGroupsApi } from "./customer-groups";
+export type {
+  CustomerGroupRow,
+  CustomerGroupWithStats,
+  CustomerGroupLite,
+  CustomerGroupListParams,
+  CustomerGroupLiteParams,
+  CreateCustomerGroupPayload,
+  UpdateCustomerGroupPayload,
+  CustomerGroupProductRow,
+  DocumentPreference,
+  ApprovalRule,
+} from "./customer-groups";
