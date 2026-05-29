@@ -305,7 +305,14 @@ var disbursementsApi = {
   createGroupV2: (payload) => post("/finance/disbursement/groups/v2", payload),
   submitV2: (id) => post(`/finance/disbursement/groups/${id}/submit/v2`, {}),
   delegateApprover: (id, payload) => post(`/finance/disbursement/groups/${id}/delegate-approver`, payload),
-  previewPdf: (id) => get(`/finance/disbursement/groups/${id}/preview-pdf`)
+  previewPdf: (id) => get(`/finance/disbursement/groups/${id}/preview-pdf`),
+  // ── v1.47 — saved 7-segment codes ──────────────────────────────────────
+  listSavedCodes: (params) => get("/finance/saved-codes", params),
+  deleteSavedCode: (id) => del(`/finance/saved-codes/${id}`),
+  updateSavedCodeLabel: (id, label) => patch(`/finance/saved-codes/${id}`, { label }),
+  // ── v1.47 — cancellation report ───────────────────────────────────────
+  cancellationReport: (filters) => get("/finance/reports/cancellation", filters),
+  cancellationReportDetail: (params) => get("/finance/reports/cancellation/detail", params)
 };
 
 // src/api-client/approve.ts
@@ -390,4 +397,4 @@ export {
   approveApi,
   customerGroupsApi
 };
-//# sourceMappingURL=chunk-WN74PZPX.js.map
+//# sourceMappingURL=chunk-V52XT3U2.js.map

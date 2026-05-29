@@ -711,6 +711,27 @@ declare const disbursementsApi: {
         pdf_url: string;
         encrypted: boolean;
     }>;
+    listSavedCodes: (params?: {
+        q?: string;
+        limit?: number;
+    }) => Promise<SavedAccountingCode[]>;
+    deleteSavedCode: (id: string) => Promise<{
+        deleted: boolean;
+    }>;
+    updateSavedCodeLabel: (id: string, label: string | null) => Promise<{
+        updated: boolean;
+    }>;
+    cancellationReport: (filters?: {
+        month_from?: string | null;
+        month_to?: string | null;
+        agency_id?: string | null;
+        customer_group_id?: string | null;
+    }) => Promise<CancellationReportRow[]>;
+    cancellationReportDetail: (params: {
+        month: string;
+        agency_id?: string | null;
+        customer_group_id?: string | null;
+    }) => Promise<CancelledOrderRow[]>;
 };
 type PendingDelivery = {
     delivery_id: string;
@@ -756,6 +777,41 @@ type DisbursementApproverRow = {
     decided_at: string | null;
     decision_comment: string | null;
     created_at: string;
+};
+type SavedAccountingCode = {
+    id: string;
+    label: string | null;
+    fund_code: string;
+    organization_code: string;
+    work_plan_code: string;
+    account_code: string;
+    curriculum_code: string;
+    budget_code: string;
+    funding_source_code: string;
+    last_used_at: string;
+    use_count: number;
+};
+type CancellationReportRow = {
+    month: string;
+    customer_group_id: string | null;
+    customer_group_name: string | null;
+    agency_id: string | null;
+    agency_name: string | null;
+    cancel_count: number;
+    cancelled_amount: number;
+    reasons: string[];
+};
+type CancelledOrderRow = {
+    order_id: string;
+    order_number: string;
+    cancelled_at: string;
+    cancelled_by_name: string | null;
+    cancellation_reason: string | null;
+    total_amount: number;
+    customer_group_id: string | null;
+    customer_group_name: string | null;
+    agency_id: string | null;
+    agency_name: string | null;
 };
 
 /**
@@ -897,4 +953,4 @@ declare const customerGroupsApi: {
     update: (id: string, payload: UpdateCustomerGroupPayload) => Promise<CustomerGroupRow>;
 };
 
-export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApprovalRule, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateCustomerGroupPayload, type CreateDisbursementGroupV2Payload, type CreateHolidayPayload, type CustomerGroupListParams, type CustomerGroupLite, type CustomerGroupLiteParams, type CustomerGroupProductRow, type CustomerGroupRow, type CustomerGroupWithStats, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, type DisbursementApproverRow, type DocumentPreference, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type MapUserPayload, type MapUserResult, type NotificationConfig, type PaymentMethodConfig, type PendingDelivery, type RecipientStrategy, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateCustomerGroupPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, configure, configureApproveClient, containersApi, customerGroupsApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersAdminApi, usersApi };
+export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApprovalRule, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type CancellationReportRow, type CancelledOrderRow, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateCustomerGroupPayload, type CreateDisbursementGroupV2Payload, type CreateHolidayPayload, type CustomerGroupListParams, type CustomerGroupLite, type CustomerGroupLiteParams, type CustomerGroupProductRow, type CustomerGroupRow, type CustomerGroupWithStats, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, type DisbursementApproverRow, type DocumentPreference, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type MapUserPayload, type MapUserResult, type NotificationConfig, type PaymentMethodConfig, type PendingDelivery, type RecipientStrategy, type SavedAccountingCode, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateCustomerGroupPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, configure, configureApproveClient, containersApi, customerGroupsApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersAdminApi, usersApi };

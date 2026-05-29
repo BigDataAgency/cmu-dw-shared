@@ -1,6 +1,6 @@
 // v1.40.0 — Admin Disbursement Menu — api-client
 
-import { get, post, del } from './fetch'
+import { get, post, patch, del } from './fetch'
 import type {
   CreateDisbursementGroupPayload,
   ApproveDisbursementPayload,
@@ -117,6 +117,32 @@ export const disbursementsApi = {
 
   previewPdf: (id: string): Promise<{ pdf_url: string; encrypted: boolean }> =>
     get(`/finance/disbursement/groups/${id}/preview-pdf`),
+
+  // ── v1.47 — saved 7-segment codes ──────────────────────────────────────
+  listSavedCodes: (params?: { q?: string; limit?: number }): Promise<SavedAccountingCode[]> =>
+    get('/finance/saved-codes', params as Record<string, unknown> | undefined),
+
+  deleteSavedCode: (id: string): Promise<{ deleted: boolean }> =>
+    del(`/finance/saved-codes/${id}`),
+
+  updateSavedCodeLabel: (id: string, label: string | null): Promise<{ updated: boolean }> =>
+    patch(`/finance/saved-codes/${id}`, { label }),
+
+  // ── v1.47 — cancellation report ───────────────────────────────────────
+  cancellationReport: (filters?: {
+    month_from?: string | null
+    month_to?: string | null
+    agency_id?: string | null
+    customer_group_id?: string | null
+  }): Promise<CancellationReportRow[]> =>
+    get('/finance/reports/cancellation', filters as Record<string, unknown> | undefined),
+
+  cancellationReportDetail: (params: {
+    month: string
+    agency_id?: string | null
+    customer_group_id?: string | null
+  }): Promise<CancelledOrderRow[]> =>
+    get('/finance/reports/cancellation/detail', params as Record<string, unknown>),
 }
 
 // v1.45 types — kept inline for now; promote to types/disbursement.ts if reused elsewhere
@@ -168,4 +194,45 @@ export type DisbursementApproverRow = {
   decided_at: string | null
   decision_comment: string | null
   created_at: string
+}
+
+// v1.47 — per-user saved 7-segment accounting codes
+export type SavedAccountingCode = {
+  id: string
+  label: string | null
+  fund_code: string
+  organization_code: string
+  work_plan_code: string
+  account_code: string
+  curriculum_code: string
+  budget_code: string
+  funding_source_code: string
+  last_used_at: string
+  use_count: number
+}
+
+// v1.47 — monthly cancellation report row
+export type CancellationReportRow = {
+  month: string
+  customer_group_id: string | null
+  customer_group_name: string | null
+  agency_id: string | null
+  agency_name: string | null
+  cancel_count: number
+  cancelled_amount: number
+  reasons: string[]
+}
+
+// v1.47 — drill-down detail row
+export type CancelledOrderRow = {
+  order_id: string
+  order_number: string
+  cancelled_at: string
+  cancelled_by_name: string | null
+  cancellation_reason: string | null
+  total_amount: number
+  customer_group_id: string | null
+  customer_group_name: string | null
+  agency_id: string | null
+  agency_name: string | null
 }

@@ -72,6 +72,9 @@ export type {
   CreateDisbursementGroupV2Payload,
   DelegateApproverPayload,
   DisbursementApproverRow,
+  SavedAccountingCode,
+  CancellationReportRow,
+  CancelledOrderRow,
 } from "./disbursements";
 export { approveApi, configureApproveClient } from "./approve";
 export type { ApproveSummary, DecisionPayload, DecisionResult } from "./approve";
