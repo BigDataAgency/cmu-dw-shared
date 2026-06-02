@@ -34,6 +34,9 @@ export interface CustomerGroupRow {
 export interface CustomerGroupWithStats extends CustomerGroupRow {
   memberCount?: number
   productCount?: number
+  // v1.48 — main-unit name resolved server-side; sub-units with duplicate names
+  // (e.g. "งานพัสดุ" exists under 31 different main-units) need this to disambiguate.
+  parent_name?: string | null
 }
 
 export interface CustomerGroupLite {

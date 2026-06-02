@@ -162,6 +162,18 @@ export type ApproverInput = {
   email: string
 }
 
+// v1.48 — Office per-delivery 7-segment
+export type OfficeItemSegments = {
+  delivery_id: string
+  fund_code: string
+  organization_code: string
+  work_plan_code: string
+  account_code: string
+  curriculum_code: string
+  budget_code: string
+  funding_source_code: string
+}
+
 export type CreateDisbursementGroupV2Payload = {
   kind: 'faculty' | 'office'
   customer_group_id: string
@@ -169,6 +181,8 @@ export type CreateDisbursementGroupV2Payload = {
   delivery_ids: string[]
   approvers: ApproverInput[]
   external_edoc_id?: string | null
+  // Required for kind='office'. Length must equal delivery_ids.length, one row per delivery_id.
+  office_items_segments?: OfficeItemSegments[] | null
 }
 
 export type DelegateApproverPayload = {
