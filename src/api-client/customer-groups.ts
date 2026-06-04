@@ -27,6 +27,7 @@ export interface CustomerGroupRow {
   owner_user_id: string | null
   agency_id: string | null
   approval_rule: ApprovalRule | null
+  allowed_delivery_days: number[] | null
   created_at?: string
   updated_at?: string
 }
@@ -80,6 +81,7 @@ export type CreateCustomerGroupPayload = {
   owner_user_id?: string | null
   agency_id?: string | null
   approval_rule?: ApprovalRule
+  allowed_delivery_days?: number[] | null
   billing_name?: string | null
   billing_address?: string | null
   billing_tax_id?: string | null
