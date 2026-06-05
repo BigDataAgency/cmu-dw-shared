@@ -55,6 +55,37 @@ type UpdateOrderStatusPayload = {
     status: string;
     note?: string;
 };
+type DeliveryAvailability = {
+    available_dates: string[] | null;
+    excluded_dates: {
+        date: string;
+        reason: string;
+    }[] | null;
+};
+type DateCapacityStatus = 'full' | 'near_full';
+type DateCapacityProduct = {
+    product_id: string;
+    name: string;
+    limit: number;
+    remaining: number;
+    status: DateCapacityStatus;
+};
+type ConstrainedDate = {
+    date: string;
+    status: DateCapacityStatus;
+    products: DateCapacityProduct[];
+};
+type DatesCapacityResult = {
+    constrained_dates: ConstrainedDate[];
+};
+type DatesCapacityPayload = {
+    start_date: string;
+    end_date: string;
+    items: {
+        product_id: string;
+        quantity: number;
+    }[];
+};
 declare const ordersApi: {
     list: (filters?: OrderFilters) => Promise<PaginatedResponse<Order>>;
     getById: (id: string) => Promise<Order>;
@@ -62,6 +93,12 @@ declare const ordersApi: {
     cancel: (id: string, payload: CancelOrderPayload) => Promise<void>;
     updateStatus: (id: string, payload: UpdateOrderStatusPayload) => Promise<unknown>;
     returnBottles: (id: string, payload: ReturnBottlesPayload) => Promise<unknown>;
+    availableDates: (params: {
+        start: string;
+        end: string;
+        customer_group_id?: string | null;
+    }) => Promise<DeliveryAvailability>;
+    datesCapacity: (payload: DatesCapacityPayload) => Promise<DatesCapacityResult>;
     listCreditNotes: (id: string) => Promise<OrderCreditNote[]>;
     createCreditNote: (id: string, payload: CreateCreditNotePayload) => Promise<OrderCreditNote>;
 };

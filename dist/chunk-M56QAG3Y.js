@@ -73,6 +73,10 @@ var ordersApi = {
   cancel: (id, payload) => patch(`/orders/${id}/cancel`, payload),
   updateStatus: (id, payload) => patch(`/orders/${id}/status`, payload),
   returnBottles: (id, payload) => post(`/orders/${id}/return-bottles`, payload),
+  // F2/F3 — วันจัดส่งได้ (วันหยุด + วันจัดส่งประจำกลุ่ม)
+  availableDates: (params) => get("/orders/available-dates", params),
+  // F3 — วัน "ใกล้เต็ม"/"เต็ม" ตามโควตา daily_order_limits เทียบสินค้าในตะกร้า
+  datesCapacity: (payload) => post("/orders/dates-capacity", payload),
   // v1.46 — Credit notes (manual ใบลดหนี้ after billing)
   listCreditNotes: (id) => get(`/orders/${id}/credit-notes`),
   createCreditNote: (id, payload) => post(`/orders/${id}/credit-notes`, payload)
@@ -397,4 +401,4 @@ export {
   approveApi,
   customerGroupsApi
 };
-//# sourceMappingURL=chunk-XZTDBIXO.js.map
+//# sourceMappingURL=chunk-M56QAG3Y.js.map

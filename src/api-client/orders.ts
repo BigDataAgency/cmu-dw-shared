@@ -47,6 +47,38 @@ export type UpdateOrderStatusPayload = {
   note?: string
 }
 
+// F2/F3 — delivery date availability + daily quota capacity (read-only)
+export type DeliveryAvailability = {
+  available_dates: string[] | null
+  excluded_dates: { date: string; reason: string }[] | null
+}
+
+export type DateCapacityStatus = 'full' | 'near_full'
+
+export type DateCapacityProduct = {
+  product_id: string
+  name: string
+  limit: number
+  remaining: number
+  status: DateCapacityStatus
+}
+
+export type ConstrainedDate = {
+  date: string
+  status: DateCapacityStatus
+  products: DateCapacityProduct[]
+}
+
+export type DatesCapacityResult = {
+  constrained_dates: ConstrainedDate[]
+}
+
+export type DatesCapacityPayload = {
+  start_date: string
+  end_date: string
+  items: { product_id: string; quantity: number }[]
+}
+
 export const ordersApi = {
   list: (filters?: OrderFilters): Promise<PaginatedResponse<Order>> =>
     get('/orders', filters as Record<string, unknown>),
@@ -65,6 +97,18 @@ export const ordersApi = {
 
   returnBottles: (id: string, payload: ReturnBottlesPayload): Promise<unknown> =>
     post(`/orders/${id}/return-bottles`, payload),
+
+  // F2/F3 — วันจัดส่งได้ (วันหยุด + วันจัดส่งประจำกลุ่ม)
+  availableDates: (params: {
+    start: string
+    end: string
+    customer_group_id?: string | null
+  }): Promise<DeliveryAvailability> =>
+    get('/orders/available-dates', params as Record<string, unknown>),
+
+  // F3 — วัน "ใกล้เต็ม"/"เต็ม" ตามโควตา daily_order_limits เทียบสินค้าในตะกร้า
+  datesCapacity: (payload: DatesCapacityPayload): Promise<DatesCapacityResult> =>
+    post('/orders/dates-capacity', payload),
 
   // v1.46 — Credit notes (manual ใบลดหนี้ after billing)
   listCreditNotes: (id: string): Promise<OrderCreditNote[]> =>
