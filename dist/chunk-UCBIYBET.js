@@ -77,6 +77,8 @@ var ordersApi = {
   availableDates: (params) => get("/orders/available-dates", params),
   // F3 — วัน "ใกล้เต็ม"/"เต็ม" ตามโควตา daily_order_limits เทียบสินค้าในตะกร้า
   datesCapacity: (payload) => post("/orders/dates-capacity", payload),
+  // F4 — ราคา + ส่วนลด (server-side SSOT, ใช้โชว์ preview ก่อนสั่ง)
+  quote: (payload) => post("/orders/quote", payload),
   // v1.46 — Credit notes (manual ใบลดหนี้ after billing)
   listCreditNotes: (id) => get(`/orders/${id}/credit-notes`),
   createCreditNote: (id, payload) => post(`/orders/${id}/credit-notes`, payload)
@@ -401,4 +403,4 @@ export {
   approveApi,
   customerGroupsApi
 };
-//# sourceMappingURL=chunk-M56QAG3Y.js.map
+//# sourceMappingURL=chunk-UCBIYBET.js.map

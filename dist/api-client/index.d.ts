@@ -86,6 +86,26 @@ type DatesCapacityPayload = {
         quantity: number;
     }[];
 };
+type OrderQuotePayload = {
+    items: {
+        product_id: string;
+        quantity: number;
+    }[];
+    payment: PaymentMethod;
+    purchase_right_id?: string;
+    delivery_type?: DeliveryType;
+};
+type OrderQuote = {
+    water_cost: number;
+    deposit_cost: number;
+    eligible_pack_qty: number;
+    prepay_discount: number;
+    pickup_discount: number;
+    discount_total: number;
+    total: number;
+    mode: string;
+    value: number;
+};
 declare const ordersApi: {
     list: (filters?: OrderFilters) => Promise<PaginatedResponse<Order>>;
     getById: (id: string) => Promise<Order>;
@@ -99,6 +119,7 @@ declare const ordersApi: {
         customer_group_id?: string | null;
     }) => Promise<DeliveryAvailability>;
     datesCapacity: (payload: DatesCapacityPayload) => Promise<DatesCapacityResult>;
+    quote: (payload: OrderQuotePayload) => Promise<OrderQuote>;
     listCreditNotes: (id: string) => Promise<OrderCreditNote[]>;
     createCreditNote: (id: string, payload: CreateCreditNotePayload) => Promise<OrderCreditNote>;
 };
@@ -600,6 +621,12 @@ interface SettingsMap {
     overdue_block_roles?: string[];
     overdue_block_customer_groups?: string[];
     pdf_encryption_enabled?: boolean;
+    pickup_discount_pct?: number;
+    qr_discount_config?: {
+        enabled?: boolean;
+        mode?: 'baht_per_pack' | 'percent';
+        value?: number;
+    };
 }
 interface UpdateSettingPayload {
     key: string;
@@ -926,6 +953,8 @@ interface CustomerGroupRow {
     parent_id: string | null;
     is_prepay: boolean | null;
     is_discount: boolean | null;
+    qr_discount_mode: 'baht_per_pack' | 'percent' | null;
+    qr_discount_value: number | null;
     sale_map_allowed: boolean | null;
     is_personal: boolean | null;
     owner_user_id: string | null;
@@ -972,6 +1001,8 @@ type CreateCustomerGroupPayload = {
     parent_id?: string | null;
     is_prepay?: boolean;
     is_discount?: boolean;
+    qr_discount_mode?: 'baht_per_pack' | 'percent' | null;
+    qr_discount_value?: number | null;
     sale_map_allowed?: boolean;
     is_personal?: boolean;
     owner_user_id?: string | null;

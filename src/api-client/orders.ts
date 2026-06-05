@@ -79,6 +79,26 @@ export type DatesCapacityPayload = {
   items: { product_id: string; quantity: number }[]
 }
 
+// F4 — order price + discount quote (server-side SSOT)
+export type OrderQuotePayload = {
+  items: { product_id: string; quantity: number }[]
+  payment: PaymentMethod
+  purchase_right_id?: string
+  delivery_type?: DeliveryType
+}
+
+export type OrderQuote = {
+  water_cost: number
+  deposit_cost: number
+  eligible_pack_qty: number
+  prepay_discount: number
+  pickup_discount: number
+  discount_total: number
+  total: number
+  mode: string
+  value: number
+}
+
 export const ordersApi = {
   list: (filters?: OrderFilters): Promise<PaginatedResponse<Order>> =>
     get('/orders', filters as Record<string, unknown>),
@@ -109,6 +129,10 @@ export const ordersApi = {
   // F3 — วัน "ใกล้เต็ม"/"เต็ม" ตามโควตา daily_order_limits เทียบสินค้าในตะกร้า
   datesCapacity: (payload: DatesCapacityPayload): Promise<DatesCapacityResult> =>
     post('/orders/dates-capacity', payload),
+
+  // F4 — ราคา + ส่วนลด (server-side SSOT, ใช้โชว์ preview ก่อนสั่ง)
+  quote: (payload: OrderQuotePayload): Promise<OrderQuote> =>
+    post('/orders/quote', payload),
 
   // v1.46 — Credit notes (manual ใบลดหนี้ after billing)
   listCreditNotes: (id: string): Promise<OrderCreditNote[]> =>

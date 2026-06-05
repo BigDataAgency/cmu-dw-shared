@@ -22,7 +22,7 @@ import {
   settingsApi,
   usersAdminApi,
   usersApi
-} from "../chunk-M56QAG3Y.js";
+} from "../chunk-UCBIYBET.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,

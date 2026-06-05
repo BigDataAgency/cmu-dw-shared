@@ -25,6 +25,13 @@ export interface SettingsMap {
   overdue_block_roles?: string[];
   overdue_block_customer_groups?: string[];
   pdf_encryption_enabled?: boolean;
+  pickup_discount_pct?: number;
+  // F4 — ส่วนลดชำระล่วงหน้า (QR): default 1฿/แพ็ค, override ต่อกลุ่มได้ที่ customer_groups
+  qr_discount_config?: {
+    enabled?: boolean;
+    mode?: 'baht_per_pack' | 'percent';
+    value?: number;
+  };
 }
 
 export interface UpdateSettingPayload {
