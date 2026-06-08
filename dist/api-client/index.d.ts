@@ -228,6 +228,7 @@ type ProductFilters = PaginationParams & SearchParams & {
     category?: string;
     is_active?: boolean;
     pos_stock_exempt?: boolean;
+    pos_sellable?: boolean;
 };
 type UpdateStockPayload = {
     qty: number;

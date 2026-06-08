@@ -20,6 +20,7 @@ export type Product = {
   price: number | null
   deposit_price: number | null
   pos_stock_exempt?: boolean
+  is_pos_sellable?: boolean     // F5: ขาย/รับที่ สนง.ทรัพย์สิน ได้ไหม (POS counter + customer pickup; ถัง = false)
   size?: string | null        // ขนาดสินค้า (v1.50)
   unit?: string | null         // หน่วยนับ กล่อง/แพค/โหล/ลัง/ถัง (v1.50)
   prices: ProductPrice[]
@@ -34,6 +35,7 @@ export type CreateProductPayload = {
   is_active?: boolean
   size?: string | null
   unit?: string | null
+  is_pos_sellable?: boolean
   prices?: Omit<ProductPrice, 'id'>[]
 }
 
