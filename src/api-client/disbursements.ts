@@ -19,6 +19,7 @@ import type {
   DisbursementApprovalConfigUpsertPayload,
   DisbursementEmailOutboxRow,
   EmailOutboxStatus,
+  DisbursementPaymentChannel,
 } from '../types/disbursement'
 import type { PaginatedResponse, PaginationParams } from '../types/pagination'
 
@@ -118,6 +119,32 @@ export const disbursementsApi = {
   previewPdf: (id: string): Promise<{ pdf_url: string; encrypted: boolean }> =>
     get(`/finance/disbursement/groups/${id}/preview-pdf`),
 
+  // v1.52 CR4-F — fully-approved, locked PDF (encrypt + SHA-256 tamper-evidence)
+  finalPdf: (id: string): Promise<{ pdf_url: string; encrypted: boolean; locked?: boolean }> =>
+    get(`/finance/disbursement/groups/${id}/final-pdf`),
+
+  // ── v1.52 CR4 — payment channel, cancel, approval routing template ──────
+  setPaymentChannel: (
+    id: string,
+    channel: DisbursementPaymentChannel,
+  ): Promise<DisbursementGroup> =>
+    post(`/finance/disbursement/groups/${id}/payment-channel`, { channel }),
+
+  cancelGroup: (id: string, reason?: string | null): Promise<DisbursementGroup> =>
+    post(`/finance/disbursement/groups/${id}/cancel`, { reason: reason ?? null }),
+
+  getApprovalTemplate: (customerGroupId: string): Promise<ApprovalTemplateStep[]> =>
+    get('/finance/disbursement/approval-template', { customer_group_id: customerGroupId }),
+
+  setApprovalTemplate: (
+    customerGroupId: string,
+    steps: ApproverInput[],
+  ): Promise<{ steps_saved: number }> =>
+    post('/finance/disbursement/approval-template', {
+      customer_group_id: customerGroupId,
+      steps,
+    }),
+
   // ── v1.47 — saved 7-segment codes ──────────────────────────────────────
   listSavedCodes: (params?: { q?: string; limit?: number }): Promise<SavedAccountingCode[]> =>
     get('/finance/saved-codes', params as Record<string, unknown> | undefined),
@@ -183,6 +210,16 @@ export type CreateDisbursementGroupV2Payload = {
   external_edoc_id?: string | null
   // Required for kind='office'. Length must equal delivery_ids.length, one row per delivery_id.
   office_items_segments?: OfficeItemSegments[] | null
+  // v1.52 CR4-B — payment channel (optional at create; required at submit)
+  payment_channel?: DisbursementPaymentChannel | null
+}
+
+// v1.52 CR4-A — saved approval routing template step (per customer_group)
+export type ApprovalTemplateStep = {
+  step_number: number
+  approver_name: string
+  approver_position: string
+  approver_email: string
 }
 
 export type DelegateApproverPayload = {

@@ -7,6 +7,8 @@ export type DisbursementKind = 'faculty' | 'office'
 export type DisbursementStatus =
   | 'draft'
   | 'submitted'
+  | 'in_approval'        // v1.45 dynamic chain
+  | 'fully_approved'     // v1.45 dynamic chain
   | 'faculty_approved'
   | 'office_head_approved'
   | 'office_director_approved'
@@ -15,6 +17,7 @@ export type DisbursementStatus =
   | 'treasury_approved'
   | 'rejected_to_preparer'
   | 'treasury_rejected'
+  | 'cancelled'          // v1.52 CR4-C
 
 export type DisbursementEventType =
   | 'created'
@@ -27,6 +30,18 @@ export type DisbursementEventType =
   | 'debtor_cleared'
   | 'unlocked_to_draft'
   | 'creditor_code_changed'
+  | 'approver_added'     // v1.45
+  | 'approver_sent'      // v1.45
+  | 'approver_opened'    // v1.45
+  | 'approver_delegated' // v1.45
+  | 'cancelled'          // v1.52 CR4-C
+  | 'locked'             // v1.52 CR4-F
+
+/** Payment channel for a disbursement bill (v1.52 CR4-B) */
+export type DisbursementPaymentChannel =
+  | 'budget_transfer'   // โอนเงินงบประมาณ
+  | 'bank_transfer'     // โอนเงินผ่านบัญชี
+  | 'cheque'            // จ่ายด้วยเช็ค
 
 /** Backend `app_role` enum (DB-side) — distinct from frontend AppRole in `./user` */
 export type DbAppRole =
@@ -97,6 +112,14 @@ export type DisbursementGroup = {
   current_assignee_role: DbAppRole | null
   last_reject_reason: string | null
   rejected_from_group_id: string | null
+  // v1.45 dynamic chain
+  customer_group_id?: string | null
+  current_step?: number
+  total_steps?: number
+  // v1.52 CR4
+  payment_channel?: DisbursementPaymentChannel | null
+  locked_at?: string | null
+  final_pdf_sha256?: string | null
   created_at: string
   updated_at: string
   agency?: { id: string; name: string; kind: AgencyKind } | null

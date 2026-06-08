@@ -312,6 +312,16 @@ var disbursementsApi = {
   submitV2: (id) => post(`/finance/disbursement/groups/${id}/submit/v2`, {}),
   delegateApprover: (id, payload) => post(`/finance/disbursement/groups/${id}/delegate-approver`, payload),
   previewPdf: (id) => get(`/finance/disbursement/groups/${id}/preview-pdf`),
+  // v1.52 CR4-F — fully-approved, locked PDF (encrypt + SHA-256 tamper-evidence)
+  finalPdf: (id) => get(`/finance/disbursement/groups/${id}/final-pdf`),
+  // ── v1.52 CR4 — payment channel, cancel, approval routing template ──────
+  setPaymentChannel: (id, channel) => post(`/finance/disbursement/groups/${id}/payment-channel`, { channel }),
+  cancelGroup: (id, reason) => post(`/finance/disbursement/groups/${id}/cancel`, { reason: reason ?? null }),
+  getApprovalTemplate: (customerGroupId) => get("/finance/disbursement/approval-template", { customer_group_id: customerGroupId }),
+  setApprovalTemplate: (customerGroupId, steps) => post("/finance/disbursement/approval-template", {
+    customer_group_id: customerGroupId,
+    steps
+  }),
   // ── v1.47 — saved 7-segment codes ──────────────────────────────────────
   listSavedCodes: (params) => get("/finance/saved-codes", params),
   deleteSavedCode: (id) => del(`/finance/saved-codes/${id}`),
@@ -403,4 +413,4 @@ export {
   approveApi,
   customerGroupsApi
 };
-//# sourceMappingURL=chunk-UHSGD6D5.js.map
+//# sourceMappingURL=chunk-DMW26GUJ.js.map

@@ -1,4 +1,4 @@
-import { PaginationParams, SearchParams, PaginatedResponse, Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, DbAppRole, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, DocumentType, PaymentMethod as PaymentMethod$1, NotificationChannel, ServerStatus, EligibleReceivablesFilters, EligibleReceivable, DisbursementGroupListFilters, DisbursementGroup, DisbursementTimelineEvent, CreateDisbursementGroupPayload, ApproveDisbursementPayload, RejectDisbursementPayload, TreasuryExportPayload, TreasuryExportResult, DisbursementExportBatch, FacultyCreditorAccount, FacultyCreditorUpsertPayload, DisbursementApprovalConfig, DisbursementApprovalConfigUpsertPayload, EmailOutboxStatus, DisbursementEmailOutboxRow } from '../types/index.js';
+import { PaginationParams, SearchParams, PaginatedResponse, Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, DbAppRole, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, DocumentType, PaymentMethod as PaymentMethod$1, NotificationChannel, ServerStatus, DisbursementPaymentChannel, EligibleReceivablesFilters, EligibleReceivable, DisbursementGroupListFilters, DisbursementGroup, DisbursementTimelineEvent, CreateDisbursementGroupPayload, ApproveDisbursementPayload, RejectDisbursementPayload, TreasuryExportPayload, TreasuryExportResult, DisbursementExportBatch, FacultyCreditorAccount, FacultyCreditorUpsertPayload, DisbursementApprovalConfig, DisbursementApprovalConfigUpsertPayload, EmailOutboxStatus, DisbursementEmailOutboxRow } from '../types/index.js';
 
 declare function configure(options: {
     baseUrl: string;
@@ -776,6 +776,17 @@ declare const disbursementsApi: {
         pdf_url: string;
         encrypted: boolean;
     }>;
+    finalPdf: (id: string) => Promise<{
+        pdf_url: string;
+        encrypted: boolean;
+        locked?: boolean;
+    }>;
+    setPaymentChannel: (id: string, channel: DisbursementPaymentChannel) => Promise<DisbursementGroup>;
+    cancelGroup: (id: string, reason?: string | null) => Promise<DisbursementGroup>;
+    getApprovalTemplate: (customerGroupId: string) => Promise<ApprovalTemplateStep[]>;
+    setApprovalTemplate: (customerGroupId: string, steps: ApproverInput[]) => Promise<{
+        steps_saved: number;
+    }>;
     listSavedCodes: (params?: {
         q?: string;
         limit?: number;
@@ -830,6 +841,13 @@ type CreateDisbursementGroupV2Payload = {
     approvers: ApproverInput[];
     external_edoc_id?: string | null;
     office_items_segments?: OfficeItemSegments[] | null;
+    payment_channel?: DisbursementPaymentChannel | null;
+};
+type ApprovalTemplateStep = {
+    step_number: number;
+    approver_name: string;
+    approver_position: string;
+    approver_email: string;
 };
 type DelegateApproverPayload = {
     step_number: number;
