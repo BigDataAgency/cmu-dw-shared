@@ -32,6 +32,15 @@ export interface SettingsMap {
     mode?: 'baht_per_pack' | 'percent';
     value?: number;
   };
+  // v1.55 (meeting item 6 §3) — Global Settings
+  /** เปิด/ปิดคิวอีเมลเบิกจ่ายรายขั้นตอน (submitted/approved/rejected/treasury_rejected) */
+  disbursement_email_toggles?: Record<string, boolean>;
+  /** หัวกระดาษใบส่งของ 80mm — render-pdf fallback ค่าเดิมถ้าไม่ตั้ง */
+  delivery_note_config?: { header_lines?: string[] };
+  /** ข้อความ org tag บนสติกเกอร์ถัง */
+  sticker_config?: { org_tag?: string };
+  /** เพดานรวมแพ็ค/วันส่ง (ทุกสินค้า) — 0 = ไม่จำกัด; คู่กับ daily_order_limits */
+  daily_delivery_cap?: number;
 }
 
 export interface UpdateSettingPayload {

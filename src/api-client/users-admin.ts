@@ -70,7 +70,31 @@ export interface AdminUpdateProfilePayload {
   billing_tax_id?: string
 }
 
+export interface CreateExternalUserPayload {
+  email: string
+  full_name?: string
+  /** Defaults to 'audit' in the UI flow; any non-super_admin role accepted. */
+  role: AdminAppRole
+  /** Optional explicit password; omitted → server generates a temp password. */
+  password?: string
+}
+
+export interface CreateExternalUserResult {
+  user_id: string
+  email: string
+  /** Temporary password — shown ONCE to the admin, never stored client-side. */
+  password: string
+}
+
 export const usersAdminApi = {
+  /**
+   * v1.54 — manual user creation for accounts without CMU OAuth
+   * (e.g. external auditors / สตง.). Server forces a password change on
+   * first login via user_metadata.force_password_change.
+   */
+  createExternalUser: (payload: CreateExternalUserPayload) =>
+    post<CreateExternalUserResult>('/admin/users', payload),
+
   // v1.43 — admin edits another user's profile fields
   updateProfile: (userId: string, payload: AdminUpdateProfilePayload) =>
     patch<{ user_id: string } & AdminUpdateProfilePayload>(

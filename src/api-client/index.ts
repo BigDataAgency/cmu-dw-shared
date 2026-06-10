@@ -14,6 +14,8 @@ export type {
   UserPurchaseRightRow,
   MapUserPayload,
   MapUserResult,
+  CreateExternalUserPayload,
+  CreateExternalUserResult,
 } from "./users-admin";
 export { financeApi } from "./finance";
 export type { SupportFeeFilters, SupportFeeRow, DebtRow, DebtFilters } from "./finance";

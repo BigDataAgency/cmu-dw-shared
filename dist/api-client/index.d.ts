@@ -316,7 +316,27 @@ interface AdminUpdateProfilePayload {
     billing_address?: string;
     billing_tax_id?: string;
 }
+interface CreateExternalUserPayload {
+    email: string;
+    full_name?: string;
+    /** Defaults to 'audit' in the UI flow; any non-super_admin role accepted. */
+    role: AdminAppRole;
+    /** Optional explicit password; omitted → server generates a temp password. */
+    password?: string;
+}
+interface CreateExternalUserResult {
+    user_id: string;
+    email: string;
+    /** Temporary password — shown ONCE to the admin, never stored client-side. */
+    password: string;
+}
 declare const usersAdminApi: {
+    /**
+     * v1.54 — manual user creation for accounts without CMU OAuth
+     * (e.g. external auditors / สตง.). Server forces a password change on
+     * first login via user_metadata.force_password_change.
+     */
+    createExternalUser: (payload: CreateExternalUserPayload) => Promise<CreateExternalUserResult>;
     updateProfile: (userId: string, payload: AdminUpdateProfilePayload) => Promise<{
         user_id: string;
     } & AdminUpdateProfilePayload>;
@@ -628,6 +648,18 @@ interface SettingsMap {
         mode?: 'baht_per_pack' | 'percent';
         value?: number;
     };
+    /** เปิด/ปิดคิวอีเมลเบิกจ่ายรายขั้นตอน (submitted/approved/rejected/treasury_rejected) */
+    disbursement_email_toggles?: Record<string, boolean>;
+    /** หัวกระดาษใบส่งของ 80mm — render-pdf fallback ค่าเดิมถ้าไม่ตั้ง */
+    delivery_note_config?: {
+        header_lines?: string[];
+    };
+    /** ข้อความ org tag บนสติกเกอร์ถัง */
+    sticker_config?: {
+        org_tag?: string;
+    };
+    /** เพดานรวมแพ็ค/วันส่ง (ทุกสินค้า) — 0 = ไม่จำกัด; คู่กับ daily_order_limits */
+    daily_delivery_cap?: number;
 }
 interface UpdateSettingPayload {
     key: string;
@@ -1102,4 +1134,4 @@ declare const customerGroupsApi: {
     update: (id: string, payload: UpdateCustomerGroupPayload) => Promise<CustomerGroupRow>;
 };
 
-export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApprovalRule, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type AuditLogEnvelope, type AuditLogListParams, type AuditLogRow, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type CancellationReportRow, type CancelledOrderRow, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateCustomerGroupPayload, type CreateDisbursementGroupV2Payload, type CreateHolidayPayload, type CustomerGroupListParams, type CustomerGroupLite, type CustomerGroupLiteParams, type CustomerGroupProductRow, type CustomerGroupRow, type CustomerGroupWithStats, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, type DisbursementApproverRow, type DocumentPreference, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type MapUserPayload, type MapUserResult, type NotificationConfig, type OfficeItemSegments, type PaymentMethodConfig, type PendingDelivery, type RecipientStrategy, type SavedAccountingCode, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateCustomerGroupPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, auditApi, configure, configureApproveClient, containersApi, customerGroupsApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersAdminApi, usersApi };
+export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApprovalRule, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type AuditLogEnvelope, type AuditLogListParams, type AuditLogRow, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type CancellationReportRow, type CancelledOrderRow, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateCustomerGroupPayload, type CreateDisbursementGroupV2Payload, type CreateExternalUserPayload, type CreateExternalUserResult, type CreateHolidayPayload, type CustomerGroupListParams, type CustomerGroupLite, type CustomerGroupLiteParams, type CustomerGroupProductRow, type CustomerGroupRow, type CustomerGroupWithStats, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, type DisbursementApproverRow, type DocumentPreference, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type MapUserPayload, type MapUserResult, type NotificationConfig, type OfficeItemSegments, type PaymentMethodConfig, type PendingDelivery, type RecipientStrategy, type SavedAccountingCode, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateCustomerGroupPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, auditApi, configure, configureApproveClient, containersApi, customerGroupsApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersAdminApi, usersApi };

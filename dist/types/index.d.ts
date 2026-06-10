@@ -438,7 +438,7 @@ type DisbursementEventType = 'created' | 'submitted' | 'approved' | 'rejected' |
 /** Payment channel for a disbursement bill (v1.52 CR4-B) */
 type DisbursementPaymentChannel = 'budget_transfer' | 'bank_transfer' | 'cheque';
 /** Backend `app_role` enum (DB-side) — distinct from frontend AppRole in `./user` */
-type DbAppRole = 'guest' | 'member_email' | 'member_cmu' | 'org_cmu' | 'staff_property' | 'admin_property' | 'executive' | 'admin_vendor' | 'delivery' | 'super_admin';
+type DbAppRole = 'guest' | 'member_email' | 'member_cmu' | 'org_cmu' | 'staff_property' | 'admin_property' | 'executive' | 'admin_vendor' | 'delivery' | 'super_admin' | 'audit';
 /** 7-segment 3D accounting code per office disbursement item */
 type AccountingCode7Seg = {
     fund_code?: string | null;

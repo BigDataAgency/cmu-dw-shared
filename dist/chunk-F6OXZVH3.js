@@ -147,6 +147,12 @@ var usersApi = {
 
 // src/api-client/users-admin.ts
 var usersAdminApi = {
+  /**
+   * v1.54 — manual user creation for accounts without CMU OAuth
+   * (e.g. external auditors / สตง.). Server forces a password change on
+   * first login via user_metadata.force_password_change.
+   */
+  createExternalUser: (payload) => post("/admin/users", payload),
   // v1.43 — admin edits another user's profile fields
   updateProfile: (userId, payload) => patch(
     `/users/admin/${userId}/profile`,
@@ -423,4 +429,4 @@ export {
   approveApi,
   customerGroupsApi
 };
-//# sourceMappingURL=chunk-4TZYB4ET.js.map
+//# sourceMappingURL=chunk-F6OXZVH3.js.map

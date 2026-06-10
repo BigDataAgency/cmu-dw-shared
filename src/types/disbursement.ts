@@ -55,6 +55,7 @@ export type DbAppRole =
   | 'admin_vendor'
   | 'delivery'
   | 'super_admin'
+  | 'audit'
 
 /** 7-segment 3D accounting code per office disbursement item */
 export type AccountingCode7Seg = {
