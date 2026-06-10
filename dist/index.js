@@ -9,6 +9,7 @@ import {
   ApiError,
   CONTAINER_QR_PATTERN,
   approveApi,
+  auditApi,
   configure,
   configureApproveClient,
   containersApi,
@@ -29,7 +30,7 @@ import {
   settingsApi,
   usersAdminApi,
   usersApi
-} from "./chunk-DMW26GUJ.js";
+} from "./chunk-4TZYB4ET.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,
@@ -37,6 +38,7 @@ export {
   MAX_PAGE_SIZE,
   PAGE_SIZE_OPTIONS,
   approveApi,
+  auditApi,
   clampPageSize,
   configure,
   configureApproveClient,

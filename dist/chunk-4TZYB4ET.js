@@ -244,6 +244,15 @@ var settingsApi = {
   patchVendor: (key, value) => patch("/routes/settings", { key, value })
 };
 
+// src/api-client/audit.ts
+var auditApi = {
+  /**
+   * Admin: list audit_logs (paginated, filterable, actor-enriched).
+   * Requires admin_property / executive / super_admin (audit role added v1.54).
+   */
+  list: (params) => get("/admin/audit-logs", params)
+};
+
 // src/api-client/payment-methods.ts
 var paymentMethodsApi = {
   /** Customer: ดูว่าตัวเองใช้วิธีชำระอะไรได้ (v1.48: ตาม context/customer_group ที่เลือก) */
@@ -405,6 +414,7 @@ export {
   containersApi,
   holidaysApi,
   settingsApi,
+  auditApi,
   paymentMethodsApi,
   notificationConfigsApi,
   serverStatusApi,
@@ -413,4 +423,4 @@ export {
   approveApi,
   customerGroupsApi
 };
-//# sourceMappingURL=chunk-DMW26GUJ.js.map
+//# sourceMappingURL=chunk-4TZYB4ET.js.map

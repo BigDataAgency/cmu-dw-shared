@@ -51,6 +51,12 @@ export type {
   UpdateSettingPayload,
   HolidayOrderPolicy,
 } from "./settings";
+export { auditApi } from "./audit";
+export type {
+  AuditLogRow,
+  AuditLogListParams,
+  AuditLogEnvelope,
+} from "./audit";
 export { paymentMethodsApi } from "./payment-methods";
 export type {
   PaymentMethodConfig,

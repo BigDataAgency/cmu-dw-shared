@@ -648,6 +648,54 @@ declare const settingsApi: {
     }>;
 };
 
+/** A single audit_logs row (append-only history — meeting item 6). */
+interface AuditLogRow {
+    id: string;
+    table_name: string;
+    record_id: string;
+    action: string;
+    /** Before snapshot (JSON). null for inserts/system events. */
+    old_data: unknown | null;
+    /** After snapshot (JSON). */
+    new_data: unknown | null;
+    changed_by: string | null;
+    ip_address: string | null;
+    created_at: string;
+    /** Server-enriched actor display name (changed_by → profiles.full_name). */
+    actor_name: string | null;
+    actor_email: string | null;
+}
+interface AuditLogListParams {
+    page?: number;
+    pageSize?: number;
+    /** Exact table_name match (e.g. "settings", "orders", "disbursement_groups"). */
+    table_name?: string;
+    /** table_name prefix match (e.g. "auth" for login/logout events). */
+    table_prefix?: string;
+    /** audit_action value (e.g. "UPDATE", "DISBURSEMENT_CANCEL", "LOGIN"). */
+    action?: string;
+    /** Filter by actor profile id. */
+    changed_by?: string;
+    /** YYYY-MM-DD inclusive. */
+    date_from?: string;
+    /** YYYY-MM-DD inclusive. */
+    date_to?: string;
+}
+interface AuditLogEnvelope {
+    data: AuditLogRow[];
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+}
+declare const auditApi: {
+    /**
+     * Admin: list audit_logs (paginated, filterable, actor-enriched).
+     * Requires admin_property / executive / super_admin (audit role added v1.54).
+     */
+    list: (params?: AuditLogListParams) => Promise<AuditLogEnvelope>;
+};
+
 interface PaymentMethodConfig {
     payment_method: PaymentMethod$1;
     is_enabled: boolean;
@@ -1054,4 +1102,4 @@ declare const customerGroupsApi: {
     update: (id: string, payload: UpdateCustomerGroupPayload) => Promise<CustomerGroupRow>;
 };
 
-export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApprovalRule, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type CancellationReportRow, type CancelledOrderRow, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateCustomerGroupPayload, type CreateDisbursementGroupV2Payload, type CreateHolidayPayload, type CustomerGroupListParams, type CustomerGroupLite, type CustomerGroupLiteParams, type CustomerGroupProductRow, type CustomerGroupRow, type CustomerGroupWithStats, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, type DisbursementApproverRow, type DocumentPreference, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type MapUserPayload, type MapUserResult, type NotificationConfig, type OfficeItemSegments, type PaymentMethodConfig, type PendingDelivery, type RecipientStrategy, type SavedAccountingCode, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateCustomerGroupPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, configure, configureApproveClient, containersApi, customerGroupsApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersAdminApi, usersApi };
+export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApprovalRule, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type AuditLogEnvelope, type AuditLogListParams, type AuditLogRow, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type CancellationReportRow, type CancelledOrderRow, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateCustomerGroupPayload, type CreateDisbursementGroupV2Payload, type CreateHolidayPayload, type CustomerGroupListParams, type CustomerGroupLite, type CustomerGroupLiteParams, type CustomerGroupProductRow, type CustomerGroupRow, type CustomerGroupWithStats, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, type DisbursementApproverRow, type DocumentPreference, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type MapUserPayload, type MapUserResult, type NotificationConfig, type OfficeItemSegments, type PaymentMethodConfig, type PendingDelivery, type RecipientStrategy, type SavedAccountingCode, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateCustomerGroupPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, auditApi, configure, configureApproveClient, containersApi, customerGroupsApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersAdminApi, usersApi };
