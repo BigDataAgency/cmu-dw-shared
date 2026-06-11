@@ -40,6 +40,10 @@ export type OrderFilters = PaginationParams & SearchParams & {
   source?: string
   date_from?: string
   date_to?: string
+  /** v1.55 context isolation: เฉพาะออเดอร์ของสิทธิ์/กลุ่มนี้ */
+  customer_group_id?: string
+  /** v1.55: รวมออเดอร์เก่าก่อนระบบ context (customer_group_id IS NULL) — ใช้คู่กับ customer_group_id */
+  include_ungrouped?: boolean
 }
 
 export type UpdateOrderStatusPayload = {

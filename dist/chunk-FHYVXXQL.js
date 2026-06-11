@@ -263,6 +263,8 @@ var auditApi = {
 var paymentMethodsApi = {
   /** Customer: ดูว่าตัวเองใช้วิธีชำระอะไรได้ (v1.48: ตาม context/customer_group ที่เลือก) */
   getMyMethods: (customerGroupId) => get("/users/me/payment-methods", customerGroupId ? { customer_group_id: customerGroupId } : void 0),
+  /** v1.55 POS/staff: resolve payment methods ของลูกค้าที่เลือก (staff_property+) */
+  getMethodsFor: (userId, customerGroupId) => get(`/users/${userId}/payment-methods`, customerGroupId ? { customer_group_id: customerGroupId } : void 0),
   /** Admin: ดู config + resolved methods ของ user */
   getForUser: (userId) => get(`/admin/users/${userId}/payment-methods`),
   /** Admin: set user payment method overrides */
@@ -429,4 +431,4 @@ export {
   approveApi,
   customerGroupsApi
 };
-//# sourceMappingURL=chunk-F6OXZVH3.js.map
+//# sourceMappingURL=chunk-FHYVXXQL.js.map

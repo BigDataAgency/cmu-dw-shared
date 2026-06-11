@@ -30,6 +30,10 @@ export const paymentMethodsApi = {
   getMyMethods: (customerGroupId?: string): Promise<UserPaymentMethodsResponse> =>
     get('/users/me/payment-methods', customerGroupId ? { customer_group_id: customerGroupId } : undefined),
 
+  /** v1.55 POS/staff: resolve payment methods ของลูกค้าที่เลือก (staff_property+) */
+  getMethodsFor: (userId: string, customerGroupId?: string): Promise<UserPaymentMethodsResponse> =>
+    get(`/users/${userId}/payment-methods`, customerGroupId ? { customer_group_id: customerGroupId } : undefined),
+
   /** Admin: ดู config + resolved methods ของ user */
   getForUser: (userId: string): Promise<AdminUserPaymentResponse> =>
     get(`/admin/users/${userId}/payment-methods`),

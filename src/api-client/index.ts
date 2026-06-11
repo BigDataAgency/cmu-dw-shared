@@ -1,5 +1,6 @@
 export { configure, ApiError } from "./fetch";
 export { ordersApi } from "./orders";
+export type { OrderQuote, OrderQuotePayload, OrderFilters } from "./orders";
 export { deliveriesApi } from "./deliveries";
 export type { BatchCompletePayload, BatchCompleteResult } from "./deliveries";
 export { routesApi } from "./routes";
