@@ -66,9 +66,22 @@ export const disbursementsApi = {
     post(`/finance/disbursement/groups/${id}/final-reject`, payload),
 
   treasuryHistory: (
-    filters?: { kind?: 'faculty' | 'office' } & PaginationParams,
+    filters?: { kind?: 'faculty' | 'office'; date_from?: string; date_to?: string } & PaginationParams,
   ): Promise<PaginatedResponse<DisbursementExportBatch>> =>
     get('/finance/disbursement/treasury/history', filters as Record<string, unknown>),
+
+  // ── v1.56 — Finance (กองคลัง-การเงิน): คิวเช็ค/โอนผ่านบัญชี ────────────
+  financeApprove: (id: string): Promise<DisbursementGroup> =>
+    post(`/finance/disbursement/groups/${id}/finance-approve`, {}),
+
+  financeReject: (id: string, payload: RejectDisbursementPayload): Promise<DisbursementGroup> =>
+    post(`/finance/disbursement/groups/${id}/finance-reject`, payload),
+
+  reExportBatch: (batchId: string): Promise<{ file_base64: string | null; filename: string | null }> =>
+    post(`/finance/disbursement/treasury/history/${batchId}/re-export`, {}),
+
+  financeQueueExport: (payload: { group_ids: string[] }): Promise<{ file_base64: string | null; filename: string | null }> =>
+    post('/finance/disbursement/finance-queue/export', payload),
 
   // ── Faculty creditor master (super_admin) ──────────────────────────────
   listFacultyCreditors: (): Promise<FacultyCreditorAccount[]> =>

@@ -834,7 +834,21 @@ declare const disbursementsApi: {
     finalReject: (id: string, payload: RejectDisbursementPayload) => Promise<DisbursementGroup>;
     treasuryHistory: (filters?: {
         kind?: "faculty" | "office";
+        date_from?: string;
+        date_to?: string;
     } & PaginationParams) => Promise<PaginatedResponse<DisbursementExportBatch>>;
+    financeApprove: (id: string) => Promise<DisbursementGroup>;
+    financeReject: (id: string, payload: RejectDisbursementPayload) => Promise<DisbursementGroup>;
+    reExportBatch: (batchId: string) => Promise<{
+        file_base64: string | null;
+        filename: string | null;
+    }>;
+    financeQueueExport: (payload: {
+        group_ids: string[];
+    }) => Promise<{
+        file_base64: string | null;
+        filename: string | null;
+    }>;
     listFacultyCreditors: () => Promise<FacultyCreditorAccount[]>;
     upsertFacultyCreditor: (payload: FacultyCreditorUpsertPayload) => Promise<FacultyCreditorAccount>;
     deleteFacultyCreditor: (id: string) => Promise<{

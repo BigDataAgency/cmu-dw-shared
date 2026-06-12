@@ -314,6 +314,11 @@ var disbursementsApi = {
   finalApprove: (id) => post(`/finance/disbursement/groups/${id}/final-approve`, {}),
   finalReject: (id, payload) => post(`/finance/disbursement/groups/${id}/final-reject`, payload),
   treasuryHistory: (filters) => get("/finance/disbursement/treasury/history", filters),
+  // ── v1.56 — Finance (กองคลัง-การเงิน): คิวเช็ค/โอนผ่านบัญชี ────────────
+  financeApprove: (id) => post(`/finance/disbursement/groups/${id}/finance-approve`, {}),
+  financeReject: (id, payload) => post(`/finance/disbursement/groups/${id}/finance-reject`, payload),
+  reExportBatch: (batchId) => post(`/finance/disbursement/treasury/history/${batchId}/re-export`, {}),
+  financeQueueExport: (payload) => post("/finance/disbursement/finance-queue/export", payload),
   // ── Faculty creditor master (super_admin) ──────────────────────────────
   listFacultyCreditors: () => get("/finance/disbursement/faculty-creditors"),
   upsertFacultyCreditor: (payload) => post("/finance/disbursement/faculty-creditors", payload),
@@ -431,4 +436,4 @@ export {
   approveApi,
   customerGroupsApi
 };
-//# sourceMappingURL=chunk-FHYVXXQL.js.map
+//# sourceMappingURL=chunk-2RBFLUTZ.js.map

@@ -18,6 +18,7 @@ export type DisbursementStatus =
   | 'rejected_to_preparer'
   | 'treasury_rejected'
   | 'cancelled'          // v1.52 CR4-C
+  | 'waiting_finance'    // v1.56 — เช็ค/โอนผ่านบัญชี รอการเงินกองคลัง
 
 export type DisbursementEventType =
   | 'created'
@@ -36,6 +37,10 @@ export type DisbursementEventType =
   | 'approver_delegated' // v1.45
   | 'cancelled'          // v1.52 CR4-C
   | 'locked'             // v1.52 CR4-F
+  | 'submitted_to_finance' // v1.56 — ส่งเข้าคิวการเงิน (เช็ค/โอน)
+  | 'finance_approved'     // v1.56
+  | 'finance_rejected'     // v1.56
+  | 'treasury_arrived'     // v1.56 (reserved)
 
 /** Payment channel for a disbursement bill (v1.52 CR4-B) */
 export type DisbursementPaymentChannel =
@@ -56,6 +61,8 @@ export type DbAppRole =
   | 'delivery'
   | 'super_admin'
   | 'audit'
+  | 'treasury_accounting' // v1.56 — กองคลัง-บัญชี
+  | 'treasury_finance'    // v1.56 — กองคลัง-การเงิน
 
 /** 7-segment 3D accounting code per office disbursement item */
 export type AccountingCode7Seg = {
@@ -121,6 +128,8 @@ export type DisbursementGroup = {
   payment_channel?: DisbursementPaymentChannel | null
   locked_at?: string | null
   final_pdf_sha256?: string | null
+  // v1.56 — เวลาเอกสารถึงกองคลัง (treasury_review/waiting_finance)
+  treasury_arrived_at?: string | null
   created_at: string
   updated_at: string
   agency?: { id: string; name: string; kind: AgencyKind } | null
@@ -229,6 +238,10 @@ export type DisbursementGroupListFilters = {
   status?: DisbursementStatus
   kind?: DisbursementKind
   agency_id?: string
+  // v1.56 — filter ตามช่องทางจ่าย + ช่วงเวลาที่เอกสารถึงกองคลัง (ISO date/datetime)
+  payment_channel?: DisbursementPaymentChannel
+  arrived_from?: string
+  arrived_to?: string
 }
 
 export type EligibleReceivablesFilters = {
