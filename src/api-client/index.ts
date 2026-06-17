@@ -101,3 +101,24 @@ export type {
   DocumentPreference,
   ApprovalRule,
 } from "./customer-groups";
+
+// v1.56 Phase 2 — กองคลัง "การเงิน"
+export { treasuryApi } from "./treasury";
+export type {
+  QrPaymentStatusFilter,
+  QrPaymentRow,
+  QrPaymentFilters,
+  QrPaymentsSummary,
+  QrSummaryStatus,
+  QrMonthlySummary,
+  BankStatementStatus,
+  BankRowMatchStatus,
+  BankStatement,
+  BankStatementRow,
+  CreateBankStatementPayload,
+  ReceiptUsageRow,
+  ReceiptUsageSummary,
+  ReceiptUsageFilters,
+  ReceivableRow,
+  ReceivableDetailRow,
+} from "../types/treasury";

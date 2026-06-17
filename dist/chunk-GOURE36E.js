@@ -410,6 +410,29 @@ var customerGroupsApi = {
   update: (id, payload) => patch(`/customer-groups/${id}`, payload)
 };
 
+// src/api-client/treasury.ts
+var treasuryApi = {
+  // ── P2-1/2 QR payments ─────────────────────────────────────────────────
+  listQrPayments: (filters) => get("/finance/qr/payments", filters),
+  qrPaymentsSummary: (month) => get("/finance/qr/payments/summary", { month }),
+  exportQrPayments: (filters) => post("/finance/qr/payments/export", filters ?? {}),
+  // ── P2-4 QR monthly summary ────────────────────────────────────────────
+  listQrSummaries: (filters) => get("/finance/qr/summaries", filters),
+  generateQrSummary: (month) => post("/finance/qr/summaries", { month }),
+  confirmQrSummary: (id) => post(`/finance/qr/summaries/${id}/confirm`, {}),
+  decideQrSummary: (id, payload) => post(`/finance/qr/summaries/${id}/decide`, payload),
+  // ── P2-3 bank statements (schema/upload only — engine BLOCKED) ──────────
+  listBankStatements: (filters) => get("/finance/qr/statements", filters),
+  getBankStatement: (id) => get(`/finance/qr/statements/${id}`),
+  createBankStatement: (payload) => post("/finance/qr/statements", payload),
+  // ── P2-6 receipt usage report ──────────────────────────────────────────
+  receiptUsageReport: (filters) => get("/finance/reports/receipt-usage", filters),
+  receiptUsageSummary: (filters) => get("/finance/reports/receipt-usage/summary", filters),
+  // ── P2-7 receivables ───────────────────────────────────────────────────
+  receivablesReport: (asOf) => get("/finance/reports/receivables", asOf ? { as_of: asOf } : void 0),
+  receivablesDetail: (agencyId) => get(`/finance/reports/receivables/${agencyId}/detail`)
+};
+
 export {
   configure,
   ApiError,
@@ -434,6 +457,7 @@ export {
   disbursementsApi,
   configureApproveClient,
   approveApi,
-  customerGroupsApi
+  customerGroupsApi,
+  treasuryApi
 };
-//# sourceMappingURL=chunk-2RBFLUTZ.js.map
+//# sourceMappingURL=chunk-GOURE36E.js.map

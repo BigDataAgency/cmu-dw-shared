@@ -4,7 +4,7 @@ import {
   PAGE_SIZE_OPTIONS,
   clampPageSize,
   todayISO
-} from "./chunk-F2VJCOVV.js";
+} from "./chunk-XOQVGVPE.js";
 import {
   ApiError,
   CONTAINER_QR_PATTERN,
@@ -28,9 +28,10 @@ import {
   routesApi,
   serverStatusApi,
   settingsApi,
+  treasuryApi,
   usersAdminApi,
   usersApi
-} from "./chunk-2RBFLUTZ.js";
+} from "./chunk-GOURE36E.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,
@@ -59,6 +60,7 @@ export {
   serverStatusApi,
   settingsApi,
   todayISO,
+  treasuryApi,
   usersAdminApi,
   usersApi
 };

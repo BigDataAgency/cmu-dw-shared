@@ -21,9 +21,10 @@ import {
   routesApi,
   serverStatusApi,
   settingsApi,
+  treasuryApi,
   usersAdminApi,
   usersApi
-} from "../chunk-2RBFLUTZ.js";
+} from "../chunk-GOURE36E.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,
@@ -47,6 +48,7 @@ export {
   routesApi,
   serverStatusApi,
   settingsApi,
+  treasuryApi,
   usersAdminApi,
   usersApi
 };

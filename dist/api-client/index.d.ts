@@ -1,4 +1,5 @@
-import { PaginationParams, SearchParams, PaginatedResponse, Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, DbAppRole, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, DocumentType, PaymentMethod as PaymentMethod$1, NotificationChannel, ServerStatus, DisbursementPaymentChannel, EligibleReceivablesFilters, EligibleReceivable, DisbursementGroupListFilters, DisbursementGroup, DisbursementTimelineEvent, CreateDisbursementGroupPayload, ApproveDisbursementPayload, RejectDisbursementPayload, TreasuryExportPayload, TreasuryExportResult, DisbursementExportBatch, FacultyCreditorAccount, FacultyCreditorUpsertPayload, DisbursementApprovalConfig, DisbursementApprovalConfigUpsertPayload, EmailOutboxStatus, DisbursementEmailOutboxRow } from '../types/index.js';
+import { PaginationParams, SearchParams, PaginatedResponse, Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, DbAppRole, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, DocumentType, PaymentMethod as PaymentMethod$1, NotificationChannel, ServerStatus, DisbursementPaymentChannel, EligibleReceivablesFilters, EligibleReceivable, DisbursementGroupListFilters, DisbursementGroup, DisbursementTimelineEvent, CreateDisbursementGroupPayload, ApproveDisbursementPayload, RejectDisbursementPayload, TreasuryExportPayload, TreasuryExportResult, DisbursementExportBatch, FacultyCreditorAccount, FacultyCreditorUpsertPayload, DisbursementApprovalConfig, DisbursementApprovalConfigUpsertPayload, EmailOutboxStatus, DisbursementEmailOutboxRow, QrPaymentFilters, QrPaymentRow, QrPaymentsSummary, QrSummaryStatus, QrMonthlySummary, BankStatement, BankStatementRow, CreateBankStatementPayload, ReceiptUsageFilters, ReceiptUsageRow, ReceiptUsageSummary, ReceivableRow, ReceivableDetailRow } from '../types/index.js';
+export { BankRowMatchStatus, BankStatementStatus, QrPaymentStatusFilter } from '../types/index.js';
 
 declare function configure(options: {
     baseUrl: string;
@@ -664,6 +665,14 @@ interface SettingsMap {
     };
     /** เพดานรวมแพ็ค/วันส่ง (ทุกสินค้า) — 0 = ไม่จำกัด; คู่กับ daily_order_limits */
     daily_delivery_cap?: number;
+    /** อีเมลกองคลังรับแจ้งเตือนเอกสารเบิกจ่ายถึง (Phase 1) */
+    treasury_notify_emails?: string[];
+    /** true = การเงินต้อง confirm สรุปยอด QR ก่อนข้ามให้บัญชี approve (false = ข้ามขั้น) */
+    qr_summary_require_finance_confirm?: boolean;
+    /** column mapping ของไฟล์ bank statement — {} จนกว่าได้ไฟล์จริง (engine BLOCKED) */
+    bank_statement_column_mapping?: Record<string, unknown>;
+    /** จำนวนวันเกินกำหนดถือเป็นค้างชำระ (receivables aging — documents ไม่มี due_date) */
+    receivable_overdue_threshold_days?: number;
 }
 interface UpdateSettingPayload {
     key: string;
@@ -1154,4 +1163,38 @@ declare const customerGroupsApi: {
     update: (id: string, payload: UpdateCustomerGroupPayload) => Promise<CustomerGroupRow>;
 };
 
-export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApprovalRule, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type AuditLogEnvelope, type AuditLogListParams, type AuditLogRow, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type CancellationReportRow, type CancelledOrderRow, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, type CreateContainersBatchPayload, type CreateCustomerGroupPayload, type CreateDisbursementGroupV2Payload, type CreateExternalUserPayload, type CreateExternalUserResult, type CreateHolidayPayload, type CustomerGroupListParams, type CustomerGroupLite, type CustomerGroupLiteParams, type CustomerGroupProductRow, type CustomerGroupRow, type CustomerGroupWithStats, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, type DisbursementApproverRow, type DocumentPreference, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type MapUserPayload, type MapUserResult, type NotificationConfig, type OfficeItemSegments, type OrderFilters, type OrderQuote, type OrderQuotePayload, type PaymentMethodConfig, type PendingDelivery, type RecipientStrategy, type SavedAccountingCode, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateCustomerGroupPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, auditApi, configure, configureApproveClient, containersApi, customerGroupsApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, usersAdminApi, usersApi };
+type ExportResult = {
+    file_base64: string | null;
+    filename: string | null;
+};
+declare const treasuryApi: {
+    listQrPayments: (filters?: QrPaymentFilters) => Promise<PaginatedResponse<QrPaymentRow>>;
+    qrPaymentsSummary: (month: string) => Promise<QrPaymentsSummary>;
+    exportQrPayments: (filters?: QrPaymentFilters) => Promise<ExportResult>;
+    listQrSummaries: (filters?: {
+        status?: QrSummaryStatus;
+    } & {
+        page?: number;
+        pageSize?: number;
+    }) => Promise<PaginatedResponse<QrMonthlySummary>>;
+    generateQrSummary: (month: string) => Promise<QrMonthlySummary>;
+    confirmQrSummary: (id: string) => Promise<QrMonthlySummary>;
+    decideQrSummary: (id: string, payload: {
+        approve: boolean;
+        reason?: string;
+    }) => Promise<QrMonthlySummary>;
+    listBankStatements: (filters?: {
+        page?: number;
+        pageSize?: number;
+    }) => Promise<PaginatedResponse<BankStatement>>;
+    getBankStatement: (id: string) => Promise<BankStatement & {
+        rows: BankStatementRow[];
+    }>;
+    createBankStatement: (payload: CreateBankStatementPayload) => Promise<BankStatement>;
+    receiptUsageReport: (filters?: ReceiptUsageFilters) => Promise<ReceiptUsageRow[]>;
+    receiptUsageSummary: (filters?: ReceiptUsageFilters) => Promise<ReceiptUsageSummary>;
+    receivablesReport: (asOf?: string) => Promise<ReceivableRow[]>;
+    receivablesDetail: (agencyId: string) => Promise<ReceivableDetailRow[]>;
+};
+
+export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApprovalRule, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type AuditLogEnvelope, type AuditLogListParams, type AuditLogRow, BankStatement, BankStatementRow, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type CancellationReportRow, type CancelledOrderRow, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, CreateBankStatementPayload, type CreateContainersBatchPayload, type CreateCustomerGroupPayload, type CreateDisbursementGroupV2Payload, type CreateExternalUserPayload, type CreateExternalUserResult, type CreateHolidayPayload, type CustomerGroupListParams, type CustomerGroupLite, type CustomerGroupLiteParams, type CustomerGroupProductRow, type CustomerGroupRow, type CustomerGroupWithStats, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, type DisbursementApproverRow, type DocumentPreference, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type MapUserPayload, type MapUserResult, type NotificationConfig, type OfficeItemSegments, type OrderFilters, type OrderQuote, type OrderQuotePayload, type PaymentMethodConfig, type PendingDelivery, QrMonthlySummary, QrPaymentFilters, QrPaymentRow, QrPaymentsSummary, QrSummaryStatus, ReceiptUsageFilters, ReceiptUsageRow, ReceiptUsageSummary, ReceivableDetailRow, ReceivableRow, type RecipientStrategy, type SavedAccountingCode, type SettingsMap, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateCustomerGroupPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, auditApi, configure, configureApproveClient, containersApi, customerGroupsApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, treasuryApi, usersAdminApi, usersApi };

@@ -41,6 +41,16 @@ export interface SettingsMap {
   sticker_config?: { org_tag?: string };
   /** เพดานรวมแพ็ค/วันส่ง (ทุกสินค้า) — 0 = ไม่จำกัด; คู่กับ daily_order_limits */
   daily_delivery_cap?: number;
+  // v1.56 — กองคลัง
+  /** อีเมลกองคลังรับแจ้งเตือนเอกสารเบิกจ่ายถึง (Phase 1) */
+  treasury_notify_emails?: string[];
+  // v1.56 Phase 2
+  /** true = การเงินต้อง confirm สรุปยอด QR ก่อนข้ามให้บัญชี approve (false = ข้ามขั้น) */
+  qr_summary_require_finance_confirm?: boolean;
+  /** column mapping ของไฟล์ bank statement — {} จนกว่าได้ไฟล์จริง (engine BLOCKED) */
+  bank_statement_column_mapping?: Record<string, unknown>;
+  /** จำนวนวันเกินกำหนดถือเป็นค้างชำระ (receivables aging — documents ไม่มี due_date) */
+  receivable_overdue_threshold_days?: number;
 }
 
 export interface UpdateSettingPayload {
