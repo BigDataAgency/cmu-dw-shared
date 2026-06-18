@@ -775,6 +775,7 @@ type ReceivableRow = {
     bucket_31_60: number;
     bucket_61_90: number;
     bucket_90_plus: number;
+    threshold_days: number;
 };
 type ReceivableDetailRow = {
     document_id: string;
@@ -784,6 +785,7 @@ type ReceivableDetailRow = {
     order_number: string | null;
     payment_status: string;
     age_days: number | null;
+    agency_name: string | null;
 };
 
 export { type AccountingCode7Seg, type Address, type AddressPayload, type AgencyKind, type AppRole, type ApproveDisbursementPayload, type ApproveVoidPayload, type AssignDeliveryPayload, type BankRowMatchStatus, type BankStatement, type BankStatementRow, type BankStatementStatus, type CancelOrderPayload, type CompleteDeliveryPayload, type ConfirmRoutePayload, type CreateBankStatementPayload, type CreateDisbursementGroupItem, type CreateDisbursementGroupPayload, type CreateOrderPayload, type CreateProductPayload, type CustomerGroup, DEFAULT_PAGE_SIZE, type DbAppRole, type Delivery, type DeliveryDetail, type DeliveryItem, type DeliveryStatus, type DeliveryType, type DisbursementApprovalConfig, type DisbursementApprovalConfigUpsertPayload, type DisbursementApprovalStep, type DisbursementEmailOutboxRow, type DisbursementEventType, type DisbursementExportBatch, type DisbursementGroup, type DisbursementGroupListFilters, type DisbursementItem, type DisbursementKind, type DisbursementPaymentChannel, type DisbursementStatus, type DisbursementTimelineEvent, type Document, type DocumentStatus, type DocumentType, type EligibleReceivable, type EligibleReceivablesFilters, type EmailOutboxStatus, type ExportedData, type FacultyCreditorAccount, type FacultyCreditorUpsertPayload, type GenerateRoutePayload, MAX_PAGE_SIZE, type MarkReadPayload, type MoveStopPayload, type Notification, type NotificationChannel, type NotificationType, type Order, type OrderItem, type OrderStatus, PAGE_SIZE_OPTIONS, type PageSize, type PaginatedResponse, type PaginationParams, type PaymentMethod, type Product, type ProductPrice, type Profile, type PushSubscriptionPayload, type QrMonthlySummary, type QrPaymentFilters, type QrPaymentRow, type QrPaymentStatusFilter, type QrPaymentsSummary, type QrSummaryStatus, type ReceiptUsageFilters, type ReceiptUsageRow, type ReceiptUsageSummary, type ReceivableDetailRow, type ReceivableRow, type RejectDisbursementPayload, type RejectVoidPayload, type ReorderStopsPayload, type ReturnBottlesPayload, type RoutePlan, type RoutePlanStop, type RouteStatus, type SearchParams, type SendNotificationPayload, type SendToAgencyPayload, type SendToAgencyResult, type ServerStatus, type ServerStatusBucket, type ServerStatusTable, type SettleDebtPayload, type Transaction, type TreasuryExportPayload, type TreasuryExportResult, type UpdateDeliveryStatusPayload, type UpdateProductPayload, type UpdateProfilePayload, type UserRole, type VoidRequest, clampPageSize, todayISO };

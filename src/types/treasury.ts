@@ -136,6 +136,9 @@ export type ReceivableRow = {
   bucket_31_60: number
   bucket_61_90: number
   bucket_90_plus: number
+  // L3 — ความกว้างช่วงอายุหนี้ (setting receivable_overdue_threshold_days, default 30);
+  // bucket แบ่งเป็น [0,T] / [T+1,2T] / [2T+1,3T] / >3T — UI ทำ label ตามค่านี้
+  threshold_days: number
 }
 
 export type ReceivableDetailRow = {
@@ -146,4 +149,5 @@ export type ReceivableDetailRow = {
   order_number: string | null
   payment_status: string
   age_days: number | null
+  agency_name: string | null // L7 — มาจาก RPC แล้ว (เลิกให้หน้าพิมพ์ดึง list ทั้งก้อนหาชื่อ)
 }
