@@ -309,6 +309,8 @@ var disbursementsApi = {
   approve: (id, payload) => post(`/finance/disbursement/groups/${id}/approve`, payload ?? {}),
   reject: (id, payload) => post(`/finance/disbursement/groups/${id}/reject`, payload),
   unlock: (id) => post(`/finance/disbursement/groups/${id}/unlock`, {}),
+  // A6 Path 1 — แก้ 7-segment ในใบที่ถูกตีกลับ (rejected_to_preparer)
+  updateItem: (itemId, payload) => patch(`/finance/disbursement/items/${itemId}`, payload),
   // ── Treasury ───────────────────────────────────────────────────────────
   treasuryExport: (payload) => post("/finance/disbursement/treasury/export", payload),
   finalApprove: (id) => post(`/finance/disbursement/groups/${id}/final-approve`, {}),
@@ -460,4 +462,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-GOURE36E.js.map
+//# sourceMappingURL=chunk-L763E6QB.js.map

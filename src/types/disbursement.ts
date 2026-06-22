@@ -75,6 +75,17 @@ export type AccountingCode7Seg = {
   funding_source_code?: string | null
 }
 
+/** A6 Path 1 — แก้ 7-segment ในใบที่ถูกตีกลับ (rejected_to_preparer); ทุก field required */
+export type UpdateDisbursementItemPayload = {
+  fund_code: string
+  organization_code: string
+  work_plan_code: string
+  account_code: string
+  curriculum_code: string
+  budget_code: string
+  funding_source_code: string
+}
+
 export type EligibleReceivable = {
   document_id: string
   document_number: string

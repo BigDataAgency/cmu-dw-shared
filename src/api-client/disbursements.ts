@@ -12,6 +12,8 @@ import type {
   EligibleReceivablesFilters,
   EligibleReceivable,
   DisbursementGroup,
+  DisbursementItem,
+  UpdateDisbursementItemPayload,
   DisbursementTimelineEvent,
   DisbursementExportBatch,
   FacultyCreditorAccount,
@@ -54,6 +56,10 @@ export const disbursementsApi = {
 
   unlock: (id: string): Promise<DisbursementGroup> =>
     post(`/finance/disbursement/groups/${id}/unlock`, {}),
+
+  // A6 Path 1 — แก้ 7-segment ในใบที่ถูกตีกลับ (rejected_to_preparer)
+  updateItem: (itemId: string, payload: UpdateDisbursementItemPayload): Promise<DisbursementItem> =>
+    patch(`/finance/disbursement/items/${itemId}`, payload),
 
   // ── Treasury ───────────────────────────────────────────────────────────
   treasuryExport: (payload: TreasuryExportPayload): Promise<TreasuryExportResult> =>
