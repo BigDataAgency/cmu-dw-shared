@@ -311,6 +311,8 @@ var disbursementsApi = {
   unlock: (id) => post(`/finance/disbursement/groups/${id}/unlock`, {}),
   // A6 Path 1 — แก้ 7-segment ในใบที่ถูกตีกลับ (rejected_to_preparer)
   updateItem: (itemId, payload) => patch(`/finance/disbursement/items/${itemId}`, payload),
+  // A6 Path 1 (faculty) — ดึงรหัสเจ้าหนี้คณะล่าสุดมาลงใบที่ถูกตีกลับ
+  resnapshotCreditor: (id) => post(`/finance/disbursement/groups/${id}/resnapshot-creditor`, {}),
   // ── Treasury ───────────────────────────────────────────────────────────
   treasuryExport: (payload) => post("/finance/disbursement/treasury/export", payload),
   finalApprove: (id) => post(`/finance/disbursement/groups/${id}/final-approve`, {}),
@@ -462,4 +464,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-L763E6QB.js.map
+//# sourceMappingURL=chunk-GU3WJOSZ.js.map

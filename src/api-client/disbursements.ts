@@ -61,6 +61,10 @@ export const disbursementsApi = {
   updateItem: (itemId: string, payload: UpdateDisbursementItemPayload): Promise<DisbursementItem> =>
     patch(`/finance/disbursement/items/${itemId}`, payload),
 
+  // A6 Path 1 (faculty) — ดึงรหัสเจ้าหนี้คณะล่าสุดมาลงใบที่ถูกตีกลับ
+  resnapshotCreditor: (id: string): Promise<DisbursementGroup> =>
+    post(`/finance/disbursement/groups/${id}/resnapshot-creditor`, {}),
+
   // ── Treasury ───────────────────────────────────────────────────────────
   treasuryExport: (payload: TreasuryExportPayload): Promise<TreasuryExportResult> =>
     post('/finance/disbursement/treasury/export', payload),

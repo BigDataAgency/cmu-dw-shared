@@ -839,6 +839,7 @@ declare const disbursementsApi: {
     reject: (id: string, payload: RejectDisbursementPayload) => Promise<DisbursementGroup>;
     unlock: (id: string) => Promise<DisbursementGroup>;
     updateItem: (itemId: string, payload: UpdateDisbursementItemPayload) => Promise<DisbursementItem>;
+    resnapshotCreditor: (id: string) => Promise<DisbursementGroup>;
     treasuryExport: (payload: TreasuryExportPayload) => Promise<TreasuryExportResult>;
     finalApprove: (id: string) => Promise<DisbursementGroup>;
     finalReject: (id: string, payload: RejectDisbursementPayload) => Promise<DisbursementGroup>;
