@@ -842,6 +842,15 @@ declare const disbursementsApi: {
     resnapshotCreditor: (id: string) => Promise<DisbursementGroup>;
     treasuryExport: (payload: TreasuryExportPayload) => Promise<TreasuryExportResult>;
     finalApprove: (id: string) => Promise<DisbursementGroup>;
+    finalApproveBatch: (group_ids: string[]) => Promise<{
+        succeeded: number;
+        failed: number;
+        results: Array<{
+            group_id: string;
+            ok: boolean;
+            error?: string;
+        }>;
+    }>;
     finalReject: (id: string, payload: RejectDisbursementPayload) => Promise<DisbursementGroup>;
     treasuryHistory: (filters?: {
         kind?: "faculty" | "office";

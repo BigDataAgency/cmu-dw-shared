@@ -316,6 +316,8 @@ var disbursementsApi = {
   // ── Treasury ───────────────────────────────────────────────────────────
   treasuryExport: (payload) => post("/finance/disbursement/treasury/export", payload),
   finalApprove: (id) => post(`/finance/disbursement/groups/${id}/final-approve`, {}),
+  // v1.57 — batch ตัดลูกหนี้หลายใบทีเดียว; server รายงานผลราย group (ใบที่ fail ไม่ล้มทั้งชุด)
+  finalApproveBatch: (group_ids) => post("/finance/disbursement/groups/final-approve-batch", { group_ids }),
   finalReject: (id, payload) => post(`/finance/disbursement/groups/${id}/final-reject`, payload),
   treasuryHistory: (filters) => get("/finance/disbursement/treasury/history", filters),
   // ── v1.56 — Finance (กองคลัง-การเงิน): คิวเช็ค/โอนผ่านบัญชี ────────────
@@ -471,4 +473,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-ZHF36N2K.js.map
+//# sourceMappingURL=chunk-HXQ4XXE6.js.map

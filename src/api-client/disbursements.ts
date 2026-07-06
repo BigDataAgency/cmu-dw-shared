@@ -72,6 +72,15 @@ export const disbursementsApi = {
   finalApprove: (id: string): Promise<DisbursementGroup> =>
     post(`/finance/disbursement/groups/${id}/final-approve`, {}),
 
+  // v1.57 — batch ตัดลูกหนี้หลายใบทีเดียว; server รายงานผลราย group (ใบที่ fail ไม่ล้มทั้งชุด)
+  finalApproveBatch: (
+    group_ids: string[],
+  ): Promise<{
+    succeeded: number
+    failed: number
+    results: Array<{ group_id: string; ok: boolean; error?: string }>
+  }> => post('/finance/disbursement/groups/final-approve-batch', { group_ids }),
+
   finalReject: (id: string, payload: RejectDisbursementPayload): Promise<DisbursementGroup> =>
     post(`/finance/disbursement/groups/${id}/final-reject`, payload),
 
