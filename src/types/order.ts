@@ -18,6 +18,10 @@ export type OrderItem = {
   quantity: number
   unit_price: number
   subtotal: number
+  // v1.57 — driver-edited actual delivered qty (display-only; billing stays on quantity).
+  // Present on GET /orders/:id items once the order is delivered/completed.
+  delivered_qty?: number | null
+  qty_edited?: boolean
 }
 
 export type Order = {

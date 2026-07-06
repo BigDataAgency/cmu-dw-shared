@@ -139,6 +139,8 @@ type OrderItem = {
     quantity: number;
     unit_price: number;
     subtotal: number;
+    delivered_qty?: number | null;
+    qty_edited?: boolean;
 };
 type Order = {
     id: string;
