@@ -383,6 +383,13 @@ async function handle(res) {
 }
 var approveApi = {
   /**
+   * v1.57 — Direct URL of the disbursement preview PDF for a magic-link token.
+   * The approve EF is deployed with verify_jwt=false, so this URL works as a
+   * plain <a href>/window.open target with no headers — token is the credential.
+   * Repeated views are safe (server-side validation has no side effects).
+   */
+  getPdfUrl: (token) => `${_baseUrl2}/approve/${encodeURIComponent(token)}/pdf`,
+  /**
    * Fetch the approver-safe summary for a magic-link token.
    * Side effect: marks the approver row as 'opened' on first call.
    */
@@ -464,4 +471,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-GU3WJOSZ.js.map
+//# sourceMappingURL=chunk-ZHF36N2K.js.map
