@@ -443,7 +443,30 @@ var treasuryApi = {
   receiptUsageSummary: (filters) => get("/finance/reports/receipt-usage/summary", filters),
   // ── P2-7 receivables ───────────────────────────────────────────────────
   receivablesReport: (asOf) => get("/finance/reports/receivables", asOf ? { as_of: asOf } : void 0),
-  receivablesDetail: (agencyId) => get(`/finance/reports/receivables/${agencyId}/detail`)
+  receivablesDetail: (agencyId) => get(`/finance/reports/receivables/${agencyId}/detail`),
+  // ── v1.58 — RPT-01,02,03,04,05,07,08,10 (real data) ─────────────────────
+  deliveryReportSummary: (filters) => get("/finance/reports/delivery/summary", filters),
+  deliveryReportByDriver: (filters) => get("/finance/reports/delivery/by-driver", filters),
+  stockLevels: () => get("/finance/reports/stock/levels"),
+  stockMovements: (filters) => get("/finance/reports/stock/movements", filters),
+  ordersReportSummary: (filters) => get("/finance/reports/orders/summary", filters),
+  ordersReportList: (filters) => get("/finance/reports/orders/list", filters),
+  paymentsReportSummary: (filters) => get("/finance/reports/payments/summary", filters),
+  paymentsByMethod: (filters) => get("/finance/reports/payments/by-method", filters),
+  invoicesReportList: (filters) => get("/finance/reports/invoices/list", filters),
+  invoicesReportSummary: (filters) => get("/finance/reports/invoices/summary", filters),
+  deliveryEvidenceReport: (filters) => get("/finance/reports/delivery-evidence", filters),
+  deliveryStatusSummary: (filters) => get("/finance/reports/delivery-status/summary", filters),
+  deliveryStatusList: (filters) => get("/finance/reports/delivery-status/list", filters),
+  salesReportSummary: (filters) => get("/finance/reports/sales/summary", filters),
+  salesByProduct: (filters) => get("/finance/reports/sales/by-product", filters),
+  salesDaily: (filters) => get("/finance/reports/sales/daily", filters),
+  // ── v1.58 bonus — Usage / Customers / Monthly (not TOR) ─────────────────
+  usageReportSummary: (filters) => get("/finance/reports/usage/summary", filters),
+  usageByUser: (filters) => get("/finance/reports/usage/by-user", filters),
+  customersReportSummary: (filters) => get("/finance/reports/customers/summary", filters),
+  customersByAgency: (filters) => get("/finance/reports/customers/by-agency", filters),
+  monthlyOverview: (filters) => get("/finance/reports/monthly", filters)
 };
 
 export {
@@ -473,4 +496,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-HXQ4XXE6.js.map
+//# sourceMappingURL=chunk-GRZHS3HD.js.map

@@ -24,7 +24,7 @@ import {
   treasuryApi,
   usersAdminApi,
   usersApi
-} from "../chunk-HXQ4XXE6.js";
+} from "../chunk-GRZHS3HD.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,

@@ -151,3 +151,204 @@ export type ReceivableDetailRow = {
   age_days: number | null
   agency_name: string | null // L7 — มาจาก RPC แล้ว (เลิกให้หน้าพิมพ์ดึง list ทั้งก้อนหาชื่อ)
 }
+
+// ─── v1.58 — RPT-01,02,03,04,05,07,08,10 (real data, replacing hardcoded mock) ──
+export type ReportDateRangeFilters = {
+  date_from?: string
+  date_to?: string
+}
+
+// RPT-01 รายงานการจัดส่งน้ำดื่ม
+export type DeliveryReportSummary = {
+  total_deliveries: number
+  delivered_count: number
+  failed_count: number
+  rejected_count: number
+  pending_count: number
+  success_rate: number
+}
+
+export type DeliveryByDriverRow = {
+  driver_id: string | null
+  driver_name: string
+  total_count: number
+  delivered_count: number
+  failed_count: number
+  rejected_count: number
+  success_rate: number
+}
+
+// RPT-02 รายงานสต็อกสินค้า
+export type StockLevelRow = {
+  product_id: string
+  sku: string
+  name: string
+  category: string | null
+  stock_qty: number
+  low_stock_threshold: number | null
+  is_low_stock: boolean
+}
+
+export type StockMovementRow = {
+  product_id: string
+  sku: string
+  name: string
+  stock_in: number
+  stock_out: number
+  adjust_qty: number
+  return_qty: number
+  internal_use_qty: number
+  net_change: number
+}
+
+// RPT-03 รายงานใบสั่งซื้อและใบจัดส่งของ
+export type OrdersReportSummary = {
+  total_orders: number
+  approved_count: number
+  in_transit_count: number
+  completed_count: number
+  cancelled_count: number
+  rejected_count: number
+  total_amount: number
+}
+
+export type OrdersReportRow = {
+  order_id: string
+  order_number: string
+  order_type: string
+  status: string
+  total_amount: number
+  created_at: string
+  delivery_note_number: string | null
+  delivery_status: string | null
+}
+
+// RPT-04 รายงานชำระเงินและใบเสร็จ
+export type PaymentsReportSummary = {
+  collected_amount: number
+  pending_amount: number
+  invoiced_amount: number
+  overdue_amount: number
+  refunded_amount: number
+  receipt_count: number
+}
+
+export type PaymentsByMethodRow = {
+  payment_method: string
+  order_count: number
+  total_amount: number
+}
+
+// RPT-05 รายงานใบแจ้งหนี้และวางบิล
+export type InvoiceReportRow = {
+  document_id: string
+  document_number: string
+  status: 'draft' | 'issued' | 'void'
+  issued_at: string | null
+  issued_to_name: string
+  agency_id: string | null
+  agency_name: string | null
+  amount: number
+  order_number: string | null
+  order_payment_status: string | null
+}
+
+export type InvoiceReportSummary = {
+  invoice_count: number
+  void_count: number
+  total_amount: number
+  paid_amount: number
+  outstanding_amount: number
+}
+
+// RPT-07 รายงานหลักฐานการส่งน้ำดื่ม
+export type DeliveryEvidenceRow = {
+  delivery_id: string
+  delivery_note_number: string
+  order_number: string
+  driver_name: string
+  completed_at: string | null
+  photo_count: number
+  has_signature: boolean
+  recipient_name: string | null
+}
+
+// RPT-08 รายงานสถานะการส่งน้ำสำเร็จ
+export type DeliveryStatusSummaryRow = {
+  status: string
+  delivery_count: number
+}
+
+export type DeliveryStatusRow = {
+  delivery_id: string
+  delivery_note_number: string
+  order_number: string
+  status: string
+  scheduled_date: string | null
+  completed_at: string | null
+  driver_name: string
+  rejection_reason: string | null
+}
+
+// RPT-10 รายงานยอดขาย+คำนวณกำไร
+export type SalesReportSummary = {
+  order_count: number
+  units_sold: number
+  revenue: number
+  cost: number
+  profit: number
+}
+
+export type SalesByProductRow = {
+  product_id: string
+  sku: string
+  name: string
+  units_sold: number
+  revenue: number
+  cost: number
+  profit: number
+}
+
+export type SalesDailyRow = {
+  sale_date: string
+  units_sold: number
+  revenue: number
+}
+
+// ─── v1.58 bonus — Usage / Customers / Monthly (not TOR, requested explicitly) ──
+export type UsageReportSummary = {
+  login_count: number
+  login_failed_count: number
+  active_user_count: number
+  action_count: number
+}
+
+export type UsageByUserRow = {
+  profile_id: string
+  full_name: string
+  role: string | null
+  last_login_at: string | null
+  action_count: number
+}
+
+export type CustomersReportSummary = {
+  total_customers: number
+  new_customers: number
+  repeat_customers: number
+  avg_orders_per_customer: number
+}
+
+export type CustomersByAgencyRow = {
+  agency_id: string
+  agency_name: string
+  order_count: number
+  total_amount: number
+  last_order_at: string | null
+}
+
+export type MonthlyOverview = {
+  revenue: number
+  order_count: number
+  new_customers: number
+  total_debt: number
+}

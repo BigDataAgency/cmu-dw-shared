@@ -807,5 +807,174 @@ type ReceivableDetailRow = {
     age_days: number | null;
     agency_name: string | null;
 };
+type ReportDateRangeFilters = {
+    date_from?: string;
+    date_to?: string;
+};
+type DeliveryReportSummary = {
+    total_deliveries: number;
+    delivered_count: number;
+    failed_count: number;
+    rejected_count: number;
+    pending_count: number;
+    success_rate: number;
+};
+type DeliveryByDriverRow = {
+    driver_id: string | null;
+    driver_name: string;
+    total_count: number;
+    delivered_count: number;
+    failed_count: number;
+    rejected_count: number;
+    success_rate: number;
+};
+type StockLevelRow = {
+    product_id: string;
+    sku: string;
+    name: string;
+    category: string | null;
+    stock_qty: number;
+    low_stock_threshold: number | null;
+    is_low_stock: boolean;
+};
+type StockMovementRow = {
+    product_id: string;
+    sku: string;
+    name: string;
+    stock_in: number;
+    stock_out: number;
+    adjust_qty: number;
+    return_qty: number;
+    internal_use_qty: number;
+    net_change: number;
+};
+type OrdersReportSummary = {
+    total_orders: number;
+    approved_count: number;
+    in_transit_count: number;
+    completed_count: number;
+    cancelled_count: number;
+    rejected_count: number;
+    total_amount: number;
+};
+type OrdersReportRow = {
+    order_id: string;
+    order_number: string;
+    order_type: string;
+    status: string;
+    total_amount: number;
+    created_at: string;
+    delivery_note_number: string | null;
+    delivery_status: string | null;
+};
+type PaymentsReportSummary = {
+    collected_amount: number;
+    pending_amount: number;
+    invoiced_amount: number;
+    overdue_amount: number;
+    refunded_amount: number;
+    receipt_count: number;
+};
+type PaymentsByMethodRow = {
+    payment_method: string;
+    order_count: number;
+    total_amount: number;
+};
+type InvoiceReportRow = {
+    document_id: string;
+    document_number: string;
+    status: 'draft' | 'issued' | 'void';
+    issued_at: string | null;
+    issued_to_name: string;
+    agency_id: string | null;
+    agency_name: string | null;
+    amount: number;
+    order_number: string | null;
+    order_payment_status: string | null;
+};
+type InvoiceReportSummary = {
+    invoice_count: number;
+    void_count: number;
+    total_amount: number;
+    paid_amount: number;
+    outstanding_amount: number;
+};
+type DeliveryEvidenceRow = {
+    delivery_id: string;
+    delivery_note_number: string;
+    order_number: string;
+    driver_name: string;
+    completed_at: string | null;
+    photo_count: number;
+    has_signature: boolean;
+    recipient_name: string | null;
+};
+type DeliveryStatusSummaryRow = {
+    status: string;
+    delivery_count: number;
+};
+type DeliveryStatusRow = {
+    delivery_id: string;
+    delivery_note_number: string;
+    order_number: string;
+    status: string;
+    scheduled_date: string | null;
+    completed_at: string | null;
+    driver_name: string;
+    rejection_reason: string | null;
+};
+type SalesReportSummary = {
+    order_count: number;
+    units_sold: number;
+    revenue: number;
+    cost: number;
+    profit: number;
+};
+type SalesByProductRow = {
+    product_id: string;
+    sku: string;
+    name: string;
+    units_sold: number;
+    revenue: number;
+    cost: number;
+    profit: number;
+};
+type SalesDailyRow = {
+    sale_date: string;
+    units_sold: number;
+    revenue: number;
+};
+type UsageReportSummary = {
+    login_count: number;
+    login_failed_count: number;
+    active_user_count: number;
+    action_count: number;
+};
+type UsageByUserRow = {
+    profile_id: string;
+    full_name: string;
+    role: string | null;
+    last_login_at: string | null;
+    action_count: number;
+};
+type CustomersReportSummary = {
+    total_customers: number;
+    new_customers: number;
+    repeat_customers: number;
+    avg_orders_per_customer: number;
+};
+type CustomersByAgencyRow = {
+    agency_id: string;
+    agency_name: string;
+    order_count: number;
+    total_amount: number;
+    last_order_at: string | null;
+};
+type MonthlyOverview = {
+    revenue: number;
+    order_count: number;
+    new_customers: number;
+    total_debt: number;
+};
 
-export { type AccountingCode7Seg, type Address, type AddressPayload, type AgencyKind, type AppRole, type ApproveDisbursementPayload, type ApproveVoidPayload, type AssignDeliveryPayload, type BankRowMatchStatus, type BankStatement, type BankStatementRow, type BankStatementStatus, type CancelOrderPayload, type CompleteDeliveryPayload, type ConfirmRoutePayload, type CreateBankStatementPayload, type CreateDisbursementGroupItem, type CreateDisbursementGroupPayload, type CreateOrderPayload, type CreateProductPayload, type CustomerGroup, DEFAULT_PAGE_SIZE, type DbAppRole, type Delivery, type DeliveryDetail, type DeliveryItem, type DeliveryStatus, type DeliveryType, type DisbursementApprovalConfig, type DisbursementApprovalConfigUpsertPayload, type DisbursementApprovalStep, type DisbursementEmailOutboxRow, type DisbursementEventType, type DisbursementExportBatch, type DisbursementGroup, type DisbursementGroupListFilters, type DisbursementItem, type DisbursementKind, type DisbursementPaymentChannel, type DisbursementStatus, type DisbursementTimelineEvent, type Document, type DocumentStatus, type DocumentType, type EligibleReceivable, type EligibleReceivablesFilters, type EmailOutboxStatus, type ExportedData, type FacultyCreditorAccount, type FacultyCreditorUpsertPayload, type GenerateRoutePayload, MAX_PAGE_SIZE, type MarkReadPayload, type MoveStopPayload, type Notification, type NotificationChannel, type NotificationType, type Order, type OrderItem, type OrderStatus, PAGE_SIZE_OPTIONS, type PageSize, type PaginatedResponse, type PaginationParams, type PaymentMethod, type Product, type ProductPrice, type Profile, type PushSubscriptionPayload, type QrMonthlySummary, type QrPaymentFilters, type QrPaymentRow, type QrPaymentStatusFilter, type QrPaymentsSummary, type QrSummaryStatus, type ReceiptUsageFilters, type ReceiptUsageRow, type ReceiptUsageSummary, type ReceivableDetailRow, type ReceivableRow, type RejectDisbursementPayload, type RejectVoidPayload, type ReorderStopsPayload, type ReturnBottlesPayload, type RoutePlan, type RoutePlanStop, type RouteStatus, type SearchParams, type SendNotificationPayload, type SendToAgencyPayload, type SendToAgencyResult, type ServerStatus, type ServerStatusBucket, type ServerStatusTable, type SettleDebtPayload, type Transaction, type TreasuryExportPayload, type TreasuryExportResult, type UpdateDeliveryStatusPayload, type UpdateDisbursementItemPayload, type UpdateProductPayload, type UpdateProfilePayload, type UserRole, type VoidRequest, clampPageSize, todayISO };
+export { type AccountingCode7Seg, type Address, type AddressPayload, type AgencyKind, type AppRole, type ApproveDisbursementPayload, type ApproveVoidPayload, type AssignDeliveryPayload, type BankRowMatchStatus, type BankStatement, type BankStatementRow, type BankStatementStatus, type CancelOrderPayload, type CompleteDeliveryPayload, type ConfirmRoutePayload, type CreateBankStatementPayload, type CreateDisbursementGroupItem, type CreateDisbursementGroupPayload, type CreateOrderPayload, type CreateProductPayload, type CustomerGroup, type CustomersByAgencyRow, type CustomersReportSummary, DEFAULT_PAGE_SIZE, type DbAppRole, type Delivery, type DeliveryByDriverRow, type DeliveryDetail, type DeliveryEvidenceRow, type DeliveryItem, type DeliveryReportSummary, type DeliveryStatus, type DeliveryStatusRow, type DeliveryStatusSummaryRow, type DeliveryType, type DisbursementApprovalConfig, type DisbursementApprovalConfigUpsertPayload, type DisbursementApprovalStep, type DisbursementEmailOutboxRow, type DisbursementEventType, type DisbursementExportBatch, type DisbursementGroup, type DisbursementGroupListFilters, type DisbursementItem, type DisbursementKind, type DisbursementPaymentChannel, type DisbursementStatus, type DisbursementTimelineEvent, type Document, type DocumentStatus, type DocumentType, type EligibleReceivable, type EligibleReceivablesFilters, type EmailOutboxStatus, type ExportedData, type FacultyCreditorAccount, type FacultyCreditorUpsertPayload, type GenerateRoutePayload, type InvoiceReportRow, type InvoiceReportSummary, MAX_PAGE_SIZE, type MarkReadPayload, type MonthlyOverview, type MoveStopPayload, type Notification, type NotificationChannel, type NotificationType, type Order, type OrderItem, type OrderStatus, type OrdersReportRow, type OrdersReportSummary, PAGE_SIZE_OPTIONS, type PageSize, type PaginatedResponse, type PaginationParams, type PaymentMethod, type PaymentsByMethodRow, type PaymentsReportSummary, type Product, type ProductPrice, type Profile, type PushSubscriptionPayload, type QrMonthlySummary, type QrPaymentFilters, type QrPaymentRow, type QrPaymentStatusFilter, type QrPaymentsSummary, type QrSummaryStatus, type ReceiptUsageFilters, type ReceiptUsageRow, type ReceiptUsageSummary, type ReceivableDetailRow, type ReceivableRow, type RejectDisbursementPayload, type RejectVoidPayload, type ReorderStopsPayload, type ReportDateRangeFilters, type ReturnBottlesPayload, type RoutePlan, type RoutePlanStop, type RouteStatus, type SalesByProductRow, type SalesDailyRow, type SalesReportSummary, type SearchParams, type SendNotificationPayload, type SendToAgencyPayload, type SendToAgencyResult, type ServerStatus, type ServerStatusBucket, type ServerStatusTable, type SettleDebtPayload, type StockLevelRow, type StockMovementRow, type Transaction, type TreasuryExportPayload, type TreasuryExportResult, type UpdateDeliveryStatusPayload, type UpdateDisbursementItemPayload, type UpdateProductPayload, type UpdateProfilePayload, type UsageByUserRow, type UsageReportSummary, type UserRole, type VoidRequest, clampPageSize, todayISO };
