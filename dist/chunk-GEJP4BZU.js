@@ -7,7 +7,12 @@ function clampPageSize(n) {
   return Math.min(n, MAX_PAGE_SIZE);
 }
 function todayISO() {
-  return (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Bangkok",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(/* @__PURE__ */ new Date());
 }
 
 export {
@@ -17,4 +22,4 @@ export {
   clampPageSize,
   todayISO
 };
-//# sourceMappingURL=chunk-XOQVGVPE.js.map
+//# sourceMappingURL=chunk-GEJP4BZU.js.map

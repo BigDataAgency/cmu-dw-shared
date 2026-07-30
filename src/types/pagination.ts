@@ -26,6 +26,19 @@ export function clampPageSize(n: number | undefined): number {
   return Math.min(n, MAX_PAGE_SIZE)
 }
 
+/**
+ * "Today" in Asia/Bangkok (UTC+7) as YYYY-MM-DD.
+ *
+ * Must NOT use toISOString(), which is UTC: between 00:00 and 07:00 ICT that
+ * returns YESTERDAY's date. Driver job lists query `scheduled_date = todayISO()`,
+ * so a UTC value showed drivers an empty job list at the very start of a shift.
+ * en-CA formatting yields YYYY-MM-DD directly.
+ */
 export function todayISO(): string {
-  return new Date().toISOString().slice(0, 10)
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Bangkok',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
 }

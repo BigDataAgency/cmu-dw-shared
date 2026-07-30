@@ -431,6 +431,14 @@ type PaginatedResponse<T> = {
     totalPages: number;
 };
 declare function clampPageSize(n: number | undefined): number;
+/**
+ * "Today" in Asia/Bangkok (UTC+7) as YYYY-MM-DD.
+ *
+ * Must NOT use toISOString(), which is UTC: between 00:00 and 07:00 ICT that
+ * returns YESTERDAY's date. Driver job lists query `scheduled_date = todayISO()`,
+ * so a UTC value showed drivers an empty job list at the very start of a shift.
+ * en-CA formatting yields YYYY-MM-DD directly.
+ */
 declare function todayISO(): string;
 
 type AgencyKind = 'faculty' | 'office' | 'external';
