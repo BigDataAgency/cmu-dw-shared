@@ -1,10 +1,5 @@
 export type AppRole = 'customer' | 'driver' | 'vendor' | 'pos' | 'admin' | 'superadmin'
 
-export type UserRole = {
-  role: AppRole
-  is_active: boolean
-}
-
 export type Profile = {
   id: string
   email: string | null
@@ -14,7 +9,11 @@ export type Profile = {
   billing_name: string | null
   billing_address: string | null
   billing_tax_id: string | null
-  roles: UserRole[]
+  // `profiles_with_roles` (backend/supabase/functions/users/index.ts) returns
+  // roles as a plain string[] (public.app_role[]), not objects — verified
+  // 31 Jul 2026 after ExportPage.tsx shipped a silent bug trusting the old
+  // `UserRole[]` shape, which no consumer in this repo ever actually used.
+  roles: string[]
   created_at: string
   updated_at: string
 }
