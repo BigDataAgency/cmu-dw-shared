@@ -1101,7 +1101,6 @@ interface CustomerGroupRow {
     is_discount: boolean | null;
     qr_discount_mode: 'baht_per_pack' | 'percent' | null;
     qr_discount_value: number | null;
-    sale_map_allowed: boolean | null;
     is_personal: boolean | null;
     owner_user_id: string | null;
     agency_id: string | null;
@@ -1149,7 +1148,6 @@ type CreateCustomerGroupPayload = {
     is_discount?: boolean;
     qr_discount_mode?: 'baht_per_pack' | 'percent' | null;
     qr_discount_value?: number | null;
-    sale_map_allowed?: boolean;
     is_personal?: boolean;
     owner_user_id?: string | null;
     agency_id?: string | null;
