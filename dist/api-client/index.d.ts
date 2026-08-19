@@ -467,6 +467,7 @@ declare const notificationsApi: {
 
 type DocumentFilters = PaginationParams & SearchParams & {
     type?: string;
+    status?: string;
     date_from?: string;
     date_to?: string;
 };
@@ -492,6 +493,9 @@ declare const documentsApi: {
     }>;
     getById: (id: string) => Promise<Document>;
     batchPrint: (deliveryIds: string[], docType?: BatchPrintDocType) => Promise<BatchPrintResult>;
+    void: (id: string, reason: string) => Promise<{
+        success: boolean;
+    }>;
     printContainerLabels: (containerIds: string[]) => Promise<BatchPrintResult>;
 };
 
@@ -907,6 +911,10 @@ declare const disbursementsApi: {
     setApprovalTemplate: (customerGroupId: string, steps: ApproverInput[]) => Promise<{
         steps_saved: number;
     }>;
+    getAgencyApprovalTemplate: (agencyId: string) => Promise<ApprovalTemplateStep[]>;
+    setAgencyApprovalTemplate: (agencyId: string, steps: ApproverInput[]) => Promise<{
+        steps_saved: number;
+    }>;
     listSavedCodes: (params?: {
         q?: string;
         limit?: number;
@@ -1234,4 +1242,4 @@ declare const treasuryApi: {
     monthlyOverview: (filters?: ReportDateRangeFilters) => Promise<MonthlyOverview>;
 };
 
-export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApprovalRule, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type AuditLogEnvelope, type AuditLogListParams, type AuditLogRow, BankStatement, BankStatementRow, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type CancellationReportRow, type CancelledOrderRow, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, CreateBankStatementPayload, type CreateContainersBatchPayload, type CreateCustomerGroupPayload, type CreateDisbursementGroupV2Payload, type CreateExternalUserPayload, type CreateExternalUserResult, type CreateHolidayPayload, type CustomerGroupListParams, type CustomerGroupLite, type CustomerGroupLiteParams, type CustomerGroupProductRow, type CustomerGroupRow, type CustomerGroupWithStats, CustomersByAgencyRow, CustomersReportSummary, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, DeliveryByDriverRow, DeliveryEvidenceRow, DeliveryReportSummary, DeliveryStatusRow, DeliveryStatusSummaryRow, type DisbursementApproverRow, type DocumentPreference, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, InvoiceReportRow, InvoiceReportSummary, type MapUserPayload, type MapUserResult, MonthlyOverview, type NotificationConfig, type OfficeItemSegments, type OrderFilters, type OrderQuote, type OrderQuotePayload, OrdersReportRow, OrdersReportSummary, type PaymentMethodConfig, PaymentsByMethodRow, PaymentsReportSummary, type PendingDelivery, QrMonthlySummary, QrPaymentFilters, QrPaymentRow, QrPaymentsSummary, QrSummaryStatus, ReceiptUsageFilters, ReceiptUsageRow, ReceiptUsageSummary, ReceivableDetailRow, ReceivableRow, type RecipientStrategy, ReportDateRangeFilters, SalesByProductRow, SalesDailyRow, SalesReportSummary, type SavedAccountingCode, type SettingsMap, StockLevelRow, StockMovementRow, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateCustomerGroupPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, UsageByUserRow, UsageReportSummary, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, auditApi, configure, configureApproveClient, containersApi, customerGroupsApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, treasuryApi, usersAdminApi, usersApi };
+export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApprovalRule, type ApprovalTemplateStep, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type AuditLogEnvelope, type AuditLogListParams, type AuditLogRow, BankStatement, BankStatementRow, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type CancellationReportRow, type CancelledOrderRow, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, CreateBankStatementPayload, type CreateContainersBatchPayload, type CreateCustomerGroupPayload, type CreateDisbursementGroupV2Payload, type CreateExternalUserPayload, type CreateExternalUserResult, type CreateHolidayPayload, type CustomerGroupListParams, type CustomerGroupLite, type CustomerGroupLiteParams, type CustomerGroupProductRow, type CustomerGroupRow, type CustomerGroupWithStats, CustomersByAgencyRow, CustomersReportSummary, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, DeliveryByDriverRow, DeliveryEvidenceRow, DeliveryReportSummary, DeliveryStatusRow, DeliveryStatusSummaryRow, type DisbursementApproverRow, type DocumentPreference, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, InvoiceReportRow, InvoiceReportSummary, type MapUserPayload, type MapUserResult, MonthlyOverview, type NotificationConfig, type OfficeItemSegments, type OrderFilters, type OrderQuote, type OrderQuotePayload, OrdersReportRow, OrdersReportSummary, type PaymentMethodConfig, PaymentsByMethodRow, PaymentsReportSummary, type PendingDelivery, QrMonthlySummary, QrPaymentFilters, QrPaymentRow, QrPaymentsSummary, QrSummaryStatus, ReceiptUsageFilters, ReceiptUsageRow, ReceiptUsageSummary, ReceivableDetailRow, ReceivableRow, type RecipientStrategy, ReportDateRangeFilters, SalesByProductRow, SalesDailyRow, SalesReportSummary, type SavedAccountingCode, type SettingsMap, StockLevelRow, StockMovementRow, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateCustomerGroupPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, UsageByUserRow, UsageReportSummary, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, auditApi, configure, configureApproveClient, containersApi, customerGroupsApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, treasuryApi, usersAdminApi, usersApi };

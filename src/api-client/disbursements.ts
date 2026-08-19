@@ -177,6 +177,19 @@ export const disbursementsApi = {
       steps,
     }),
 
+  // ── v1.59 — สายอนุมัติระดับหน่วยงาน (ใช้กับใบวางบิลของคณะ) ─────────────
+  getAgencyApprovalTemplate: (agencyId: string): Promise<ApprovalTemplateStep[]> =>
+    get('/finance/disbursement/agency-approval-template', { agency_id: agencyId }),
+
+  setAgencyApprovalTemplate: (
+    agencyId: string,
+    steps: ApproverInput[],
+  ): Promise<{ steps_saved: number }> =>
+    post('/finance/disbursement/agency-approval-template', {
+      agency_id: agencyId,
+      steps,
+    }),
+
   // ── v1.47 — saved 7-segment codes ──────────────────────────────────────
   listSavedCodes: (params?: { q?: string; limit?: number }): Promise<SavedAccountingCode[]> =>
     get('/finance/saved-codes', params as Record<string, unknown> | undefined),

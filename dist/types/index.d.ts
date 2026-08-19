@@ -515,6 +515,8 @@ type DisbursementGroup = {
     customer_group_id?: string | null;
     current_step?: number;
     total_steps?: number;
+    /** true = ใบเก่าที่ยังวิ่งบนสายอนุมัติรุ่น v1.40/41 (แช่แข็งแล้ว) — หน้าจอใช้แยกปุ่มส่งอนุมัติ */
+    uses_legacy_chain?: boolean;
     payment_channel?: DisbursementPaymentChannel | null;
     locked_at?: string | null;
     final_pdf_sha256?: string | null;

@@ -198,6 +198,9 @@ var documentsApi = {
   generatePdf: (payload) => post("/documents/pdf", payload),
   getById: (id) => get(`/documents/${id}`),
   batchPrint: (deliveryIds, docType = "delivery_note") => post("/documents/batch-print", { delivery_ids: deliveryIds, doc_type: docType }),
+  // Voiding goes through the Edge Function so it gets a role check and an audit
+  // row; admin used to UPDATE the table straight from the browser.
+  void: (id, reason) => patch(`/documents/${id}/void`, { reason }),
   // v1.39.0: per-container TK label print (sticker pivot)
   printContainerLabels: (containerIds) => post("/documents/print-container-labels", { container_ids: containerIds })
 };
@@ -350,6 +353,12 @@ var disbursementsApi = {
     customer_group_id: customerGroupId,
     steps
   }),
+  // ── v1.59 — สายอนุมัติระดับหน่วยงาน (ใช้กับใบวางบิลของคณะ) ─────────────
+  getAgencyApprovalTemplate: (agencyId) => get("/finance/disbursement/agency-approval-template", { agency_id: agencyId }),
+  setAgencyApprovalTemplate: (agencyId, steps) => post("/finance/disbursement/agency-approval-template", {
+    agency_id: agencyId,
+    steps
+  }),
   // ── v1.47 — saved 7-segment codes ──────────────────────────────────────
   listSavedCodes: (params) => get("/finance/saved-codes", params),
   deleteSavedCode: (id) => del(`/finance/saved-codes/${id}`),
@@ -496,4 +505,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-VGTPTPBF.js.map
+//# sourceMappingURL=chunk-OMCWVZIJ.js.map

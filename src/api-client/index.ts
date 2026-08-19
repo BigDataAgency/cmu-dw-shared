@@ -78,6 +78,7 @@ export { disbursementsApi } from "./disbursements";
 export type {
   PendingDelivery,
   ApproverInput,
+  ApprovalTemplateStep,
   OfficeItemSegments,
   CreateDisbursementGroupV2Payload,
   DelegateApproverPayload,

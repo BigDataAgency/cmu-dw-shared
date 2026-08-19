@@ -31,7 +31,7 @@ import {
   treasuryApi,
   usersAdminApi,
   usersApi
-} from "./chunk-VGTPTPBF.js";
+} from "./chunk-OMCWVZIJ.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,

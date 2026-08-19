@@ -135,6 +135,8 @@ export type DisbursementGroup = {
   customer_group_id?: string | null
   current_step?: number
   total_steps?: number
+  /** true = ใบเก่าที่ยังวิ่งบนสายอนุมัติรุ่น v1.40/41 (แช่แข็งแล้ว) — หน้าจอใช้แยกปุ่มส่งอนุมัติ */
+  uses_legacy_chain?: boolean
   // v1.52 CR4
   payment_channel?: DisbursementPaymentChannel | null
   locked_at?: string | null
