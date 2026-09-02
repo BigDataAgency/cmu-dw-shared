@@ -109,6 +109,10 @@ type Product = {
     is_pos_sellable?: boolean;
     size?: string | null;
     unit?: string | null;
+    vendor_id?: string | null;
+    vendors?: {
+        brand_name: string;
+    } | null;
     prices: ProductPrice[];
     created_at: string;
     updated_at: string;
