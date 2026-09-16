@@ -29,7 +29,7 @@ export interface SettingsMap {
   // F4 — ส่วนลดชำระล่วงหน้า (QR): default 1฿/แพ็ค, override ต่อกลุ่มได้ที่ customer_groups
   qr_discount_config?: {
     enabled?: boolean;
-    mode?: 'baht_per_pack' | 'percent';
+    mode?: "baht_per_pack" | "percent";
     value?: number;
   };
   // v1.55 (meeting item 6 §3) — Global Settings
@@ -51,6 +51,7 @@ export interface SettingsMap {
   bank_statement_column_mapping?: Record<string, unknown>;
   /** จำนวนวันเกินกำหนดถือเป็นค้างชำระ (receivables aging — documents ไม่มี due_date) */
   receivable_overdue_threshold_days?: number;
+  document_org_info?: Record<string, unknown>;
 }
 
 export interface UpdateSettingPayload {
