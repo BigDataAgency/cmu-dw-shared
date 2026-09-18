@@ -6,6 +6,8 @@ import type { PaginationParams, SearchParams, PaginatedResponse } from '../types
 export type ContainerFilters = PaginationParams & SearchParams & {
   status?: string
   product_id?: string
+  dateFrom?: string // YYYY-MM-DD
+  dateTo?: string // YYYY-MM-DD
 }
 
 export type ContainerScanType =
