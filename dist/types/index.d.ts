@@ -86,7 +86,7 @@ interface ExportedData {
     }[];
 }
 
-type CustomerGroup = 'general' | 'university' | 'wholesale' | 'vip';
+type CustomerGroup = "general" | "university" | "wholesale" | "vip";
 type ProductPrice = {
     id: string;
     customer_group: CustomerGroup;
@@ -125,7 +125,7 @@ type CreateProductPayload = {
     size?: string | null;
     unit?: string | null;
     is_pos_sellable?: boolean;
-    prices?: Omit<ProductPrice, 'id'>[];
+    prices?: Omit<ProductPrice, "id">[];
 };
 type UpdateProductPayload = Partial<CreateProductPayload>;
 
@@ -977,6 +977,16 @@ type MonthlyOverview = {
     order_count: number;
     new_customers: number;
     total_debt: number;
+    /** จำนวนหน่วยงานที่สั่งซื้อในช่วง (distinct agency_id, ไม่นับ cancelled/rejected) */
+    agency_count: number;
+    /** ยอดเฉลี่ยต่อออเดอร์ (บาท) — revenue / order_count, 0 ถ้าไม่มีออเดอร์ */
+    avg_order_value: number;
+    /** จำนวนใบส่งของที่จัดส่งสำเร็จในช่วง (status = 'delivered') */
+    delivery_count: number;
+    /** ยอดขายแยกตามช่องทางชำระ — { cash, qr_promptpay, payroll_deduction, invoice_billing } */
+    revenue_by_payment_method: Record<string, number>;
+    /** ยอดขายแยกประเภทสินค้า — { returnable: ถัง, non_returnable: แพ็ค/กล่อง } */
+    revenue_by_product_type: Record<string, number>;
 };
 
 export { type AccountingCode7Seg, type Address, type AddressPayload, type AgencyKind, type AppRole, type ApproveDisbursementPayload, type ApproveVoidPayload, type AssignDeliveryPayload, type BankRowMatchStatus, type BankStatement, type BankStatementRow, type BankStatementStatus, type CancelOrderPayload, type CompleteDeliveryPayload, type ConfirmRoutePayload, type CreateBankStatementPayload, type CreateDisbursementGroupItem, type CreateDisbursementGroupPayload, type CreateOrderPayload, type CreateProductPayload, type CustomerGroup, type CustomersByAgencyRow, type CustomersReportSummary, DEFAULT_PAGE_SIZE, type DbAppRole, type Delivery, type DeliveryByDriverRow, type DeliveryDetail, type DeliveryEvidenceRow, type DeliveryItem, type DeliveryReportSummary, type DeliveryStatus, type DeliveryStatusRow, type DeliveryStatusSummaryRow, type DeliveryType, type DisbursementApprovalConfig, type DisbursementApprovalConfigUpsertPayload, type DisbursementApprovalStep, type DisbursementEmailOutboxRow, type DisbursementEventType, type DisbursementExportBatch, type DisbursementGroup, type DisbursementGroupListFilters, type DisbursementItem, type DisbursementKind, type DisbursementPaymentChannel, type DisbursementStatus, type DisbursementTimelineEvent, type Document, type DocumentStatus, type DocumentType, type EligibleReceivable, type EligibleReceivablesFilters, type EmailOutboxStatus, type ExportedData, type FacultyCreditorAccount, type FacultyCreditorUpsertPayload, type GenerateRoutePayload, type InvoiceReportRow, type InvoiceReportSummary, MAX_PAGE_SIZE, type MarkReadPayload, type MonthlyOverview, type MoveStopPayload, type Notification, type NotificationChannel, type NotificationType, type Order, type OrderItem, type OrderStatus, type OrdersReportRow, type OrdersReportSummary, PAGE_SIZE_OPTIONS, type PageSize, type PaginatedResponse, type PaginationParams, type PaymentMethod, type PaymentsByMethodRow, type PaymentsReportSummary, type Product, type ProductPrice, type Profile, type PushSubscriptionPayload, type QrMonthlySummary, type QrPaymentFilters, type QrPaymentRow, type QrPaymentStatusFilter, type QrPaymentsSummary, type QrSummaryStatus, type ReceiptUsageFilters, type ReceiptUsageRow, type ReceiptUsageSummary, type ReceivableDetailRow, type ReceivableRow, type RejectDisbursementPayload, type RejectVoidPayload, type ReorderStopsPayload, type ReportDateRangeFilters, type ReturnBottlesPayload, type RoutePlan, type RoutePlanStop, type RouteStatus, type SalesByProductRow, type SalesDailyRow, type SalesReportSummary, type SearchParams, type SendNotificationPayload, type SendToAgencyPayload, type SendToAgencyResult, type ServerStatus, type ServerStatusBucket, type ServerStatusTable, type SettleDebtPayload, type StockLevelRow, type StockMovementRow, type Transaction, type TreasuryExportPayload, type TreasuryExportResult, type UpdateDeliveryStatusPayload, type UpdateDisbursementItemPayload, type UpdateProductPayload, type UpdateProfilePayload, type UsageByUserRow, type UsageReportSummary, type VoidRequest, clampPageSize, todayISO };

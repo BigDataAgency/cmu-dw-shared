@@ -502,6 +502,8 @@ declare const documentsApi: {
 type ContainerFilters = PaginationParams & SearchParams & {
     status?: string;
     product_id?: string;
+    dateFrom?: string;
+    dateTo?: string;
 };
 type ContainerScanType = 'load_truck' | 'deliver' | 'collect_return' | 'pos_return' | 'receive_depot' | 'audit' | 'unload_truck';
 type BatchScanPayload = {
@@ -654,7 +656,7 @@ interface SettingsMap {
     pickup_discount_pct?: number;
     qr_discount_config?: {
         enabled?: boolean;
-        mode?: 'baht_per_pack' | 'percent';
+        mode?: "baht_per_pack" | "percent";
         value?: number;
     };
     /** เปิด/ปิดคิวอีเมลเบิกจ่ายรายขั้นตอน (submitted/approved/rejected/treasury_rejected) */
@@ -677,6 +679,7 @@ interface SettingsMap {
     bank_statement_column_mapping?: Record<string, unknown>;
     /** จำนวนวันเกินกำหนดถือเป็นค้างชำระ (receivables aging — documents ไม่มี due_date) */
     receivable_overdue_threshold_days?: number;
+    document_org_info?: Record<string, unknown>;
 }
 interface UpdateSettingPayload {
     key: string;
