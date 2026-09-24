@@ -116,6 +116,14 @@ declare const ordersApi: {
     getById: (id: string) => Promise<Order>;
     create: (payload: CreateOrderPayload) => Promise<Order>;
     cancel: (id: string, payload: CancelOrderPayload) => Promise<void>;
+    /**
+     * ชื่อโครงการ (optional) ที่จะติดไปบนใบเสร็จ/ใบสำคัญรับเงิน
+     * ต้องตั้งก่อนออกเอกสาร — documents.project_name เป็น snapshot
+     */
+    setProjectName: (id: string, projectName: string | null) => Promise<{
+        order_id: string;
+        project_name: string | null;
+    }>;
     updateStatus: (id: string, payload: UpdateOrderStatusPayload) => Promise<unknown>;
     returnBottles: (id: string, payload: ReturnBottlesPayload) => Promise<unknown>;
     availableDates: (params: {
@@ -883,6 +891,10 @@ declare const disbursementsApi: {
         date_from?: string;
         date_to?: string;
     } & PaginationParams) => Promise<PaginatedResponse<DisbursementExportBatch>>;
+    propertyFinanceForward: (id: string, payload?: {
+        note?: string;
+    }) => Promise<DisbursementGroup>;
+    propertyFinanceReject: (id: string, payload: RejectDisbursementPayload) => Promise<DisbursementGroup>;
     financeApprove: (id: string) => Promise<DisbursementGroup>;
     financeReject: (id: string, payload: RejectDisbursementPayload) => Promise<DisbursementGroup>;
     reExportBatch: (batchId: string) => Promise<{

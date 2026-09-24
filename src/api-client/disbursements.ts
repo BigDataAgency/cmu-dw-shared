@@ -1,6 +1,6 @@
 // v1.40.0 — Admin Disbursement Menu — api-client
 
-import { get, post, patch, del } from './fetch'
+import { get, post, patch, del } from "./fetch";
 import type {
   CreateDisbursementGroupPayload,
   ApproveDisbursementPayload,
@@ -22,19 +22,21 @@ import type {
   DisbursementEmailOutboxRow,
   EmailOutboxStatus,
   DisbursementPaymentChannel,
-} from '../types/disbursement'
-import type { PaginatedResponse, PaginationParams } from '../types/pagination'
+} from "../types/disbursement";
+import type { PaginatedResponse, PaginationParams } from "../types/pagination";
 
 export const disbursementsApi = {
   // ── Eligible receivables ───────────────────────────────────────────────
-  listEligible: (filters?: EligibleReceivablesFilters): Promise<EligibleReceivable[]> =>
-    get('/finance/disbursement/eligible', filters as Record<string, unknown>),
+  listEligible: (
+    filters?: EligibleReceivablesFilters
+  ): Promise<EligibleReceivable[]> =>
+    get("/finance/disbursement/eligible", filters as Record<string, unknown>),
 
   // ── Groups ─────────────────────────────────────────────────────────────
   listGroups: (
-    filters?: DisbursementGroupListFilters & PaginationParams,
+    filters?: DisbursementGroupListFilters & PaginationParams
   ): Promise<PaginatedResponse<DisbursementGroup>> =>
-    get('/finance/disbursement/groups', filters as Record<string, unknown>),
+    get("/finance/disbursement/groups", filters as Record<string, unknown>),
 
   getGroup: (id: string): Promise<DisbursementGroup> =>
     get(`/finance/disbursement/groups/${id}`),
@@ -42,23 +44,34 @@ export const disbursementsApi = {
   getTimeline: (id: string): Promise<DisbursementTimelineEvent[]> =>
     get(`/finance/disbursement/groups/${id}/timeline`),
 
-  createGroup: (payload: CreateDisbursementGroupPayload): Promise<DisbursementGroup> =>
-    post('/finance/disbursement/groups', payload),
+  createGroup: (
+    payload: CreateDisbursementGroupPayload
+  ): Promise<DisbursementGroup> =>
+    post("/finance/disbursement/groups", payload),
 
   submit: (id: string): Promise<DisbursementGroup> =>
     post(`/finance/disbursement/groups/${id}/submit`, {}),
 
-  approve: (id: string, payload?: ApproveDisbursementPayload): Promise<DisbursementGroup> =>
+  approve: (
+    id: string,
+    payload?: ApproveDisbursementPayload
+  ): Promise<DisbursementGroup> =>
     post(`/finance/disbursement/groups/${id}/approve`, payload ?? {}),
 
-  reject: (id: string, payload: RejectDisbursementPayload): Promise<DisbursementGroup> =>
+  reject: (
+    id: string,
+    payload: RejectDisbursementPayload
+  ): Promise<DisbursementGroup> =>
     post(`/finance/disbursement/groups/${id}/reject`, payload),
 
   unlock: (id: string): Promise<DisbursementGroup> =>
     post(`/finance/disbursement/groups/${id}/unlock`, {}),
 
   // A6 Path 1 — แก้ 7-segment ในใบที่ถูกตีกลับ (rejected_to_preparer)
-  updateItem: (itemId: string, payload: UpdateDisbursementItemPayload): Promise<DisbursementItem> =>
+  updateItem: (
+    itemId: string,
+    payload: UpdateDisbursementItemPayload
+  ): Promise<DisbursementItem> =>
     patch(`/finance/disbursement/items/${itemId}`, payload),
 
   // A6 Path 1 (faculty) — ดึงรหัสเจ้าหนี้คณะล่าสุดมาลงใบที่ถูกตีกลับ
@@ -66,85 +79,136 @@ export const disbursementsApi = {
     post(`/finance/disbursement/groups/${id}/resnapshot-creditor`, {}),
 
   // ── Treasury ───────────────────────────────────────────────────────────
-  treasuryExport: (payload: TreasuryExportPayload): Promise<TreasuryExportResult> =>
-    post('/finance/disbursement/treasury/export', payload),
+  treasuryExport: (
+    payload: TreasuryExportPayload
+  ): Promise<TreasuryExportResult> =>
+    post("/finance/disbursement/treasury/export", payload),
 
   finalApprove: (id: string): Promise<DisbursementGroup> =>
     post(`/finance/disbursement/groups/${id}/final-approve`, {}),
 
   // v1.57 — batch ตัดลูกหนี้หลายใบทีเดียว; server รายงานผลราย group (ใบที่ fail ไม่ล้มทั้งชุด)
   finalApproveBatch: (
-    group_ids: string[],
+    group_ids: string[]
   ): Promise<{
-    succeeded: number
-    failed: number
-    results: Array<{ group_id: string; ok: boolean; error?: string }>
-  }> => post('/finance/disbursement/groups/final-approve-batch', { group_ids }),
+    succeeded: number;
+    failed: number;
+    results: Array<{ group_id: string; ok: boolean; error?: string }>;
+  }> => post("/finance/disbursement/groups/final-approve-batch", { group_ids }),
 
-  finalReject: (id: string, payload: RejectDisbursementPayload): Promise<DisbursementGroup> =>
+  finalReject: (
+    id: string,
+    payload: RejectDisbursementPayload
+  ): Promise<DisbursementGroup> =>
     post(`/finance/disbursement/groups/${id}/final-reject`, payload),
 
   treasuryHistory: (
-    filters?: { kind?: 'faculty' | 'office'; date_from?: string; date_to?: string } & PaginationParams,
+    filters?: {
+      kind?: "faculty" | "office";
+      date_from?: string;
+      date_to?: string;
+    } & PaginationParams
   ): Promise<PaginatedResponse<DisbursementExportBatch>> =>
-    get('/finance/disbursement/treasury/history', filters as Record<string, unknown>),
+    get(
+      "/finance/disbursement/treasury/history",
+      filters as Record<string, unknown>
+    ),
 
-  // ── v1.56 — Finance (กองคลัง-การเงิน): คิวเช็ค/โอนผ่านบัญชี ────────────
+  // ── ด่านการเงินทรัพย์สิน (เช็คเท่านั้น) ก่อนถึงกองคลัง ──
+  propertyFinanceForward: (
+    id: string,
+    payload?: { note?: string }
+  ): Promise<DisbursementGroup> =>
+    post(
+      `/finance/disbursement/groups/${id}/property-finance-forward`,
+      payload ?? {}
+    ),
+
+  propertyFinanceReject: (
+    id: string,
+    payload: RejectDisbursementPayload
+  ): Promise<DisbursementGroup> =>
+    post(`/finance/disbursement/groups/${id}/property-finance-reject`, payload),
+
+  // ── Finance (กองคลัง-การเงิน): คิวเช็ค/โอนผ่านบัญชี ────────────
   financeApprove: (id: string): Promise<DisbursementGroup> =>
     post(`/finance/disbursement/groups/${id}/finance-approve`, {}),
 
-  financeReject: (id: string, payload: RejectDisbursementPayload): Promise<DisbursementGroup> =>
+  financeReject: (
+    id: string,
+    payload: RejectDisbursementPayload
+  ): Promise<DisbursementGroup> =>
     post(`/finance/disbursement/groups/${id}/finance-reject`, payload),
 
-  reExportBatch: (batchId: string): Promise<{ file_base64: string | null; filename: string | null }> =>
+  reExportBatch: (
+    batchId: string
+  ): Promise<{ file_base64: string | null; filename: string | null }> =>
     post(`/finance/disbursement/treasury/history/${batchId}/re-export`, {}),
 
-  financeQueueExport: (payload: { group_ids: string[] }): Promise<{ file_base64: string | null; filename: string | null }> =>
-    post('/finance/disbursement/finance-queue/export', payload),
+  financeQueueExport: (payload: {
+    group_ids: string[];
+  }): Promise<{ file_base64: string | null; filename: string | null }> =>
+    post("/finance/disbursement/finance-queue/export", payload),
 
   // ── Faculty creditor master (super_admin) ──────────────────────────────
   listFacultyCreditors: (): Promise<FacultyCreditorAccount[]> =>
-    get('/finance/disbursement/faculty-creditors'),
+    get("/finance/disbursement/faculty-creditors"),
 
-  upsertFacultyCreditor: (payload: FacultyCreditorUpsertPayload): Promise<FacultyCreditorAccount> =>
-    post('/finance/disbursement/faculty-creditors', payload),
+  upsertFacultyCreditor: (
+    payload: FacultyCreditorUpsertPayload
+  ): Promise<FacultyCreditorAccount> =>
+    post("/finance/disbursement/faculty-creditors", payload),
 
   deleteFacultyCreditor: (id: string): Promise<{ deleted: boolean }> =>
     del(`/finance/disbursement/faculty-creditors/${id}`),
 
   // ── v1.41 — Approval Config + Email Outbox ─────────────────────────────
-  listApprovalConfig: (agencyId?: string): Promise<DisbursementApprovalConfig[]> =>
-    get('/finance/disbursement/approval-config', agencyId ? { agency_id: agencyId } : undefined),
+  listApprovalConfig: (
+    agencyId?: string
+  ): Promise<DisbursementApprovalConfig[]> =>
+    get(
+      "/finance/disbursement/approval-config",
+      agencyId ? { agency_id: agencyId } : undefined
+    ),
 
   upsertApprovalConfig: (
-    payload: DisbursementApprovalConfigUpsertPayload,
+    payload: DisbursementApprovalConfigUpsertPayload
   ): Promise<DisbursementApprovalConfig> =>
-    post('/finance/disbursement/approval-config', payload),
+    post("/finance/disbursement/approval-config", payload),
 
   deleteApprovalConfig: (id: string): Promise<{ deleted: boolean }> =>
     del(`/finance/disbursement/approval-config/${id}`),
 
-  listEmailOutbox: (
-    filters?: { status?: EmailOutboxStatus; limit?: number },
-  ): Promise<DisbursementEmailOutboxRow[]> =>
-    get('/finance/disbursement/email-outbox', filters as Record<string, unknown>),
+  listEmailOutbox: (filters?: {
+    status?: EmailOutboxStatus;
+    limit?: number;
+  }): Promise<DisbursementEmailOutboxRow[]> =>
+    get(
+      "/finance/disbursement/email-outbox",
+      filters as Record<string, unknown>
+    ),
 
   // ── v1.45 — Dynamic Per-Document Approval Chain ────────────────────────
   listPendingDeliveries: (filters: {
-    customer_group_id: string
-    agency_id?: string | null
+    customer_group_id: string;
+    agency_id?: string | null;
   }): Promise<PendingDelivery[]> =>
-    get('/finance/disbursement/pending-deliveries', filters as Record<string, unknown>),
+    get(
+      "/finance/disbursement/pending-deliveries",
+      filters as Record<string, unknown>
+    ),
 
-  createGroupV2: (payload: CreateDisbursementGroupV2Payload): Promise<DisbursementGroup> =>
-    post('/finance/disbursement/groups/v2', payload),
+  createGroupV2: (
+    payload: CreateDisbursementGroupV2Payload
+  ): Promise<DisbursementGroup> =>
+    post("/finance/disbursement/groups/v2", payload),
 
   submitV2: (id: string): Promise<DisbursementGroup> =>
     post(`/finance/disbursement/groups/${id}/submit/v2`, {}),
 
   delegateApprover: (
     id: string,
-    payload: DelegateApproverPayload,
+    payload: DelegateApproverPayload
   ): Promise<{ new_approver_id: string }> =>
     post(`/finance/disbursement/groups/${id}/delegate-approver`, payload),
 
@@ -152,183 +216,217 @@ export const disbursementsApi = {
     get(`/finance/disbursement/groups/${id}/preview-pdf`),
 
   // v1.52 CR4-F — fully-approved, locked PDF (encrypt + SHA-256 tamper-evidence)
-  finalPdf: (id: string): Promise<{ pdf_url: string; encrypted: boolean; locked?: boolean }> =>
+  finalPdf: (
+    id: string
+  ): Promise<{ pdf_url: string; encrypted: boolean; locked?: boolean }> =>
     get(`/finance/disbursement/groups/${id}/final-pdf`),
 
   // ── v1.52 CR4 — payment channel, cancel, approval routing template ──────
   setPaymentChannel: (
     id: string,
-    channel: DisbursementPaymentChannel,
+    channel: DisbursementPaymentChannel
   ): Promise<DisbursementGroup> =>
     post(`/finance/disbursement/groups/${id}/payment-channel`, { channel }),
 
-  cancelGroup: (id: string, reason?: string | null): Promise<DisbursementGroup> =>
-    post(`/finance/disbursement/groups/${id}/cancel`, { reason: reason ?? null }),
+  cancelGroup: (
+    id: string,
+    reason?: string | null
+  ): Promise<DisbursementGroup> =>
+    post(`/finance/disbursement/groups/${id}/cancel`, {
+      reason: reason ?? null,
+    }),
 
-  getApprovalTemplate: (customerGroupId: string): Promise<ApprovalTemplateStep[]> =>
-    get('/finance/disbursement/approval-template', { customer_group_id: customerGroupId }),
+  getApprovalTemplate: (
+    customerGroupId: string
+  ): Promise<ApprovalTemplateStep[]> =>
+    get("/finance/disbursement/approval-template", {
+      customer_group_id: customerGroupId,
+    }),
 
   setApprovalTemplate: (
     customerGroupId: string,
-    steps: ApproverInput[],
+    steps: ApproverInput[]
   ): Promise<{ steps_saved: number }> =>
-    post('/finance/disbursement/approval-template', {
+    post("/finance/disbursement/approval-template", {
       customer_group_id: customerGroupId,
       steps,
     }),
 
   // ── v1.59 — สายอนุมัติระดับหน่วยงาน (ใช้กับใบวางบิลของคณะ) ─────────────
-  getAgencyApprovalTemplate: (agencyId: string): Promise<ApprovalTemplateStep[]> =>
-    get('/finance/disbursement/agency-approval-template', { agency_id: agencyId }),
+  getAgencyApprovalTemplate: (
+    agencyId: string
+  ): Promise<ApprovalTemplateStep[]> =>
+    get("/finance/disbursement/agency-approval-template", {
+      agency_id: agencyId,
+    }),
 
   setAgencyApprovalTemplate: (
     agencyId: string,
-    steps: ApproverInput[],
+    steps: ApproverInput[]
   ): Promise<{ steps_saved: number }> =>
-    post('/finance/disbursement/agency-approval-template', {
+    post("/finance/disbursement/agency-approval-template", {
       agency_id: agencyId,
       steps,
     }),
 
   // ── v1.47 — saved 7-segment codes ──────────────────────────────────────
-  listSavedCodes: (params?: { q?: string; limit?: number }): Promise<SavedAccountingCode[]> =>
-    get('/finance/saved-codes', params as Record<string, unknown> | undefined),
+  listSavedCodes: (params?: {
+    q?: string;
+    limit?: number;
+  }): Promise<SavedAccountingCode[]> =>
+    get("/finance/saved-codes", params as Record<string, unknown> | undefined),
 
   deleteSavedCode: (id: string): Promise<{ deleted: boolean }> =>
     del(`/finance/saved-codes/${id}`),
 
-  updateSavedCodeLabel: (id: string, label: string | null): Promise<{ updated: boolean }> =>
+  updateSavedCodeLabel: (
+    id: string,
+    label: string | null
+  ): Promise<{ updated: boolean }> =>
     patch(`/finance/saved-codes/${id}`, { label }),
 
   // ── v1.47 — cancellation report ───────────────────────────────────────
   cancellationReport: (filters?: {
-    month_from?: string | null
-    month_to?: string | null
-    agency_id?: string | null
-    customer_group_id?: string | null
+    month_from?: string | null;
+    month_to?: string | null;
+    agency_id?: string | null;
+    customer_group_id?: string | null;
   }): Promise<CancellationReportRow[]> =>
-    get('/finance/reports/cancellation', filters as Record<string, unknown> | undefined),
+    get(
+      "/finance/reports/cancellation",
+      filters as Record<string, unknown> | undefined
+    ),
 
   cancellationReportDetail: (params: {
-    month: string
-    agency_id?: string | null
-    customer_group_id?: string | null
+    month: string;
+    agency_id?: string | null;
+    customer_group_id?: string | null;
   }): Promise<CancelledOrderRow[]> =>
-    get('/finance/reports/cancellation/detail', params as Record<string, unknown>),
-}
+    get(
+      "/finance/reports/cancellation/detail",
+      params as Record<string, unknown>
+    ),
+};
 
 // v1.45 types — kept inline for now; promote to types/disbursement.ts if reused elsewhere
 export type PendingDelivery = {
-  delivery_id: string
-  delivery_note_number: string
-  delivered_at: string | null
-  order_id: string
-  order_number: string
-  order_total_amount: number
-  delivery_item_count: number
-}
+  delivery_id: string;
+  delivery_note_number: string;
+  delivered_at: string | null;
+  order_id: string;
+  order_number: string;
+  order_total_amount: number;
+  delivery_item_count: number;
+};
 
 export type ApproverInput = {
-  name: string
-  position: string
-  email: string
-}
+  name: string;
+  position: string;
+  email: string;
+};
 
 // v1.48 — Office per-delivery 7-segment
 export type OfficeItemSegments = {
-  delivery_id: string
-  fund_code: string
-  organization_code: string
-  work_plan_code: string
-  account_code: string
-  curriculum_code: string
-  budget_code: string
-  funding_source_code: string
-}
+  delivery_id: string;
+  fund_code: string;
+  organization_code: string;
+  work_plan_code: string;
+  account_code: string;
+  curriculum_code: string;
+  budget_code: string;
+  funding_source_code: string;
+};
 
 export type CreateDisbursementGroupV2Payload = {
-  kind: 'faculty' | 'office'
-  customer_group_id: string
-  agency_id: string
-  delivery_ids: string[]
-  approvers: ApproverInput[]
-  external_edoc_id?: string | null
+  kind: "faculty" | "office";
+  customer_group_id: string;
+  agency_id: string;
+  delivery_ids: string[];
+  approvers: ApproverInput[];
+  external_edoc_id?: string | null;
   // Required for kind='office'. Length must equal delivery_ids.length, one row per delivery_id.
-  office_items_segments?: OfficeItemSegments[] | null
+  office_items_segments?: OfficeItemSegments[] | null;
   // v1.52 CR4-B — payment channel (optional at create; required at submit)
-  payment_channel?: DisbursementPaymentChannel | null
-}
+  payment_channel?: DisbursementPaymentChannel | null;
+};
 
 // v1.52 CR4-A — saved approval routing template step (per customer_group)
 export type ApprovalTemplateStep = {
-  step_number: number
-  approver_name: string
-  approver_position: string
-  approver_email: string
-}
+  step_number: number;
+  approver_name: string;
+  approver_position: string;
+  approver_email: string;
+};
 
 export type DelegateApproverPayload = {
-  step_number: number
-  new_name: string
-  new_position: string
-  new_email: string
-}
+  step_number: number;
+  new_name: string;
+  new_position: string;
+  new_email: string;
+};
 
 export type DisbursementApproverRow = {
-  id: string
-  group_id: string
-  step_number: number
-  approver_name: string
-  approver_position: string
-  approver_email: string
-  approver_user_id: string | null
-  delegated_from_id: string | null
-  status: 'pending' | 'sent' | 'opened' | 'approved' | 'rejected' | 'expired' | 'delegated'
-  magic_token_expires_at: string | null
-  sent_at: string | null
-  opened_at: string | null
-  decided_at: string | null
-  decision_comment: string | null
-  created_at: string
-}
+  id: string;
+  group_id: string;
+  step_number: number;
+  approver_name: string;
+  approver_position: string;
+  approver_email: string;
+  approver_user_id: string | null;
+  delegated_from_id: string | null;
+  status:
+    | "pending"
+    | "sent"
+    | "opened"
+    | "approved"
+    | "rejected"
+    | "expired"
+    | "delegated";
+  magic_token_expires_at: string | null;
+  sent_at: string | null;
+  opened_at: string | null;
+  decided_at: string | null;
+  decision_comment: string | null;
+  created_at: string;
+};
 
 // v1.47 — per-user saved 7-segment accounting codes
 export type SavedAccountingCode = {
-  id: string
-  label: string | null
-  fund_code: string
-  organization_code: string
-  work_plan_code: string
-  account_code: string
-  curriculum_code: string
-  budget_code: string
-  funding_source_code: string
-  last_used_at: string
-  use_count: number
-}
+  id: string;
+  label: string | null;
+  fund_code: string;
+  organization_code: string;
+  work_plan_code: string;
+  account_code: string;
+  curriculum_code: string;
+  budget_code: string;
+  funding_source_code: string;
+  last_used_at: string;
+  use_count: number;
+};
 
 // v1.47 — monthly cancellation report row
 export type CancellationReportRow = {
-  month: string
-  customer_group_id: string | null
-  customer_group_name: string | null
-  agency_id: string | null
-  agency_name: string | null
-  cancel_count: number
-  cancelled_amount: number
-  reasons: string[]
-}
+  month: string;
+  customer_group_id: string | null;
+  customer_group_name: string | null;
+  agency_id: string | null;
+  agency_name: string | null;
+  cancel_count: number;
+  cancelled_amount: number;
+  reasons: string[];
+};
 
 // v1.47 — drill-down detail row
 export type CancelledOrderRow = {
-  order_id: string
-  order_number: string
-  cancelled_at: string
-  cancelled_by_name: string | null
-  cancellation_reason: string | null
-  total_amount: number
-  customer_group_id: string | null
-  customer_group_name: string | null
-  agency_id: string | null
-  agency_name: string | null
-}
+  order_id: string;
+  order_number: string;
+  cancelled_at: string;
+  cancelled_by_name: string | null;
+  cancellation_reason: string | null;
+  total_amount: number;
+  customer_group_id: string | null;
+  customer_group_name: string | null;
+  agency_id: string | null;
+  agency_name: string | null;
+};

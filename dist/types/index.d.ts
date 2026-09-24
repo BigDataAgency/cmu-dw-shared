@@ -443,8 +443,8 @@ declare function todayISO(): string;
 
 type AgencyKind = 'faculty' | 'office' | 'external';
 type DisbursementKind = 'faculty' | 'office';
-type DisbursementStatus = 'draft' | 'submitted' | 'in_approval' | 'fully_approved' | 'faculty_approved' | 'office_head_approved' | 'office_director_approved' | 'treasury_review' | 'exported' | 'treasury_approved' | 'rejected_to_preparer' | 'treasury_rejected' | 'cancelled' | 'waiting_finance';
-type DisbursementEventType = 'created' | 'submitted' | 'approved' | 'rejected' | 'exported' | 'treasury_approved' | 'treasury_rejected' | 'debtor_cleared' | 'unlocked_to_draft' | 'creditor_code_changed' | 'approver_added' | 'approver_sent' | 'approver_opened' | 'approver_delegated' | 'cancelled' | 'locked' | 'submitted_to_finance' | 'finance_approved' | 'finance_rejected' | 'treasury_arrived';
+type DisbursementStatus = 'draft' | 'submitted' | 'in_approval' | 'fully_approved' | 'faculty_approved' | 'office_head_approved' | 'office_director_approved' | 'treasury_review' | 'exported' | 'treasury_approved' | 'rejected_to_preparer' | 'treasury_rejected' | 'cancelled' | 'waiting_finance' | 'waiting_property_finance';
+type DisbursementEventType = 'created' | 'submitted' | 'approved' | 'rejected' | 'exported' | 'treasury_approved' | 'treasury_rejected' | 'debtor_cleared' | 'unlocked_to_draft' | 'creditor_code_changed' | 'approver_added' | 'approver_sent' | 'approver_opened' | 'approver_delegated' | 'cancelled' | 'locked' | 'submitted_to_finance' | 'finance_approved' | 'finance_rejected' | 'treasury_arrived' | 'property_finance_forwarded' | 'property_finance_rejected';
 /** Payment channel for a disbursement bill (v1.52 CR4-B) */
 type DisbursementPaymentChannel = 'budget_transfer' | 'bank_transfer' | 'cheque';
 /** Backend `app_role` enum (DB-side) — distinct from frontend AppRole in `./user` */

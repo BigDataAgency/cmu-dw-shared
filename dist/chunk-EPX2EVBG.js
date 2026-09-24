@@ -71,6 +71,11 @@ var ordersApi = {
   getById: (id) => get(`/orders/${id}`),
   create: (payload) => post("/orders", payload),
   cancel: (id, payload) => patch(`/orders/${id}/cancel`, payload),
+  /**
+   * ชื่อโครงการ (optional) ที่จะติดไปบนใบเสร็จ/ใบสำคัญรับเงิน
+   * ต้องตั้งก่อนออกเอกสาร — documents.project_name เป็น snapshot
+   */
+  setProjectName: (id, projectName) => patch(`/orders/${id}/project-name`, { project_name: projectName }),
   updateStatus: (id, payload) => patch(`/orders/${id}/status`, payload),
   returnBottles: (id, payload) => post(`/orders/${id}/return-bottles`, payload),
   // F2/F3 — วันจัดส่งได้ (วันหยุด + วันจัดส่งประจำกลุ่ม)
@@ -327,6 +332,9 @@ var disbursementsApi = {
   finalApproveBatch: (group_ids) => post("/finance/disbursement/groups/final-approve-batch", { group_ids }),
   finalReject: (id, payload) => post(`/finance/disbursement/groups/${id}/final-reject`, payload),
   treasuryHistory: (filters) => get("/finance/disbursement/treasury/history", filters),
+  // ── 24 ก.ย. 2026 — ด่านการเงินทรัพย์สิน (เช็คเท่านั้น) ก่อนถึงกองคลัง ──
+  propertyFinanceForward: (id, payload) => post(`/finance/disbursement/groups/${id}/property-finance-forward`, payload ?? {}),
+  propertyFinanceReject: (id, payload) => post(`/finance/disbursement/groups/${id}/property-finance-reject`, payload),
   // ── v1.56 — Finance (กองคลัง-การเงิน): คิวเช็ค/โอนผ่านบัญชี ────────────
   financeApprove: (id) => post(`/finance/disbursement/groups/${id}/finance-approve`, {}),
   financeReject: (id, payload) => post(`/finance/disbursement/groups/${id}/finance-reject`, payload),
@@ -509,4 +517,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-II3XL5P7.js.map
+//# sourceMappingURL=chunk-EPX2EVBG.js.map

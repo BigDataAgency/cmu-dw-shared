@@ -1,311 +1,317 @@
 // v1.40.0 — Admin Disbursement Menu — types
 
-export type AgencyKind = 'faculty' | 'office' | 'external'
+export type AgencyKind = "faculty" | "office" | "external";
 
-export type DisbursementKind = 'faculty' | 'office'
+export type DisbursementKind = "faculty" | "office";
 
 export type DisbursementStatus =
-  | 'draft'
-  | 'submitted'
-  | 'in_approval'        // v1.45 dynamic chain
-  | 'fully_approved'     // v1.45 dynamic chain
-  | 'faculty_approved'
-  | 'office_head_approved'
-  | 'office_director_approved'
-  | 'treasury_review'
-  | 'exported'
-  | 'treasury_approved'
-  | 'rejected_to_preparer'
-  | 'treasury_rejected'
-  | 'cancelled'          // v1.52 CR4-C
-  | 'waiting_finance'    // v1.56 — เช็ค/โอนผ่านบัญชี รอการเงินกองคลัง
+  | "draft"
+  | "submitted"
+  | "in_approval" // v1.45 dynamic chain
+  | "fully_approved" // v1.45 dynamic chain
+  | "faculty_approved"
+  | "office_head_approved"
+  | "office_director_approved"
+  | "treasury_review"
+  | "exported"
+  | "treasury_approved"
+  | "rejected_to_preparer"
+  | "treasury_rejected"
+  | "cancelled"
+  | "waiting_finance"
+  | "waiting_property_finance";
 
 export type DisbursementEventType =
-  | 'created'
-  | 'submitted'
-  | 'approved'
-  | 'rejected'
-  | 'exported'
-  | 'treasury_approved'
-  | 'treasury_rejected'
-  | 'debtor_cleared'
-  | 'unlocked_to_draft'
-  | 'creditor_code_changed'
-  | 'approver_added'     // v1.45
-  | 'approver_sent'      // v1.45
-  | 'approver_opened'    // v1.45
-  | 'approver_delegated' // v1.45
-  | 'cancelled'          // v1.52 CR4-C
-  | 'locked'             // v1.52 CR4-F
-  | 'submitted_to_finance' // v1.56 — ส่งเข้าคิวการเงิน (เช็ค/โอน)
-  | 'finance_approved'     // v1.56
-  | 'finance_rejected'     // v1.56
-  | 'treasury_arrived'     // v1.56 (reserved)
+  | "created"
+  | "submitted"
+  | "approved"
+  | "rejected"
+  | "exported"
+  | "treasury_approved"
+  | "treasury_rejected"
+  | "debtor_cleared"
+  | "unlocked_to_draft"
+  | "creditor_code_changed"
+  | "approver_added" // v1.45
+  | "approver_sent" // v1.45
+  | "approver_opened" // v1.45
+  | "approver_delegated" // v1.45
+  | "cancelled" // v1.52 CR4-C
+  | "locked" // v1.52 CR4-F
+  | "submitted_to_finance" // v1.56 — ส่งเข้าคิวการเงิน (เช็ค/โอน)
+  | "finance_approved" // v1.56
+  | "finance_rejected" // v1.56
+  | "treasury_arrived" // v1.56 (reserved)
+  | "property_finance_forwarded"
+  | "property_finance_rejected";
 
 /** Payment channel for a disbursement bill (v1.52 CR4-B) */
 export type DisbursementPaymentChannel =
-  | 'budget_transfer'   // โอนเงินงบประมาณ
-  | 'bank_transfer'     // โอนเงินผ่านบัญชี
-  | 'cheque'            // จ่ายด้วยเช็ค
+  | "budget_transfer" // โอนเงินงบประมาณ
+  | "bank_transfer" // โอนเงินผ่านบัญชี
+  | "cheque"; // จ่ายด้วยเช็ค
 
 /** Backend `app_role` enum (DB-side) — distinct from frontend AppRole in `./user` */
 export type DbAppRole =
-  | 'guest'
-  | 'member_email'
-  | 'member_cmu'
-  | 'org_cmu'
-  | 'staff_property'
-  | 'admin_property'
-  | 'executive'
-  | 'admin_vendor'
-  | 'delivery'
-  | 'super_admin'
-  | 'audit'
-  | 'treasury_accounting' // v1.56 — กองคลัง-บัญชี
-  | 'treasury_finance'    // v1.56 — กองคลัง-การเงิน
+  | "guest"
+  | "member_email"
+  | "member_cmu"
+  | "org_cmu"
+  | "staff_property"
+  | "admin_property"
+  | "executive"
+  | "admin_vendor"
+  | "delivery"
+  | "super_admin"
+  | "audit"
+  | "treasury_accounting" // v1.56 — กองคลัง-บัญชี
+  | "treasury_finance"; // v1.56 — กองคลัง-การเงิน
 
 /** 7-segment 3D accounting code per office disbursement item */
 export type AccountingCode7Seg = {
-  fund_code?: string | null
-  organization_code?: string | null
-  work_plan_code?: string | null
-  account_code?: string | null
-  curriculum_code?: string | null
-  budget_code?: string | null
-  funding_source_code?: string | null
-}
+  fund_code?: string | null;
+  organization_code?: string | null;
+  work_plan_code?: string | null;
+  account_code?: string | null;
+  curriculum_code?: string | null;
+  budget_code?: string | null;
+  funding_source_code?: string | null;
+};
 
 /** A6 Path 1 — แก้ 7-segment ในใบที่ถูกตีกลับ (rejected_to_preparer); ทุก field required */
 export type UpdateDisbursementItemPayload = {
-  fund_code: string
-  organization_code: string
-  work_plan_code: string
-  account_code: string
-  curriculum_code: string
-  budget_code: string
-  funding_source_code: string
-}
+  fund_code: string;
+  organization_code: string;
+  work_plan_code: string;
+  account_code: string;
+  curriculum_code: string;
+  budget_code: string;
+  funding_source_code: string;
+};
 
 export type EligibleReceivable = {
-  document_id: string
-  document_number: string
-  document_type: 'invoice' | 'receipt' | 'voucher'
-  document_status: 'draft' | 'issued' | 'void'
-  amount: number
-  issued_at: string
-  order_id: string
-  order_number: string
-  agency_id: string
-  agency_name: string
-  agency_kind: AgencyKind
-}
+  document_id: string;
+  document_number: string;
+  document_type: "invoice" | "receipt" | "voucher";
+  document_status: "draft" | "issued" | "void";
+  amount: number;
+  issued_at: string;
+  order_id: string;
+  order_number: string;
+  agency_id: string;
+  agency_name: string;
+  agency_kind: AgencyKind;
+};
 
 export type DisbursementItem = AccountingCode7Seg & {
-  id: string
-  group_id: string
-  order_id: string
-  document_id: string | null
-  amount: number
-  accounting_code_combined: string | null
-  description: string | null
-  position: number
-  created_at: string
-  order?: { id: string; order_number: string; total_amount: number } | null
-}
+  id: string;
+  group_id: string;
+  order_id: string;
+  document_id: string | null;
+  amount: number;
+  accounting_code_combined: string | null;
+  description: string | null;
+  position: number;
+  created_at: string;
+  order?: { id: string; order_number: string; total_amount: number } | null;
+};
 
 export type DisbursementGroup = {
-  id: string
-  group_number: string
-  kind: DisbursementKind
-  status: DisbursementStatus
-  agency_id: string
-  prepared_by: string
-  prepared_at: string
-  faculty_creditor_account_id: string | null
-  faculty_creditor_snapshot: string | null
-  treasury_export_batch_id: string | null
-  cleared_at: string | null
-  external_edoc_id: string | null
-  total_amount: number
-  item_count: number
-  current_assignee_role: DbAppRole | null
-  last_reject_reason: string | null
-  rejected_from_group_id: string | null
+  id: string;
+  group_number: string;
+  kind: DisbursementKind;
+  status: DisbursementStatus;
+  agency_id: string;
+  prepared_by: string;
+  prepared_at: string;
+  faculty_creditor_account_id: string | null;
+  faculty_creditor_snapshot: string | null;
+  treasury_export_batch_id: string | null;
+  cleared_at: string | null;
+  external_edoc_id: string | null;
+  total_amount: number;
+  item_count: number;
+  current_assignee_role: DbAppRole | null;
+  last_reject_reason: string | null;
+  rejected_from_group_id: string | null;
   // v1.45 dynamic chain
-  customer_group_id?: string | null
-  current_step?: number
-  total_steps?: number
+  customer_group_id?: string | null;
+  current_step?: number;
+  total_steps?: number;
   /** true = ใบเก่าที่ยังวิ่งบนสายอนุมัติรุ่น v1.40/41 (แช่แข็งแล้ว) — หน้าจอใช้แยกปุ่มส่งอนุมัติ */
-  uses_legacy_chain?: boolean
+  uses_legacy_chain?: boolean;
   // v1.52 CR4
-  payment_channel?: DisbursementPaymentChannel | null
-  locked_at?: string | null
-  final_pdf_sha256?: string | null
+  payment_channel?: DisbursementPaymentChannel | null;
+  locked_at?: string | null;
+  final_pdf_sha256?: string | null;
   // v1.56 — เวลาเอกสารถึงกองคลัง (treasury_review/waiting_finance)
-  treasury_arrived_at?: string | null
-  created_at: string
-  updated_at: string
-  agency?: { id: string; name: string; kind: AgencyKind } | null
-  creditor?: { id: string; creditor_code: string; label: string | null } | null
-  items?: DisbursementItem[]
-}
+  treasury_arrived_at?: string | null;
+  created_at: string;
+  updated_at: string;
+  agency?: { id: string; name: string; kind: AgencyKind } | null;
+  creditor?: { id: string; creditor_code: string; label: string | null } | null;
+  items?: DisbursementItem[];
+};
 
 export type DisbursementTimelineEvent = {
-  id: string
-  event_type: DisbursementEventType
-  actor_user_id: string | null
-  actor_name: string | null
-  actor_role: DbAppRole | null
-  from_status: DisbursementStatus | null
-  to_status: DisbursementStatus | null
-  item_count: number | null
-  comment: string | null
-  metadata: Record<string, unknown> | null
-  created_at: string
-}
+  id: string;
+  event_type: DisbursementEventType;
+  actor_user_id: string | null;
+  actor_name: string | null;
+  actor_role: DbAppRole | null;
+  from_status: DisbursementStatus | null;
+  to_status: DisbursementStatus | null;
+  item_count: number | null;
+  comment: string | null;
+  metadata: Record<string, unknown> | null;
+  created_at: string;
+};
 
 export type DisbursementExportBatch = {
-  id: string
-  batch_number: string
-  exported_by: string
-  exported_at: string
-  kind: DisbursementKind
-  group_count: number
-  total_amount: number
-  file_path: string | null
-  filter_snapshot: Record<string, unknown> | null
-  created_at: string
-  exported_by_profile?: { id: string; full_name: string } | null
-}
+  id: string;
+  batch_number: string;
+  exported_by: string;
+  exported_at: string;
+  kind: DisbursementKind;
+  group_count: number;
+  total_amount: number;
+  file_path: string | null;
+  filter_snapshot: Record<string, unknown> | null;
+  created_at: string;
+  exported_by_profile?: { id: string; full_name: string } | null;
+};
 
 export type FacultyCreditorAccount = {
-  id: string
-  agency_id: string
-  creditor_code: string
-  label: string | null
-  is_active: boolean
-  created_by: string | null
-  created_at: string
-  updated_at: string
-  deleted_at: string | null
+  id: string;
+  agency_id: string;
+  creditor_code: string;
+  label: string | null;
+  is_active: boolean;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
   // v1.45.8 — full 7-segment template (NULL = use university-wide defaults at export)
-  fund_code: string | null
-  organization_code: string | null
-  work_plan_code: string | null
-  curriculum_code: string | null
-  budget_code: string | null
-  funding_source_code: string | null
-  agency?: { id: string; name: string; kind: AgencyKind } | null
-}
+  fund_code: string | null;
+  organization_code: string | null;
+  work_plan_code: string | null;
+  curriculum_code: string | null;
+  budget_code: string | null;
+  funding_source_code: string | null;
+  agency?: { id: string; name: string; kind: AgencyKind } | null;
+};
 
 // ─── Request payloads ─────────────────────────────────────────────────────
 
 export type CreateDisbursementGroupItem = AccountingCode7Seg & {
-  order_id: string
-  document_id?: string | null
-  amount: number
-  description?: string | null
-}
+  order_id: string;
+  document_id?: string | null;
+  amount: number;
+  description?: string | null;
+};
 
 export type CreateDisbursementGroupPayload = {
-  kind: DisbursementKind
-  agency_id: string
-  external_edoc_id?: string | null
-  items: CreateDisbursementGroupItem[]
-}
+  kind: DisbursementKind;
+  agency_id: string;
+  external_edoc_id?: string | null;
+  items: CreateDisbursementGroupItem[];
+};
 
 export type ApproveDisbursementPayload = {
-  comment?: string | null
-}
+  comment?: string | null;
+};
 
 export type RejectDisbursementPayload = {
-  reason: string
-}
+  reason: string;
+};
 
 export type TreasuryExportPayload = {
-  group_ids: string[]
-  filter?: Record<string, unknown> | null
-}
+  group_ids: string[];
+  filter?: Record<string, unknown> | null;
+};
 
 export type TreasuryExportResult = {
-  batch: DisbursementExportBatch
-  file_base64: string | null
-}
+  batch: DisbursementExportBatch;
+  file_base64: string | null;
+};
 
 export type FacultyCreditorUpsertPayload = {
-  id?: string | null
-  agency_id: string
-  creditor_code: string
-  label?: string | null
-  is_active?: boolean
+  id?: string | null;
+  agency_id: string;
+  creditor_code: string;
+  label?: string | null;
+  is_active?: boolean;
   // v1.45.8 — per-faculty 7-segment override (defaults apply server-side if NULL)
-  fund_code?: string | null
-  organization_code?: string | null
-  work_plan_code?: string | null
-  curriculum_code?: string | null
-  budget_code?: string | null
-  funding_source_code?: string | null
-}
+  fund_code?: string | null;
+  organization_code?: string | null;
+  work_plan_code?: string | null;
+  curriculum_code?: string | null;
+  budget_code?: string | null;
+  funding_source_code?: string | null;
+};
 
 export type DisbursementGroupListFilters = {
-  status?: DisbursementStatus
-  kind?: DisbursementKind
-  agency_id?: string
+  status?: DisbursementStatus;
+  kind?: DisbursementKind;
+  agency_id?: string;
   // v1.56 — filter ตามช่องทางจ่าย + ช่วงเวลาที่เอกสารถึงกองคลัง (ISO date/datetime)
-  payment_channel?: DisbursementPaymentChannel
-  arrived_from?: string
-  arrived_to?: string
-}
+  payment_channel?: DisbursementPaymentChannel;
+  arrived_from?: string;
+  arrived_to?: string;
+};
 
 export type EligibleReceivablesFilters = {
-  kind?: DisbursementKind
-  agency_id?: string
-  date_from?: string
-  date_to?: string
-}
+  kind?: DisbursementKind;
+  agency_id?: string;
+  date_from?: string;
+  date_to?: string;
+};
 
 // ─── v1.41 — Approval Config + Email Outbox ───────────────────────────────
 
-export type DisbursementApprovalStep = 'faculty_approver' | 'office_head' | 'office_director'
+export type DisbursementApprovalStep =
+  | "faculty_approver"
+  | "office_head"
+  | "office_director";
 
-export type EmailOutboxStatus = 'queued' | 'sent' | 'failed'
+export type EmailOutboxStatus = "queued" | "sent" | "failed";
 
 export type DisbursementApprovalConfig = {
-  id: string
-  agency_id: string
-  agency_name: string
-  agency_kind?: AgencyKind | null
-  step: DisbursementApprovalStep
-  approver_user_id: string | null
-  approver_full_name: string | null
-  approver_email: string | null
-  approver_email_override: string | null
-  cc_emails: string[]
-  is_active: boolean
-  updated_at: string
-}
+  id: string;
+  agency_id: string;
+  agency_name: string;
+  agency_kind?: AgencyKind | null;
+  step: DisbursementApprovalStep;
+  approver_user_id: string | null;
+  approver_full_name: string | null;
+  approver_email: string | null;
+  approver_email_override: string | null;
+  cc_emails: string[];
+  is_active: boolean;
+  updated_at: string;
+};
 
 export type DisbursementApprovalConfigUpsertPayload = {
-  id?: string | null
-  agency_id: string
-  step: DisbursementApprovalStep
-  approver_user_id?: string | null
-  approver_email_override?: string | null
-  cc_emails?: string[]
-  is_active?: boolean
-}
+  id?: string | null;
+  agency_id: string;
+  step: DisbursementApprovalStep;
+  approver_user_id?: string | null;
+  approver_email_override?: string | null;
+  cc_emails?: string[];
+  is_active?: boolean;
+};
 
 export type DisbursementEmailOutboxRow = {
-  id: string
-  to_email: string
-  cc_emails: string[]
-  subject: string
-  body: string
-  related_group_id: string | null
-  event_type: string
-  status: EmailOutboxStatus
-  attempts: number
-  last_error: string | null
-  created_at: string
-  sent_at: string | null
-}
+  id: string;
+  to_email: string;
+  cc_emails: string[];
+  subject: string;
+  body: string;
+  related_group_id: string | null;
+  event_type: string;
+  status: EmailOutboxStatus;
+  attempts: number;
+  last_error: string | null;
+  created_at: string;
+  sent_at: string | null;
+};
