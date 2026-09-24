@@ -24,9 +24,38 @@ export type BatchPrintResult = {
 // v1.39.0: sticker pivoted to per-container — batch-print only supports delivery_note
 export type BatchPrintDocType = 'delivery_note'
 
+export type GenerateDocumentResult = {
+  document_id: string;
+  document_number: string;
+  doc_type: string;
+  template_html: string;
+  variables: Record<string, unknown>;
+};
+
+export type UpdateIssuedToPayload = {
+  issued_to_name: string;
+  issued_to_address?: string;
+  tax_id?: string;
+  reason?: string;
+};
+
 export const documentsApi = {
   list: (filters?: DocumentFilters): Promise<PaginatedResponse<Document>> =>
     get('/documents', filters as Record<string, unknown>),
+
+  // ออกเอกสารจาก order — migrate จาก supabase.rpc('generate_document')
+  generate: (
+    orderId: string,
+    docType: 'receipt' | 'voucher',
+  ): Promise<GenerateDocumentResult> =>
+    post('/documents/generate', { order_id: orderId, doc_type: docType }),
+
+  // แก้ชื่อ/ที่อยู่บนเอกสารที่ออกไปแล้ว — มี audit log ในตัว
+  updateIssuedTo: (
+    documentId: string,
+    payload: UpdateIssuedToPayload,
+  ): Promise<{ document_id: string; document_number: string; issued_to_name: string }> =>
+    patch(`/documents/${documentId}/issued-to`, payload),
 
   generatePdf: (payload: GeneratePdfPayload): Promise<{ url: string; encrypted: boolean }> =>
     post('/documents/pdf', payload),

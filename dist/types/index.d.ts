@@ -683,7 +683,7 @@ type DisbursementEmailOutboxRow = {
     sent_at: string | null;
 };
 
-type QrPaymentStatusFilter = 'paid' | 'pending';
+type QrPaymentStatusFilter = "paid" | "pending";
 type QrPaymentRow = {
     id: string;
     order_number: string;
@@ -714,7 +714,7 @@ type QrPaymentsSummary = {
     order_count: number;
     total_amount: number;
 };
-type QrSummaryStatus = 'finance_review' | 'finance_confirmed' | 'accounting_approved' | 'accounting_rejected';
+type QrSummaryStatus = "finance_review" | "finance_confirmed" | "accounting_approved" | "accounting_rejected";
 type QrMonthlySummary = {
     id: string;
     month: string;
@@ -731,8 +731,8 @@ type QrMonthlySummary = {
     created_at: string;
     updated_at: string;
 };
-type BankStatementStatus = 'uploaded' | 'parsed' | 'matched' | 'archived';
-type BankRowMatchStatus = 'unmatched' | 'auto_matched' | 'manual_matched' | 'ignored';
+type BankStatementStatus = "uploaded" | "parsed" | "matched" | "archived";
+type BankRowMatchStatus = "unmatched" | "auto_matched" | "manual_matched" | "ignored";
 type BankStatement = {
     id: string;
     filename: string;
@@ -768,8 +768,8 @@ type CreateBankStatementPayload = {
 type ReceiptUsageRow = {
     document_id: string;
     document_number: string;
-    type: 'receipt' | 'voucher';
-    status: 'draft' | 'issued' | 'void';
+    type: "receipt" | "voucher";
+    status: "draft" | "issued" | "void";
     issued_at: string | null;
     issued_to_name: string;
     agency_id: string | null;
@@ -785,7 +785,7 @@ type ReceiptUsageSummary = {
 type ReceiptUsageFilters = {
     date_from?: string;
     date_to?: string;
-    type?: 'receipt' | 'voucher';
+    type?: "receipt" | "voucher";
 };
 type ReceivableRow = {
     agency_id: string;
@@ -885,7 +885,7 @@ type PaymentsByMethodRow = {
 type InvoiceReportRow = {
     document_id: string;
     document_number: string;
-    status: 'draft' | 'issued' | 'void';
+    status: "draft" | "issued" | "void";
     issued_at: string | null;
     issued_to_name: string;
     agency_id: string | null;
@@ -977,15 +977,10 @@ type MonthlyOverview = {
     order_count: number;
     new_customers: number;
     total_debt: number;
-    /** จำนวนหน่วยงานที่สั่งซื้อในช่วง (distinct agency_id, ไม่นับ cancelled/rejected) */
     agency_count: number;
-    /** ยอดเฉลี่ยต่อออเดอร์ (บาท) — revenue / order_count, 0 ถ้าไม่มีออเดอร์ */
     avg_order_value: number;
-    /** จำนวนใบส่งของที่จัดส่งสำเร็จในช่วง (status = 'delivered') */
     delivery_count: number;
-    /** ยอดขายแยกตามช่องทางชำระ — { cash, qr_promptpay, payroll_deduction, invoice_billing } */
     revenue_by_payment_method: Record<string, number>;
-    /** ยอดขายแยกประเภทสินค้า — { returnable: ถัง, non_returnable: แพ็ค/กล่อง } */
     revenue_by_product_type: Record<string, number>;
 };
 

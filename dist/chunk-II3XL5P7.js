@@ -195,6 +195,10 @@ var notificationsApi = {
 // src/api-client/documents.ts
 var documentsApi = {
   list: (filters) => get("/documents", filters),
+  // ออกเอกสารจาก order — migrate จาก supabase.rpc('generate_document')
+  generate: (orderId, docType) => post("/documents/generate", { order_id: orderId, doc_type: docType }),
+  // แก้ชื่อ/ที่อยู่บนเอกสารที่ออกไปแล้ว — มี audit log ในตัว
+  updateIssuedTo: (documentId, payload) => patch(`/documents/${documentId}/issued-to`, payload),
   generatePdf: (payload) => post("/documents/pdf", payload),
   getById: (id) => get(`/documents/${id}`),
   batchPrint: (deliveryIds, docType = "delivery_note") => post("/documents/batch-print", { delivery_ids: deliveryIds, doc_type: docType }),
@@ -505,4 +509,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-67WAKN4O.js.map
+//# sourceMappingURL=chunk-II3XL5P7.js.map
