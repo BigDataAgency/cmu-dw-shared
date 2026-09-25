@@ -441,14 +441,14 @@ declare function clampPageSize(n: number | undefined): number;
  */
 declare function todayISO(): string;
 
-type AgencyKind = 'faculty' | 'office' | 'external';
-type DisbursementKind = 'faculty' | 'office';
-type DisbursementStatus = 'draft' | 'submitted' | 'in_approval' | 'fully_approved' | 'faculty_approved' | 'office_head_approved' | 'office_director_approved' | 'treasury_review' | 'exported' | 'treasury_approved' | 'rejected_to_preparer' | 'treasury_rejected' | 'cancelled' | 'waiting_finance' | 'waiting_property_finance';
-type DisbursementEventType = 'created' | 'submitted' | 'approved' | 'rejected' | 'exported' | 'treasury_approved' | 'treasury_rejected' | 'debtor_cleared' | 'unlocked_to_draft' | 'creditor_code_changed' | 'approver_added' | 'approver_sent' | 'approver_opened' | 'approver_delegated' | 'cancelled' | 'locked' | 'submitted_to_finance' | 'finance_approved' | 'finance_rejected' | 'treasury_arrived' | 'property_finance_forwarded' | 'property_finance_rejected';
+type AgencyKind = "faculty" | "office" | "external";
+type DisbursementKind = "faculty" | "office";
+type DisbursementStatus = "draft" | "submitted" | "in_approval" | "fully_approved" | "faculty_approved" | "office_head_approved" | "office_director_approved" | "treasury_review" | "exported" | "treasury_approved" | "rejected_to_preparer" | "treasury_rejected" | "cancelled" | "waiting_finance" | "waiting_property_finance";
+type DisbursementEventType = "created" | "submitted" | "approved" | "rejected" | "exported" | "treasury_approved" | "treasury_rejected" | "debtor_cleared" | "unlocked_to_draft" | "creditor_code_changed" | "approver_added" | "approver_sent" | "approver_opened" | "approver_delegated" | "cancelled" | "locked" | "submitted_to_finance" | "finance_approved" | "finance_rejected" | "treasury_arrived" | "property_finance_forwarded" | "property_finance_rejected";
 /** Payment channel for a disbursement bill (v1.52 CR4-B) */
-type DisbursementPaymentChannel = 'budget_transfer' | 'bank_transfer' | 'cheque';
+type DisbursementPaymentChannel = "budget_transfer" | "bank_transfer" | "cheque";
 /** Backend `app_role` enum (DB-side) — distinct from frontend AppRole in `./user` */
-type DbAppRole = 'guest' | 'member_email' | 'member_cmu' | 'org_cmu' | 'staff_property' | 'admin_property' | 'executive' | 'admin_vendor' | 'delivery' | 'super_admin' | 'audit' | 'treasury_accounting' | 'treasury_finance';
+type DbAppRole = "guest" | "member_email" | "member_cmu" | "org_cmu" | "staff_property" | "admin_property" | "executive" | "admin_vendor" | "delivery" | "super_admin" | "audit" | "treasury_accounting" | "treasury_finance";
 /** 7-segment 3D accounting code per office disbursement item */
 type AccountingCode7Seg = {
     fund_code?: string | null;
@@ -472,8 +472,8 @@ type UpdateDisbursementItemPayload = {
 type EligibleReceivable = {
     document_id: string;
     document_number: string;
-    document_type: 'invoice' | 'receipt' | 'voucher';
-    document_status: 'draft' | 'issued' | 'void';
+    document_type: "invoice" | "receipt" | "voucher";
+    document_status: "draft" | "issued" | "void";
     amount: number;
     issued_at: string;
     order_id: string;
@@ -522,6 +522,8 @@ type DisbursementGroup = {
     /** true = ใบเก่าที่ยังวิ่งบนสายอนุมัติรุ่น v1.40/41 (แช่แข็งแล้ว) — หน้าจอใช้แยกปุ่มส่งอนุมัติ */
     uses_legacy_chain?: boolean;
     payment_channel?: DisbursementPaymentChannel | null;
+    /** หมายเหตุ "ออกใบสำคัญรับเงินในนาม…" (เช็ค/โอนผ่านบัญชี) — ประชุม 18 ก.ย. */
+    issue_note?: string | null;
     locked_at?: string | null;
     final_pdf_sha256?: string | null;
     treasury_arrived_at?: string | null;
@@ -643,8 +645,8 @@ type EligibleReceivablesFilters = {
     date_from?: string;
     date_to?: string;
 };
-type DisbursementApprovalStep = 'faculty_approver' | 'office_head' | 'office_director';
-type EmailOutboxStatus = 'queued' | 'sent' | 'failed';
+type DisbursementApprovalStep = "faculty_approver" | "office_head" | "office_director";
+type EmailOutboxStatus = "queued" | "sent" | "failed";
 type DisbursementApprovalConfig = {
     id: string;
     agency_id: string;

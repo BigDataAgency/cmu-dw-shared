@@ -72,8 +72,7 @@ var ordersApi = {
   create: (payload) => post("/orders", payload),
   cancel: (id, payload) => patch(`/orders/${id}/cancel`, payload),
   /**
-   * ชื่อโครงการ (optional) ที่จะติดไปบนใบเสร็จ/ใบสำคัญรับเงิน
-   * ต้องตั้งก่อนออกเอกสาร — documents.project_name เป็น snapshot
+   * ชื่อโครงการที่จะติดไปบนใบเสร็จ/ใบสำคัญรับเงิน
    */
   setProjectName: (id, projectName) => patch(`/orders/${id}/project-name`, { project_name: projectName }),
   updateStatus: (id, payload) => patch(`/orders/${id}/status`, payload),
@@ -331,12 +330,24 @@ var disbursementsApi = {
   // v1.57 — batch ตัดลูกหนี้หลายใบทีเดียว; server รายงานผลราย group (ใบที่ fail ไม่ล้มทั้งชุด)
   finalApproveBatch: (group_ids) => post("/finance/disbursement/groups/final-approve-batch", { group_ids }),
   finalReject: (id, payload) => post(`/finance/disbursement/groups/${id}/final-reject`, payload),
-  treasuryHistory: (filters) => get("/finance/disbursement/treasury/history", filters),
-  // ── 24 ก.ย. 2026 — ด่านการเงินทรัพย์สิน (เช็คเท่านั้น) ก่อนถึงกองคลัง ──
-  propertyFinanceForward: (id, payload) => post(`/finance/disbursement/groups/${id}/property-finance-forward`, payload ?? {}),
+  treasuryHistory: (filters) => get(
+    "/finance/disbursement/treasury/history",
+    filters
+  ),
+  // ── ด่านการเงินทรัพย์สิน (เช็คเท่านั้น) ก่อนถึงกองคลัง ──
+  propertyFinanceForward: (id, payload) => post(
+    `/finance/disbursement/groups/${id}/property-finance-forward`,
+    payload ?? {}
+  ),
   propertyFinanceReject: (id, payload) => post(`/finance/disbursement/groups/${id}/property-finance-reject`, payload),
-  // ── v1.56 — Finance (กองคลัง-การเงิน): คิวเช็ค/โอนผ่านบัญชี ────────────
-  financeApprove: (id) => post(`/finance/disbursement/groups/${id}/finance-approve`, {}),
+  // ── Finance (กองคลัง-การเงิน): คิวเช็ค/โอนผ่านบัญชี ────────────
+  /**
+   * การเงินกองคลังอนุมัติเช็ค/โอน → ตัดลูกหนี้ + ออกใบสำคัญรับเงิน
+   * issued_to_name = ชื่อบนใบสำคัญที่ยืนยัน/แก้ตอนกด (ไม่ส่ง = ชื่อหน่วยงาน)
+   */
+  financeApprove: (id, payload) => post(`/finance/disbursement/groups/${id}/finance-approve`, payload ?? {}),
+  /** หมายเหตุ "ออกใบสำคัญรับเงินในนาม…" (เช็ค/โอนผ่านบัญชี ช่องเดียว) */
+  setIssueNote: (id, issueNote) => patch(`/finance/disbursement/groups/${id}/issue-note`, { issue_note: issueNote }),
   financeReject: (id, payload) => post(`/finance/disbursement/groups/${id}/finance-reject`, payload),
   reExportBatch: (batchId) => post(`/finance/disbursement/treasury/history/${batchId}/re-export`, {}),
   financeQueueExport: (payload) => post("/finance/disbursement/finance-queue/export", payload),
@@ -345,12 +356,21 @@ var disbursementsApi = {
   upsertFacultyCreditor: (payload) => post("/finance/disbursement/faculty-creditors", payload),
   deleteFacultyCreditor: (id) => del(`/finance/disbursement/faculty-creditors/${id}`),
   // ── v1.41 — Approval Config + Email Outbox ─────────────────────────────
-  listApprovalConfig: (agencyId) => get("/finance/disbursement/approval-config", agencyId ? { agency_id: agencyId } : void 0),
+  listApprovalConfig: (agencyId) => get(
+    "/finance/disbursement/approval-config",
+    agencyId ? { agency_id: agencyId } : void 0
+  ),
   upsertApprovalConfig: (payload) => post("/finance/disbursement/approval-config", payload),
   deleteApprovalConfig: (id) => del(`/finance/disbursement/approval-config/${id}`),
-  listEmailOutbox: (filters) => get("/finance/disbursement/email-outbox", filters),
+  listEmailOutbox: (filters) => get(
+    "/finance/disbursement/email-outbox",
+    filters
+  ),
   // ── v1.45 — Dynamic Per-Document Approval Chain ────────────────────────
-  listPendingDeliveries: (filters) => get("/finance/disbursement/pending-deliveries", filters),
+  listPendingDeliveries: (filters) => get(
+    "/finance/disbursement/pending-deliveries",
+    filters
+  ),
   createGroupV2: (payload) => post("/finance/disbursement/groups/v2", payload),
   submitV2: (id) => post(`/finance/disbursement/groups/${id}/submit/v2`, {}),
   delegateApprover: (id, payload) => post(`/finance/disbursement/groups/${id}/delegate-approver`, payload),
@@ -359,14 +379,20 @@ var disbursementsApi = {
   finalPdf: (id) => get(`/finance/disbursement/groups/${id}/final-pdf`),
   // ── v1.52 CR4 — payment channel, cancel, approval routing template ──────
   setPaymentChannel: (id, channel) => post(`/finance/disbursement/groups/${id}/payment-channel`, { channel }),
-  cancelGroup: (id, reason) => post(`/finance/disbursement/groups/${id}/cancel`, { reason: reason ?? null }),
-  getApprovalTemplate: (customerGroupId) => get("/finance/disbursement/approval-template", { customer_group_id: customerGroupId }),
+  cancelGroup: (id, reason) => post(`/finance/disbursement/groups/${id}/cancel`, {
+    reason: reason ?? null
+  }),
+  getApprovalTemplate: (customerGroupId) => get("/finance/disbursement/approval-template", {
+    customer_group_id: customerGroupId
+  }),
   setApprovalTemplate: (customerGroupId, steps) => post("/finance/disbursement/approval-template", {
     customer_group_id: customerGroupId,
     steps
   }),
   // ── v1.59 — สายอนุมัติระดับหน่วยงาน (ใช้กับใบวางบิลของคณะ) ─────────────
-  getAgencyApprovalTemplate: (agencyId) => get("/finance/disbursement/agency-approval-template", { agency_id: agencyId }),
+  getAgencyApprovalTemplate: (agencyId) => get("/finance/disbursement/agency-approval-template", {
+    agency_id: agencyId
+  }),
   setAgencyApprovalTemplate: (agencyId, steps) => post("/finance/disbursement/agency-approval-template", {
     agency_id: agencyId,
     steps
@@ -376,8 +402,14 @@ var disbursementsApi = {
   deleteSavedCode: (id) => del(`/finance/saved-codes/${id}`),
   updateSavedCodeLabel: (id, label) => patch(`/finance/saved-codes/${id}`, { label }),
   // ── v1.47 — cancellation report ───────────────────────────────────────
-  cancellationReport: (filters) => get("/finance/reports/cancellation", filters),
-  cancellationReportDetail: (params) => get("/finance/reports/cancellation/detail", params)
+  cancellationReport: (filters) => get(
+    "/finance/reports/cancellation",
+    filters
+  ),
+  cancellationReportDetail: (params) => get(
+    "/finance/reports/cancellation/detail",
+    params
+  )
 };
 
 // src/api-client/approve.ts
@@ -517,4 +549,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-EPX2EVBG.js.map
+//# sourceMappingURL=chunk-B4TOD54O.js.map

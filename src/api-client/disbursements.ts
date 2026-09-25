@@ -131,8 +131,19 @@ export const disbursementsApi = {
     post(`/finance/disbursement/groups/${id}/property-finance-reject`, payload),
 
   // ── Finance (กองคลัง-การเงิน): คิวเช็ค/โอนผ่านบัญชี ────────────
-  financeApprove: (id: string): Promise<DisbursementGroup> =>
-    post(`/finance/disbursement/groups/${id}/finance-approve`, {}),
+  /**
+   * การเงินกองคลังอนุมัติเช็ค/โอน → ตัดลูกหนี้ + ออกใบสำคัญรับเงิน
+   * issued_to_name = ชื่อบนใบสำคัญที่ยืนยัน/แก้ตอนกด (ไม่ส่ง = ชื่อหน่วยงาน)
+   */
+  financeApprove: (
+    id: string,
+    payload?: { issued_to_name?: string | null },
+  ): Promise<DisbursementGroup> =>
+    post(`/finance/disbursement/groups/${id}/finance-approve`, payload ?? {}),
+
+  /** หมายเหตุ "ออกใบสำคัญรับเงินในนาม…" (เช็ค/โอนผ่านบัญชี ช่องเดียว) */
+  setIssueNote: (id: string, issueNote: string | null): Promise<DisbursementGroup> =>
+    patch(`/finance/disbursement/groups/${id}/issue-note`, { issue_note: issueNote }),
 
   financeReject: (
     id: string,

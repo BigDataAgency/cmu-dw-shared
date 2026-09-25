@@ -138,13 +138,15 @@ export type DisbursementGroup = {
   customer_group_id?: string | null;
   current_step?: number;
   total_steps?: number;
-  /** true = ใบเก่าที่ยังวิ่งบนสายอนุมัติรุ่น v1.40/41 (แช่แข็งแล้ว) — หน้าจอใช้แยกปุ่มส่งอนุมัติ */
+  /** true = ใบเก่าที่ยังวิ่งบนสายอนุมัติรุ่น — หน้าจอใช้แยกปุ่มส่งอนุมัติ */
   uses_legacy_chain?: boolean;
   // v1.52 CR4
   payment_channel?: DisbursementPaymentChannel | null;
+  /** หมายเหตุ "ออกใบสำคัญรับเงินในนาม…" (เช็ค/โอนผ่านบัญชี) */
+  issue_note?: string | null;
   locked_at?: string | null;
   final_pdf_sha256?: string | null;
-  // v1.56 — เวลาเอกสารถึงกองคลัง (treasury_review/waiting_finance)
+  // เวลาเอกสารถึงกองคลัง (treasury_review/waiting_finance)
   treasury_arrived_at?: string | null;
   created_at: string;
   updated_at: string;

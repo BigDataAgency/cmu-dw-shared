@@ -11,9 +11,9 @@ declare class ApiError extends Error {
     constructor(status: number, message: string);
 }
 
-type OrderSource = 'pos_walkin' | 'pos_delivery' | 'online' | 'phone' | 'agent';
-type PaymentMethod = 'cash' | 'qr_promptpay' | 'payroll_deduction' | 'invoice_billing';
-type DeliveryType = 'delivery' | 'pickup';
+type OrderSource = "pos_walkin" | "pos_delivery" | "online" | "phone" | "agent";
+type PaymentMethod = "cash" | "qr_promptpay" | "payroll_deduction" | "invoice_billing";
+type DeliveryType = "delivery" | "pickup";
 type CreateOrderPayload = {
     items: {
         product_id: string;
@@ -67,7 +67,7 @@ type DeliveryAvailability = {
         reason: string;
     }[] | null;
 };
-type DateCapacityStatus = 'full' | 'near_full';
+type DateCapacityStatus = "full" | "near_full";
 type DateCapacityProduct = {
     product_id: string;
     name: string;
@@ -117,8 +117,7 @@ declare const ordersApi: {
     create: (payload: CreateOrderPayload) => Promise<Order>;
     cancel: (id: string, payload: CancelOrderPayload) => Promise<void>;
     /**
-     * ชื่อโครงการ (optional) ที่จะติดไปบนใบเสร็จ/ใบสำคัญรับเงิน
-     * ต้องตั้งก่อนออกเอกสาร — documents.project_name เป็น snapshot
+     * ชื่อโครงการที่จะติดไปบนใบเสร็จ/ใบสำคัญรับเงิน
      */
     setProjectName: (id: string, projectName: string | null) => Promise<{
         order_id: string;
@@ -895,7 +894,15 @@ declare const disbursementsApi: {
         note?: string;
     }) => Promise<DisbursementGroup>;
     propertyFinanceReject: (id: string, payload: RejectDisbursementPayload) => Promise<DisbursementGroup>;
-    financeApprove: (id: string) => Promise<DisbursementGroup>;
+    /**
+     * การเงินกองคลังอนุมัติเช็ค/โอน → ตัดลูกหนี้ + ออกใบสำคัญรับเงิน
+     * issued_to_name = ชื่อบนใบสำคัญที่ยืนยัน/แก้ตอนกด (ไม่ส่ง = ชื่อหน่วยงาน)
+     */
+    financeApprove: (id: string, payload?: {
+        issued_to_name?: string | null;
+    }) => Promise<DisbursementGroup>;
+    /** หมายเหตุ "ออกใบสำคัญรับเงินในนาม…" (เช็ค/โอนผ่านบัญชี ช่องเดียว) */
+    setIssueNote: (id: string, issueNote: string | null) => Promise<DisbursementGroup>;
     financeReject: (id: string, payload: RejectDisbursementPayload) => Promise<DisbursementGroup>;
     reExportBatch: (batchId: string) => Promise<{
         file_base64: string | null;
@@ -996,7 +1003,7 @@ type OfficeItemSegments = {
     funding_source_code: string;
 };
 type CreateDisbursementGroupV2Payload = {
-    kind: 'faculty' | 'office';
+    kind: "faculty" | "office";
     customer_group_id: string;
     agency_id: string;
     delivery_ids: string[];
@@ -1026,7 +1033,7 @@ type DisbursementApproverRow = {
     approver_email: string;
     approver_user_id: string | null;
     delegated_from_id: string | null;
-    status: 'pending' | 'sent' | 'opened' | 'approved' | 'rejected' | 'expired' | 'delegated';
+    status: "pending" | "sent" | "opened" | "approved" | "rejected" | "expired" | "delegated";
     magic_token_expires_at: string | null;
     sent_at: string | null;
     opened_at: string | null;
