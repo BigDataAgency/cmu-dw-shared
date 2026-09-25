@@ -1,434 +1,473 @@
-type AppRole = 'customer' | 'driver' | 'vendor' | 'pos' | 'admin' | 'superadmin';
+type AppRole =
+  | "customer"
+  | "driver"
+  | "vendor"
+  | "pos"
+  | "admin"
+  | "superadmin";
 type Profile = {
-    id: string;
-    email: string | null;
-    full_name: string | null;
-    phone_number: string | null;
-    avatar_url: string | null;
-    billing_name: string | null;
-    billing_address: string | null;
-    billing_tax_id: string | null;
-    roles: string[];
-    created_at: string;
-    updated_at: string;
+  id: string;
+  email: string | null;
+  full_name: string | null;
+  phone_number: string | null;
+  avatar_url: string | null;
+  billing_name: string | null;
+  billing_address: string | null;
+  billing_tax_id: string | null;
+  roles: string[];
+  created_at: string;
+  updated_at: string;
 };
 type UpdateProfilePayload = {
-    full_name?: string;
-    phone_number?: string;
-    email?: string;
-    avatar_url?: string;
-    billing_name?: string;
-    billing_address?: string;
-    billing_tax_id?: string;
+  full_name?: string;
+  phone_number?: string;
+  email?: string;
+  avatar_url?: string;
+  billing_name?: string;
+  billing_address?: string;
+  billing_tax_id?: string;
 };
 type AddressPayload = {
-    label: string;
-    address: string;
-    recipient_name?: string;
-    phone?: string;
-    subdistrict?: string;
-    district?: string;
-    province?: string;
-    postal_code?: string;
-    lat?: number;
-    lng?: number;
-    is_default?: boolean;
-    delivery_notes?: string;
+  label: string;
+  address: string;
+  recipient_name?: string;
+  phone?: string;
+  subdistrict?: string;
+  district?: string;
+  province?: string;
+  postal_code?: string;
+  lat?: number;
+  lng?: number;
+  is_default?: boolean;
+  delivery_notes?: string;
 };
 type Address = {
+  id: string;
+  label: string;
+  address: string;
+  recipient_name: string | null;
+  phone: string | null;
+  subdistrict: string | null;
+  district: string | null;
+  province: string | null;
+  postal_code: string | null;
+  lat: number | null;
+  lng: number | null;
+  is_default: boolean;
+  delivery_notes: string | null;
+};
+interface ExportedData {
+  exported_at: string;
+  profile: {
     id: string;
+    full_name: string | null;
+    email: string | null;
+    phone_number: string | null;
+    avatar_url: string | null;
+    account_status: string;
+    created_at: string;
+  } | null;
+  addresses: {
     label: string;
-    address: string;
     recipient_name: string | null;
-    phone: string | null;
-    subdistrict: string | null;
+    recipient_phone: string | null;
+    address_line: string;
     district: string | null;
     province: string | null;
     postal_code: string | null;
-    lat: number | null;
-    lng: number | null;
-    is_default: boolean;
-    delivery_notes: string | null;
-};
-interface ExportedData {
-    exported_at: string;
-    profile: {
-        id: string;
-        full_name: string | null;
-        email: string | null;
-        phone_number: string | null;
-        avatar_url: string | null;
-        account_status: string;
-        created_at: string;
-    } | null;
-    addresses: {
-        label: string;
-        recipient_name: string | null;
-        recipient_phone: string | null;
-        address_line: string;
-        district: string | null;
-        province: string | null;
-        postal_code: string | null;
-    }[];
-    orders: {
-        id: string;
-        order_number: string;
-        status: string;
-        total_amount: number;
-        created_at: string;
-    }[];
-    consent_history: {
-        accepted_at: string;
-        ip_address: string | null;
-        consent_version: string;
-        consent_type: string;
-        consent_title: string;
-    }[];
+  }[];
+  orders: {
+    id: string;
+    order_number: string;
+    status: string;
+    total_amount: number;
+    created_at: string;
+  }[];
+  consent_history: {
+    accepted_at: string;
+    ip_address: string | null;
+    consent_version: string;
+    consent_type: string;
+    consent_title: string;
+  }[];
 }
 
 type CustomerGroup = "general" | "university" | "wholesale" | "vip";
 type ProductPrice = {
-    id: string;
-    customer_group: CustomerGroup;
-    price: number;
-    unit: string;
+  id: string;
+  customer_group: CustomerGroup;
+  price: number;
+  unit: string;
 };
 type Product = {
-    id: string;
-    name: string;
-    sku: string | null;
-    category: string | null;
-    description: string | null;
-    image_url: string | null;
-    is_active: boolean;
-    stock_qty: number;
-    low_stock_threshold: number | null;
-    price: number | null;
-    deposit_price: number | null;
-    pos_stock_exempt?: boolean;
-    is_pos_sellable?: boolean;
-    size?: string | null;
-    unit?: string | null;
-    vendor_id?: string | null;
-    vendors?: {
-        brand_name: string;
-    } | null;
-    prices: ProductPrice[];
-    created_at: string;
-    updated_at: string;
+  id: string;
+  name: string;
+  sku: string | null;
+  category: string | null;
+  description: string | null;
+  image_url: string | null;
+  is_active: boolean;
+  stock_qty: number;
+  low_stock_threshold: number | null;
+  price: number | null;
+  deposit_price: number | null;
+  pos_stock_exempt?: boolean;
+  is_pos_sellable?: boolean;
+  size?: string | null;
+  unit?: string | null;
+  vendor_id?: string | null;
+  vendors?: {
+    brand_name: string;
+  } | null;
+  prices: ProductPrice[];
+  created_at: string;
+  updated_at: string;
 };
 type CreateProductPayload = {
-    name: string;
-    description?: string;
-    image_url?: string;
-    is_active?: boolean;
-    size?: string | null;
-    unit?: string | null;
-    is_pos_sellable?: boolean;
-    prices?: Omit<ProductPrice, "id">[];
+  name: string;
+  description?: string;
+  image_url?: string;
+  is_active?: boolean;
+  size?: string | null;
+  unit?: string | null;
+  is_pos_sellable?: boolean;
+  prices?: Omit<ProductPrice, "id">[];
 };
 type UpdateProductPayload = Partial<CreateProductPayload>;
 
-type OrderStatus = 'pending' | 'confirmed' | 'preparing' | 'ready' | 'delivering' | 'delivered' | 'cancelled' | 'overdue';
-type PaymentMethod = 'cash' | 'qr_promptpay' | 'payroll_deduction' | 'invoice_billing';
-type DeliveryType = 'delivery' | 'pickup';
+type OrderStatus =
+  | "pending"
+  | "confirmed"
+  | "preparing"
+  | "ready"
+  | "delivering"
+  | "delivered"
+  | "cancelled"
+  | "overdue";
+type PaymentMethod =
+  | "cash"
+  | "qr_promptpay"
+  | "payroll_deduction"
+  | "invoice_billing";
+type DeliveryType = "delivery" | "pickup";
 type OrderItem = {
-    id: string;
-    product_id: string;
-    product_name: string;
-    quantity: number;
-    unit_price: number;
-    subtotal: number;
-    delivered_qty?: number | null;
-    qty_edited?: boolean;
+  id: string;
+  product_id: string;
+  product_name: string;
+  quantity: number;
+  unit_price: number;
+  subtotal: number;
+  delivered_qty?: number | null;
+  qty_edited?: boolean;
 };
 type Order = {
-    id: string;
-    order_number: string;
-    customer_id: string;
-    status: OrderStatus;
-    payment_method: PaymentMethod;
-    address_id: string;
-    items: OrderItem[];
-    total_amount: number;
-    note: string | null;
-    delivery_type: DeliveryType;
-    created_at: string;
-    updated_at: string;
-    cancellation_reason?: string | null;
-    cancelled_at?: string | null;
-    cancelled_by?: string | null;
+  id: string;
+  order_number: string;
+  customer_id: string;
+  status: OrderStatus;
+  payment_method: PaymentMethod;
+  address_id: string;
+  items: OrderItem[];
+  total_amount: number;
+  note: string | null;
+  delivery_type: DeliveryType;
+  created_at: string;
+  updated_at: string;
+  cancellation_reason?: string | null;
+  cancelled_at?: string | null;
+  cancelled_by?: string | null;
 };
 type CreateOrderPayload = {
-    items: {
-        product_id: string;
-        quantity: number;
-    }[];
-    address: {
-        address_id?: string;
-        address?: string;
-        lat?: number;
-        lng?: number;
-    };
-    payment: PaymentMethod;
-    source?: 'online' | 'pos_walkin' | 'pos_delivery' | 'phone' | 'agent';
-    purchase_right_id?: string;
-    scheduled_date?: string;
-    scheduled_time_slot?: string;
-    delivery_notes?: string;
-    discount_amount?: number;
-    delivery_type?: DeliveryType;
+  items: {
+    product_id: string;
+    quantity: number;
+  }[];
+  address: {
+    address_id?: string;
+    address?: string;
+    lat?: number;
+    lng?: number;
+  };
+  payment: PaymentMethod;
+  source?: "online" | "pos_walkin" | "pos_delivery" | "phone" | "agent";
+  purchase_right_id?: string;
+  scheduled_date?: string;
+  scheduled_time_slot?: string;
+  delivery_notes?: string;
+  discount_amount?: number;
+  delivery_type?: DeliveryType;
 };
 type CancelOrderPayload = {
-    reason: string;
+  reason: string;
 };
 type ReturnBottlesPayload = {
-    bottles_returned: number;
+  bottles_returned: number;
 };
 
-type DeliveryStatus = 'pending' | 'assigned' | 'in_progress' | 'completed' | 'cancelled';
+type DeliveryStatus =
+  | "pending"
+  | "assigned"
+  | "in_progress"
+  | "completed"
+  | "cancelled";
 
 type DeliveryItem = {
-    product_id: string;
-    product_name: string;
-    quantity: number;
+  product_id: string;
+  product_name: string;
+  quantity: number;
 };
 type Delivery = {
-    id: string;
-    order_id: string;
-    driver_id: string | null;
-    route_plan_stop_id: string | null;
-    status: DeliveryStatus;
-    items: DeliveryItem[];
-    address: string;
-    lat: number | null;
-    lng: number | null;
-    note: string | null;
-    completed_at: string | null;
-    created_at: string;
-    updated_at: string;
+  id: string;
+  order_id: string;
+  driver_id: string | null;
+  route_plan_stop_id: string | null;
+  status: DeliveryStatus;
+  items: DeliveryItem[];
+  address: string;
+  lat: number | null;
+  lng: number | null;
+  note: string | null;
+  completed_at: string | null;
+  created_at: string;
+  updated_at: string;
 };
 /** GET /deliveries/:id — expanded response with order info + product flags (v1.20.0) */
 type DeliveryDetail = Delivery & {
-    orders: {
-        order_number: string;
-        payment_method: PaymentMethod;
-        order_type: string;
-        delivery_address: string;
-        delivery_recipient_name: string | null;
-        delivery_phone: string | null;
-        delivery_notes: string | null;
-        delivery_lat: number | null;
-        delivery_lng: number | null;
+  orders: {
+    order_number: string;
+    payment_method: PaymentMethod;
+    order_type: string;
+    delivery_address: string;
+    delivery_recipient_name: string | null;
+    delivery_phone: string | null;
+    delivery_notes: string | null;
+    delivery_lat: number | null;
+    delivery_lng: number | null;
+  } | null;
+  delivery_items: Array<{
+    quantity: number;
+    order_items: {
+      products: {
+        name: string;
+        is_returnable: boolean;
+      };
     } | null;
-    delivery_items: Array<{
-        quantity: number;
-        order_items: {
-            products: {
-                name: string;
-                is_returnable: boolean;
-            };
-        } | null;
-    }>;
-    payment_method: PaymentMethod | null;
-    has_returnable_items: boolean;
+  }>;
+  payment_method: PaymentMethod | null;
+  has_returnable_items: boolean;
 };
 type AssignDeliveryPayload = {
-    driver_id: string;
-    route_plan_stop_id?: string;
+  driver_id: string;
+  route_plan_stop_id?: string;
 };
 type CompleteDeliveryPayload = {
-    bottles_collected: number;
-    note?: string;
+  bottles_collected: number;
+  note?: string;
 };
 type UpdateDeliveryStatusPayload = {
-    status: DeliveryStatus;
+  status: DeliveryStatus;
 };
 
-type RouteStatus = 'draft' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
+type RouteStatus =
+  | "draft"
+  | "confirmed"
+  | "in_progress"
+  | "completed"
+  | "cancelled";
 type RoutePlanStop = {
-    id: string;
-    route_plan_id: string;
-    sequence: number;
-    delivery_id: string;
-    address: string;
-    lat: number | null;
-    lng: number | null;
-    estimated_arrival: string | null;
-    completed_at: string | null;
+  id: string;
+  route_plan_id: string;
+  sequence: number;
+  delivery_id: string;
+  address: string;
+  lat: number | null;
+  lng: number | null;
+  estimated_arrival: string | null;
+  completed_at: string | null;
 };
 type RoutePlan = {
-    id: string;
-    driver_id: string;
-    date: string;
-    status: RouteStatus;
-    stops: RoutePlanStop[];
-    created_at: string;
-    updated_at: string;
+  id: string;
+  driver_id: string;
+  date: string;
+  status: RouteStatus;
+  stops: RoutePlanStop[];
+  created_at: string;
+  updated_at: string;
 };
 type GenerateRoutePayload = {
-    date: string;
-    driver_ids?: string[];
+  date: string;
+  driver_ids?: string[];
 };
 type ConfirmRoutePayload = {
-    driver_id?: string;
+  driver_id?: string;
 };
 type ReorderStopsPayload = {
-    stop_ids: string[];
+  stop_ids: string[];
 };
 type MoveStopPayload = {
-    stop_id: string;
-    target_route_plan_id: string;
+  stop_id: string;
+  target_route_plan_id: string;
 };
 
-type DocumentType = 'invoice' | 'receipt' | 'voucher' | 'delivery_note' | 'sticker';
-type DocumentStatus = 'draft' | 'issued' | 'void';
+type DocumentType =
+  | "invoice"
+  | "receipt"
+  | "voucher"
+  | "delivery_note"
+  | "sticker";
+type DocumentStatus = "draft" | "issued" | "void";
 type Document = {
-    id: string;
-    document_number: string;
-    type: DocumentType;
-    status: DocumentStatus;
-    amount: number;
-    issued_to_name: string;
-    issued_to_address: string | null;
-    tax_id: string | null;
-    agency_id: string | null;
-    profile_id: string | null;
-    order_id: string | null;
-    delivery_id: string | null;
-    template_id: string | null;
-    issued_at: string | null;
-    issued_by: string | null;
-    pdf_url: string | null;
-    void_reason: string | null;
-    voided_document_id: string | null;
-    reissue_reason: string | null;
-    created_at: string;
+  id: string;
+  document_number: string;
+  type: DocumentType;
+  status: DocumentStatus;
+  amount: number;
+  issued_to_name: string;
+  issued_to_address: string | null;
+  tax_id: string | null;
+  agency_id: string | null;
+  profile_id: string | null;
+  order_id: string | null;
+  delivery_id: string | null;
+  template_id: string | null;
+  issued_at: string | null;
+  issued_by: string | null;
+  pdf_url: string | null;
+  void_reason: string | null;
+  voided_document_id: string | null;
+  reissue_reason: string | null;
+  created_at: string;
 };
 type Transaction = {
-    id: string;
-    document_id: string;
-    amount: number;
-    payment_method: string;
-    reference: string | null;
-    created_at: string;
+  id: string;
+  document_id: string;
+  amount: number;
+  payment_method: string;
+  reference: string | null;
+  created_at: string;
 };
 type VoidRequest = {
-    id: string;
-    document_id: string;
-    reason: string;
-    status: 'pending' | 'approved' | 'rejected';
-    requested_by: string;
-    reviewed_by: string | null;
-    created_at: string;
+  id: string;
+  document_id: string;
+  reason: string;
+  status: "pending" | "approved" | "rejected";
+  requested_by: string;
+  reviewed_by: string | null;
+  created_at: string;
 };
 type ApproveVoidPayload = {
-    void_request_id: string;
-    reissue: boolean;
+  void_request_id: string;
+  reissue: boolean;
 };
 type RejectVoidPayload = {
-    void_request_id: string;
-    reason: string;
+  void_request_id: string;
+  reason: string;
 };
 type SettleDebtPayload = {
-    customer_id: string;
-    amount: number;
-    payment_method: string;
-    reference?: string;
+  customer_id: string;
+  amount: number;
+  payment_method: string;
+  reference?: string;
 };
 
-type NotificationChannel = 'push' | 'email' | 'in_app';
-type NotificationType = 'order_update' | 'delivery_update' | 'payment_reminder' | 'subscription_reminder' | 'route_plan_ready' | 'system';
+type NotificationChannel = "push" | "email" | "in_app";
+type NotificationType =
+  | "order_update"
+  | "delivery_update"
+  | "payment_reminder"
+  | "subscription_reminder"
+  | "route_plan_ready"
+  | "system";
 type Notification = {
-    id: string;
-    user_id: string;
-    type: NotificationType;
-    title: string;
-    body: string;
-    data: Record<string, unknown> | null;
-    read_at: string | null;
-    created_at: string;
+  id: string;
+  user_id: string;
+  type: NotificationType;
+  title: string;
+  body: string;
+  data: Record<string, unknown> | null;
+  read_at: string | null;
+  created_at: string;
 };
 type SendNotificationPayload = {
-    user_id: string;
-    type: NotificationType;
-    title: string;
-    body: string;
-    channels?: NotificationChannel[];
-    data?: Record<string, unknown>;
+  user_id: string;
+  type: NotificationType;
+  title: string;
+  body: string;
+  channels?: NotificationChannel[];
+  data?: Record<string, unknown>;
 };
 type MarkReadPayload = {
-    notification_id: string;
+  notification_id: string;
 };
 type PushSubscriptionPayload = {
-    endpoint: string;
-    keys: {
-        p256dh: string;
-        auth: string;
-    };
+  endpoint: string;
+  keys: {
+    p256dh: string;
+    auth: string;
+  };
 };
 type SendToAgencyPayload = {
-    agency_id: string;
-    type: string;
-    title: string;
-    body: string;
-    channels?: ('push' | 'in_app')[];
-    data?: Record<string, unknown>;
+  agency_id: string;
+  type: string;
+  title: string;
+  body: string;
+  channels?: ("push" | "in_app")[];
+  data?: Record<string, unknown>;
 };
 type SendToAgencyResult = {
-    sent_count: number;
-    skipped_count: number;
-    agency_id: string;
-    warning?: string;
+  sent_count: number;
+  skipped_count: number;
+  agency_id: string;
+  warning?: string;
 };
 
 interface ServerStatusBucket {
-    name: string;
-    size_bytes: number;
-    size_human: string;
-    file_count: number;
+  name: string;
+  size_bytes: number;
+  size_human: string;
+  file_count: number;
 }
 interface ServerStatusTable {
-    name: string;
-    size_bytes: number;
-    size_human: string;
-    row_estimate: number;
+  name: string;
+  size_bytes: number;
+  size_human: string;
+  row_estimate: number;
 }
 interface ServerStatus {
-    database: {
-        size_bytes: number;
-        size_human: string;
-        active_connections: number;
-        max_connections: number;
-        uptime_since: string;
-        cache_hit_ratio: number;
-    };
-    storage: {
-        total_bytes: number;
-        total_human: string;
-        buckets: ServerStatusBucket[];
-    };
-    tables: ServerStatusTable[];
-    timestamp: string;
+  database: {
+    size_bytes: number;
+    size_human: string;
+    active_connections: number;
+    max_connections: number;
+    uptime_since: string;
+    cache_hit_ratio: number;
+  };
+  storage: {
+    total_bytes: number;
+    total_human: string;
+    buckets: ServerStatusBucket[];
+  };
+  tables: ServerStatusTable[];
+  timestamp: string;
 }
 
 declare const DEFAULT_PAGE_SIZE = 20;
 declare const MAX_PAGE_SIZE = 100;
 declare const PAGE_SIZE_OPTIONS: readonly [20, 50, 100];
-type PageSize = typeof PAGE_SIZE_OPTIONS[number];
+type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];
 type PaginationParams = {
-    page?: number;
-    pageSize?: number;
+  page?: number;
+  pageSize?: number;
 };
 type SearchParams = {
-    q?: string;
+  q?: string;
 };
 type PaginatedResponse<T> = {
-    data: T[];
-    total: number;
-    page: number;
-    pageSize: number;
-    totalPages: number;
+  data: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
 };
 declare function clampPageSize(n: number | undefined): number;
 /**
@@ -443,547 +482,737 @@ declare function todayISO(): string;
 
 type AgencyKind = "faculty" | "office" | "external";
 type DisbursementKind = "faculty" | "office";
-type DisbursementStatus = "draft" | "submitted" | "in_approval" | "fully_approved" | "faculty_approved" | "office_head_approved" | "office_director_approved" | "treasury_review" | "exported" | "treasury_approved" | "rejected_to_preparer" | "treasury_rejected" | "cancelled" | "waiting_finance" | "waiting_property_finance";
-type DisbursementEventType = "created" | "submitted" | "approved" | "rejected" | "exported" | "treasury_approved" | "treasury_rejected" | "debtor_cleared" | "unlocked_to_draft" | "creditor_code_changed" | "approver_added" | "approver_sent" | "approver_opened" | "approver_delegated" | "cancelled" | "locked" | "submitted_to_finance" | "finance_approved" | "finance_rejected" | "treasury_arrived" | "property_finance_forwarded" | "property_finance_rejected";
+type DisbursementStatus =
+  | "draft"
+  | "submitted"
+  | "in_approval"
+  | "fully_approved"
+  | "faculty_approved"
+  | "office_head_approved"
+  | "office_director_approved"
+  | "treasury_review"
+  | "exported"
+  | "treasury_approved"
+  | "rejected_to_preparer"
+  | "treasury_rejected"
+  | "cancelled"
+  | "waiting_finance"
+  | "waiting_property_finance";
+type DisbursementEventType =
+  | "created"
+  | "submitted"
+  | "approved"
+  | "rejected"
+  | "exported"
+  | "treasury_approved"
+  | "treasury_rejected"
+  | "debtor_cleared"
+  | "unlocked_to_draft"
+  | "creditor_code_changed"
+  | "approver_added"
+  | "approver_sent"
+  | "approver_opened"
+  | "approver_delegated"
+  | "cancelled"
+  | "locked"
+  | "submitted_to_finance"
+  | "finance_approved"
+  | "finance_rejected"
+  | "treasury_arrived"
+  | "property_finance_forwarded"
+  | "property_finance_rejected";
 /** Payment channel for a disbursement bill (v1.52 CR4-B) */
-type DisbursementPaymentChannel = "budget_transfer" | "bank_transfer" | "cheque";
+type DisbursementPaymentChannel =
+  | "budget_transfer"
+  | "bank_transfer"
+  | "cheque";
 /** Backend `app_role` enum (DB-side) — distinct from frontend AppRole in `./user` */
-type DbAppRole = "guest" | "member_email" | "member_cmu" | "org_cmu" | "staff_property" | "admin_property" | "executive" | "admin_vendor" | "delivery" | "super_admin" | "audit" | "treasury_accounting" | "treasury_finance";
+type DbAppRole =
+  | "guest"
+  | "member_email"
+  | "member_cmu"
+  | "org_cmu"
+  | "staff_property"
+  | "admin_property"
+  | "executive"
+  | "admin_vendor"
+  | "delivery"
+  | "super_admin"
+  | "audit"
+  | "treasury_accounting"
+  | "treasury_finance";
 /** 7-segment 3D accounting code per office disbursement item */
 type AccountingCode7Seg = {
-    fund_code?: string | null;
-    organization_code?: string | null;
-    work_plan_code?: string | null;
-    account_code?: string | null;
-    curriculum_code?: string | null;
-    budget_code?: string | null;
-    funding_source_code?: string | null;
+  fund_code?: string | null;
+  organization_code?: string | null;
+  work_plan_code?: string | null;
+  account_code?: string | null;
+  curriculum_code?: string | null;
+  budget_code?: string | null;
+  funding_source_code?: string | null;
 };
 /** A6 Path 1 — แก้ 7-segment ในใบที่ถูกตีกลับ (rejected_to_preparer); ทุก field required */
 type UpdateDisbursementItemPayload = {
-    fund_code: string;
-    organization_code: string;
-    work_plan_code: string;
-    account_code: string;
-    curriculum_code: string;
-    budget_code: string;
-    funding_source_code: string;
+  fund_code: string;
+  organization_code: string;
+  work_plan_code: string;
+  account_code: string;
+  curriculum_code: string;
+  budget_code: string;
+  funding_source_code: string;
 };
 type EligibleReceivable = {
-    document_id: string;
-    document_number: string;
-    document_type: "invoice" | "receipt" | "voucher";
-    document_status: "draft" | "issued" | "void";
-    amount: number;
-    issued_at: string;
-    order_id: string;
-    order_number: string;
-    agency_id: string;
-    agency_name: string;
-    agency_kind: AgencyKind;
+  document_id: string;
+  document_number: string;
+  document_type: "invoice" | "receipt" | "voucher";
+  document_status: "draft" | "issued" | "void";
+  amount: number;
+  issued_at: string;
+  order_id: string;
+  order_number: string;
+  agency_id: string;
+  agency_name: string;
+  agency_kind: AgencyKind;
 };
 type DisbursementItem = AccountingCode7Seg & {
+  id: string;
+  group_id: string;
+  order_id: string;
+  document_id: string | null;
+  amount: number;
+  accounting_code_combined: string | null;
+  description: string | null;
+  position: number;
+  created_at: string;
+  order?: {
     id: string;
-    group_id: string;
-    order_id: string;
-    document_id: string | null;
-    amount: number;
-    accounting_code_combined: string | null;
-    description: string | null;
-    position: number;
-    created_at: string;
-    order?: {
-        id: string;
-        order_number: string;
-        total_amount: number;
-    } | null;
+    order_number: string;
+    total_amount: number;
+  } | null;
 };
 type DisbursementGroup = {
+  id: string;
+  group_number: string;
+  kind: DisbursementKind;
+  status: DisbursementStatus;
+  agency_id: string;
+  prepared_by: string;
+  prepared_at: string;
+  faculty_creditor_account_id: string | null;
+  faculty_creditor_snapshot: string | null;
+  treasury_export_batch_id: string | null;
+  cleared_at: string | null;
+  external_edoc_id: string | null;
+  total_amount: number;
+  item_count: number;
+  current_assignee_role: DbAppRole | null;
+  last_reject_reason: string | null;
+  rejected_from_group_id: string | null;
+  customer_group_id?: string | null;
+  current_step?: number;
+  total_steps?: number;
+  uses_legacy_chain?: boolean;
+  payment_channel?: DisbursementPaymentChannel | null;
+  issue_note?: string | null;
+  locked_at?: string | null;
+  final_pdf_sha256?: string | null;
+  treasury_arrived_at?: string | null;
+  created_at: string;
+  updated_at: string;
+  agency?: {
     id: string;
-    group_number: string;
-    kind: DisbursementKind;
-    status: DisbursementStatus;
-    agency_id: string;
-    prepared_by: string;
-    prepared_at: string;
-    faculty_creditor_account_id: string | null;
-    faculty_creditor_snapshot: string | null;
-    treasury_export_batch_id: string | null;
-    cleared_at: string | null;
-    external_edoc_id: string | null;
-    total_amount: number;
-    item_count: number;
-    current_assignee_role: DbAppRole | null;
-    last_reject_reason: string | null;
-    rejected_from_group_id: string | null;
-    customer_group_id?: string | null;
-    current_step?: number;
-    total_steps?: number;
-    /** true = ใบเก่าที่ยังวิ่งบนสายอนุมัติรุ่น v1.40/41 (แช่แข็งแล้ว) — หน้าจอใช้แยกปุ่มส่งอนุมัติ */
-    uses_legacy_chain?: boolean;
-    payment_channel?: DisbursementPaymentChannel | null;
-    /** หมายเหตุ "ออกใบสำคัญรับเงินในนาม…" (เช็ค/โอนผ่านบัญชี) — ประชุม 18 ก.ย. */
-    issue_note?: string | null;
-    locked_at?: string | null;
-    final_pdf_sha256?: string | null;
-    treasury_arrived_at?: string | null;
-    created_at: string;
-    updated_at: string;
-    agency?: {
-        id: string;
-        name: string;
-        kind: AgencyKind;
-    } | null;
-    creditor?: {
-        id: string;
-        creditor_code: string;
-        label: string | null;
-    } | null;
-    items?: DisbursementItem[];
-};
-type DisbursementTimelineEvent = {
+    name: string;
+    kind: AgencyKind;
+  } | null;
+  creditor?: {
     id: string;
-    event_type: DisbursementEventType;
-    actor_user_id: string | null;
-    actor_name: string | null;
-    actor_role: DbAppRole | null;
-    from_status: DisbursementStatus | null;
-    to_status: DisbursementStatus | null;
-    item_count: number | null;
-    comment: string | null;
-    metadata: Record<string, unknown> | null;
-    created_at: string;
-};
-type DisbursementExportBatch = {
-    id: string;
-    batch_number: string;
-    exported_by: string;
-    exported_at: string;
-    kind: DisbursementKind;
-    group_count: number;
-    total_amount: number;
-    file_path: string | null;
-    filter_snapshot: Record<string, unknown> | null;
-    created_at: string;
-    exported_by_profile?: {
-        id: string;
-        full_name: string;
-    } | null;
-};
-type FacultyCreditorAccount = {
-    id: string;
-    agency_id: string;
     creditor_code: string;
     label: string | null;
-    is_active: boolean;
-    created_by: string | null;
-    created_at: string;
-    updated_at: string;
-    deleted_at: string | null;
-    fund_code: string | null;
-    organization_code: string | null;
-    work_plan_code: string | null;
-    curriculum_code: string | null;
-    budget_code: string | null;
-    funding_source_code: string | null;
-    agency?: {
-        id: string;
-        name: string;
-        kind: AgencyKind;
-    } | null;
+  } | null;
+  items?: DisbursementItem[];
+};
+type DisbursementTimelineEvent = {
+  id: string;
+  event_type: DisbursementEventType;
+  actor_user_id: string | null;
+  actor_name: string | null;
+  actor_role: DbAppRole | null;
+  from_status: DisbursementStatus | null;
+  to_status: DisbursementStatus | null;
+  item_count: number | null;
+  comment: string | null;
+  metadata: Record<string, unknown> | null;
+  created_at: string;
+};
+type DisbursementExportBatch = {
+  id: string;
+  batch_number: string;
+  exported_by: string;
+  exported_at: string;
+  kind: DisbursementKind;
+  group_count: number;
+  total_amount: number;
+  file_path: string | null;
+  filter_snapshot: Record<string, unknown> | null;
+  created_at: string;
+  exported_by_profile?: {
+    id: string;
+    full_name: string;
+  } | null;
+};
+type FacultyCreditorAccount = {
+  id: string;
+  agency_id: string;
+  creditor_code: string;
+  label: string | null;
+  is_active: boolean;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+  fund_code: string | null;
+  organization_code: string | null;
+  work_plan_code: string | null;
+  curriculum_code: string | null;
+  budget_code: string | null;
+  funding_source_code: string | null;
+  agency?: {
+    id: string;
+    name: string;
+    kind: AgencyKind;
+  } | null;
 };
 type CreateDisbursementGroupItem = AccountingCode7Seg & {
-    order_id: string;
-    document_id?: string | null;
-    amount: number;
-    description?: string | null;
+  order_id: string;
+  document_id?: string | null;
+  amount: number;
+  description?: string | null;
 };
 type CreateDisbursementGroupPayload = {
-    kind: DisbursementKind;
-    agency_id: string;
-    external_edoc_id?: string | null;
-    items: CreateDisbursementGroupItem[];
+  kind: DisbursementKind;
+  agency_id: string;
+  external_edoc_id?: string | null;
+  items: CreateDisbursementGroupItem[];
 };
 type ApproveDisbursementPayload = {
-    comment?: string | null;
+  comment?: string | null;
 };
 type RejectDisbursementPayload = {
-    reason: string;
+  reason: string;
 };
 type TreasuryExportPayload = {
-    group_ids: string[];
-    filter?: Record<string, unknown> | null;
+  group_ids: string[];
+  filter?: Record<string, unknown> | null;
 };
 type TreasuryExportResult = {
-    batch: DisbursementExportBatch;
-    file_base64: string | null;
+  batch: DisbursementExportBatch;
+  file_base64: string | null;
 };
 type FacultyCreditorUpsertPayload = {
-    id?: string | null;
-    agency_id: string;
-    creditor_code: string;
-    label?: string | null;
-    is_active?: boolean;
-    fund_code?: string | null;
-    organization_code?: string | null;
-    work_plan_code?: string | null;
-    curriculum_code?: string | null;
-    budget_code?: string | null;
-    funding_source_code?: string | null;
+  id?: string | null;
+  agency_id: string;
+  creditor_code: string;
+  label?: string | null;
+  is_active?: boolean;
+  fund_code?: string | null;
+  organization_code?: string | null;
+  work_plan_code?: string | null;
+  curriculum_code?: string | null;
+  budget_code?: string | null;
+  funding_source_code?: string | null;
 };
 type DisbursementGroupListFilters = {
-    status?: DisbursementStatus;
-    kind?: DisbursementKind;
-    agency_id?: string;
-    payment_channel?: DisbursementPaymentChannel;
-    arrived_from?: string;
-    arrived_to?: string;
+  status?: DisbursementStatus;
+  kind?: DisbursementKind;
+  agency_id?: string;
+  payment_channel?: DisbursementPaymentChannel;
+  arrived_from?: string;
+  arrived_to?: string;
 };
 type EligibleReceivablesFilters = {
-    kind?: DisbursementKind;
-    agency_id?: string;
-    date_from?: string;
-    date_to?: string;
+  kind?: DisbursementKind;
+  agency_id?: string;
+  date_from?: string;
+  date_to?: string;
 };
-type DisbursementApprovalStep = "faculty_approver" | "office_head" | "office_director";
+type DisbursementApprovalStep =
+  | "faculty_approver"
+  | "office_head"
+  | "office_director";
 type EmailOutboxStatus = "queued" | "sent" | "failed";
 type DisbursementApprovalConfig = {
-    id: string;
-    agency_id: string;
-    agency_name: string;
-    agency_kind?: AgencyKind | null;
-    step: DisbursementApprovalStep;
-    approver_user_id: string | null;
-    approver_full_name: string | null;
-    approver_email: string | null;
-    approver_email_override: string | null;
-    cc_emails: string[];
-    is_active: boolean;
-    updated_at: string;
+  id: string;
+  agency_id: string;
+  agency_name: string;
+  agency_kind?: AgencyKind | null;
+  step: DisbursementApprovalStep;
+  approver_user_id: string | null;
+  approver_full_name: string | null;
+  approver_email: string | null;
+  approver_email_override: string | null;
+  cc_emails: string[];
+  is_active: boolean;
+  updated_at: string;
 };
 type DisbursementApprovalConfigUpsertPayload = {
-    id?: string | null;
-    agency_id: string;
-    step: DisbursementApprovalStep;
-    approver_user_id?: string | null;
-    approver_email_override?: string | null;
-    cc_emails?: string[];
-    is_active?: boolean;
+  id?: string | null;
+  agency_id: string;
+  step: DisbursementApprovalStep;
+  approver_user_id?: string | null;
+  approver_email_override?: string | null;
+  cc_emails?: string[];
+  is_active?: boolean;
 };
 type DisbursementEmailOutboxRow = {
-    id: string;
-    to_email: string;
-    cc_emails: string[];
-    subject: string;
-    body: string;
-    related_group_id: string | null;
-    event_type: string;
-    status: EmailOutboxStatus;
-    attempts: number;
-    last_error: string | null;
-    created_at: string;
-    sent_at: string | null;
+  id: string;
+  to_email: string;
+  cc_emails: string[];
+  subject: string;
+  body: string;
+  related_group_id: string | null;
+  event_type: string;
+  status: EmailOutboxStatus;
+  attempts: number;
+  last_error: string | null;
+  created_at: string;
+  sent_at: string | null;
 };
 
 type QrPaymentStatusFilter = "paid" | "pending";
 type QrPaymentRow = {
-    id: string;
-    order_number: string;
-    total_amount: number;
-    payment_status: string;
-    paid_at: string | null;
-    qr_ref1: string | null;
-    qr_ref2: string | null;
-    qr_expires_at: string | null;
-    source: string | null;
-    created_at: string;
-    updated_at: string;
-    customer_group_id: string | null;
-    agency_id: string | null;
-    agency?: {
-        name: string;
-    } | null;
+  id: string;
+  order_number: string;
+  total_amount: number;
+  payment_status: string;
+  paid_at: string | null;
+  qr_ref1: string | null;
+  qr_ref2: string | null;
+  qr_expires_at: string | null;
+  source: string | null;
+  created_at: string;
+  updated_at: string;
+  customer_group_id: string | null;
+  agency_id: string | null;
+  agency?: {
+    name: string;
+  } | null;
 };
 type QrPaymentFilters = {
-    status?: QrPaymentStatusFilter;
-    date_from?: string;
-    date_to?: string;
-    source?: string;
-    q?: string;
+  status?: QrPaymentStatusFilter;
+  date_from?: string;
+  date_to?: string;
+  source?: string;
+  q?: string;
 } & PaginationParams;
 type QrPaymentsSummary = {
-    month: string;
-    order_count: number;
-    total_amount: number;
+  month: string;
+  order_count: number;
+  total_amount: number;
 };
-type QrSummaryStatus = "finance_review" | "finance_confirmed" | "accounting_approved" | "accounting_rejected";
+type QrSummaryStatus =
+  | "finance_review"
+  | "finance_confirmed"
+  | "accounting_approved"
+  | "accounting_rejected";
 type QrMonthlySummary = {
-    id: string;
-    month: string;
-    order_count: number;
-    total_amount: number;
-    snapshot: Record<string, unknown> | null;
-    status: QrSummaryStatus;
-    finance_confirmed_by: string | null;
-    finance_confirmed_at: string | null;
-    accounting_decided_by: string | null;
-    accounting_decided_at: string | null;
-    reject_reason: string | null;
-    created_by: string | null;
-    created_at: string;
-    updated_at: string;
+  id: string;
+  month: string;
+  order_count: number;
+  total_amount: number;
+  snapshot: Record<string, unknown> | null;
+  status: QrSummaryStatus;
+  finance_confirmed_by: string | null;
+  finance_confirmed_at: string | null;
+  accounting_decided_by: string | null;
+  accounting_decided_at: string | null;
+  reject_reason: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
 };
 type BankStatementStatus = "uploaded" | "parsed" | "matched" | "archived";
-type BankRowMatchStatus = "unmatched" | "auto_matched" | "manual_matched" | "ignored";
+type BankRowMatchStatus =
+  | "unmatched"
+  | "auto_matched"
+  | "manual_matched"
+  | "ignored";
 type BankStatement = {
-    id: string;
-    filename: string;
-    file_path: string;
-    uploaded_by: string | null;
-    uploaded_at: string;
-    period_from: string | null;
-    period_to: string | null;
-    row_count: number;
-    status: BankStatementStatus;
-    column_mapping: Record<string, unknown> | null;
-    notes: string | null;
+  id: string;
+  filename: string;
+  file_path: string;
+  uploaded_by: string | null;
+  uploaded_at: string;
+  period_from: string | null;
+  period_to: string | null;
+  row_count: number;
+  status: BankStatementStatus;
+  column_mapping: Record<string, unknown> | null;
+  notes: string | null;
 };
 type BankStatementRow = {
-    id: string;
-    statement_id: string;
-    row_number: number;
-    raw: Record<string, unknown>;
-    txn_date: string | null;
-    amount: number | null;
-    ref1: string | null;
-    ref2: string | null;
-    matched_order_id: string | null;
-    match_status: BankRowMatchStatus;
+  id: string;
+  statement_id: string;
+  row_number: number;
+  raw: Record<string, unknown>;
+  txn_date: string | null;
+  amount: number | null;
+  ref1: string | null;
+  ref2: string | null;
+  matched_order_id: string | null;
+  match_status: BankRowMatchStatus;
 };
 type CreateBankStatementPayload = {
-    filename: string;
-    file_path: string;
-    period_from?: string | null;
-    period_to?: string | null;
-    notes?: string | null;
+  filename: string;
+  file_path: string;
+  period_from?: string | null;
+  period_to?: string | null;
+  notes?: string | null;
 };
 type ReceiptUsageRow = {
-    document_id: string;
-    document_number: string;
-    type: "receipt" | "voucher";
-    status: "draft" | "issued" | "void";
-    issued_at: string | null;
-    issued_to_name: string;
-    agency_id: string | null;
-    agency_name: string | null;
-    amount: number;
-    void_reason: string | null;
+  document_id: string;
+  document_number: string;
+  type: "receipt" | "voucher";
+  status: "draft" | "issued" | "void";
+  issued_at: string | null;
+  issued_to_name: string;
+  agency_id: string | null;
+  agency_name: string | null;
+  amount: number;
+  void_reason: string | null;
 };
 type ReceiptUsageSummary = {
-    issued_count: number;
-    void_count: number;
-    total_amount: number;
+  issued_count: number;
+  void_count: number;
+  total_amount: number;
 };
 type ReceiptUsageFilters = {
-    date_from?: string;
-    date_to?: string;
-    type?: "receipt" | "voucher";
+  date_from?: string;
+  date_to?: string;
+  type?: "receipt" | "voucher";
 };
 type ReceivableRow = {
-    agency_id: string;
-    agency_name: string;
-    current_debt: number;
-    open_doc_count: number;
-    oldest_issued_at: string | null;
-    bucket_0_30: number;
-    bucket_31_60: number;
-    bucket_61_90: number;
-    bucket_90_plus: number;
-    threshold_days: number;
+  agency_id: string;
+  agency_name: string;
+  current_debt: number;
+  open_doc_count: number;
+  oldest_issued_at: string | null;
+  bucket_0_30: number;
+  bucket_31_60: number;
+  bucket_61_90: number;
+  bucket_90_plus: number;
+  threshold_days: number;
 };
 type ReceivableDetailRow = {
-    document_id: string;
-    document_number: string;
-    issued_at: string | null;
-    amount: number;
-    order_number: string | null;
-    payment_status: string;
-    age_days: number | null;
-    agency_name: string | null;
+  document_id: string;
+  document_number: string;
+  issued_at: string | null;
+  amount: number;
+  order_number: string | null;
+  payment_status: string;
+  age_days: number | null;
+  agency_name: string | null;
 };
 type ReportDateRangeFilters = {
-    date_from?: string;
-    date_to?: string;
+  date_from?: string;
+  date_to?: string;
 };
 type DeliveryReportSummary = {
-    total_deliveries: number;
-    delivered_count: number;
-    failed_count: number;
-    rejected_count: number;
-    pending_count: number;
-    success_rate: number;
+  total_deliveries: number;
+  delivered_count: number;
+  failed_count: number;
+  rejected_count: number;
+  pending_count: number;
+  success_rate: number;
 };
 type DeliveryByDriverRow = {
-    driver_id: string | null;
-    driver_name: string;
-    total_count: number;
-    delivered_count: number;
-    failed_count: number;
-    rejected_count: number;
-    success_rate: number;
+  driver_id: string | null;
+  driver_name: string;
+  total_count: number;
+  delivered_count: number;
+  failed_count: number;
+  rejected_count: number;
+  success_rate: number;
 };
 type StockLevelRow = {
-    product_id: string;
-    sku: string;
-    name: string;
-    category: string | null;
-    stock_qty: number;
-    low_stock_threshold: number | null;
-    is_low_stock: boolean;
+  product_id: string;
+  sku: string;
+  name: string;
+  category: string | null;
+  stock_qty: number;
+  low_stock_threshold: number | null;
+  is_low_stock: boolean;
 };
 type StockMovementRow = {
-    product_id: string;
-    sku: string;
-    name: string;
-    stock_in: number;
-    stock_out: number;
-    adjust_qty: number;
-    return_qty: number;
-    internal_use_qty: number;
-    net_change: number;
+  product_id: string;
+  sku: string;
+  name: string;
+  stock_in: number;
+  stock_out: number;
+  adjust_qty: number;
+  return_qty: number;
+  internal_use_qty: number;
+  net_change: number;
 };
 type OrdersReportSummary = {
-    total_orders: number;
-    approved_count: number;
-    in_transit_count: number;
-    completed_count: number;
-    cancelled_count: number;
-    rejected_count: number;
-    total_amount: number;
+  total_orders: number;
+  approved_count: number;
+  in_transit_count: number;
+  completed_count: number;
+  cancelled_count: number;
+  rejected_count: number;
+  total_amount: number;
 };
 type OrdersReportRow = {
-    order_id: string;
-    order_number: string;
-    order_type: string;
-    status: string;
-    total_amount: number;
-    created_at: string;
-    delivery_note_number: string | null;
-    delivery_status: string | null;
+  order_id: string;
+  order_number: string;
+  order_type: string;
+  status: string;
+  total_amount: number;
+  created_at: string;
+  delivery_note_number: string | null;
+  delivery_status: string | null;
 };
 type PaymentsReportSummary = {
-    collected_amount: number;
-    pending_amount: number;
-    invoiced_amount: number;
-    overdue_amount: number;
-    refunded_amount: number;
-    receipt_count: number;
+  collected_amount: number;
+  pending_amount: number;
+  invoiced_amount: number;
+  overdue_amount: number;
+  refunded_amount: number;
+  receipt_count: number;
 };
 type PaymentsByMethodRow = {
-    payment_method: string;
-    order_count: number;
-    total_amount: number;
+  payment_method: string;
+  order_count: number;
+  total_amount: number;
 };
 type InvoiceReportRow = {
-    document_id: string;
-    document_number: string;
-    status: "draft" | "issued" | "void";
-    issued_at: string | null;
-    issued_to_name: string;
-    agency_id: string | null;
-    agency_name: string | null;
-    amount: number;
-    order_number: string | null;
-    order_payment_status: string | null;
+  document_id: string;
+  document_number: string;
+  status: "draft" | "issued" | "void";
+  issued_at: string | null;
+  issued_to_name: string;
+  agency_id: string | null;
+  agency_name: string | null;
+  amount: number;
+  order_number: string | null;
+  order_payment_status: string | null;
 };
 type InvoiceReportSummary = {
-    invoice_count: number;
-    void_count: number;
-    total_amount: number;
-    paid_amount: number;
-    outstanding_amount: number;
+  invoice_count: number;
+  void_count: number;
+  total_amount: number;
+  paid_amount: number;
+  outstanding_amount: number;
 };
 type DeliveryEvidenceRow = {
-    delivery_id: string;
-    delivery_note_number: string;
-    order_number: string;
-    driver_name: string;
-    completed_at: string | null;
-    photo_count: number;
-    has_signature: boolean;
-    recipient_name: string | null;
+  delivery_id: string;
+  delivery_note_number: string;
+  order_number: string;
+  driver_name: string;
+  completed_at: string | null;
+  photo_count: number;
+  has_signature: boolean;
+  recipient_name: string | null;
 };
 type DeliveryStatusSummaryRow = {
-    status: string;
-    delivery_count: number;
+  status: string;
+  delivery_count: number;
 };
 type DeliveryStatusRow = {
-    delivery_id: string;
-    delivery_note_number: string;
-    order_number: string;
-    status: string;
-    scheduled_date: string | null;
-    completed_at: string | null;
-    driver_name: string;
-    rejection_reason: string | null;
+  delivery_id: string;
+  delivery_note_number: string;
+  order_number: string;
+  status: string;
+  scheduled_date: string | null;
+  completed_at: string | null;
+  driver_name: string;
+  rejection_reason: string | null;
 };
 type SalesReportSummary = {
-    order_count: number;
-    units_sold: number;
-    revenue: number;
-    cost: number;
-    profit: number;
+  order_count: number;
+  units_sold: number;
+  revenue: number;
+  cost: number;
+  profit: number;
 };
 type SalesByProductRow = {
-    product_id: string;
-    sku: string;
-    name: string;
-    units_sold: number;
-    revenue: number;
-    cost: number;
-    profit: number;
+  product_id: string;
+  sku: string;
+  name: string;
+  units_sold: number;
+  revenue: number;
+  cost: number;
+  profit: number;
 };
 type SalesDailyRow = {
-    sale_date: string;
-    units_sold: number;
-    revenue: number;
+  sale_date: string;
+  units_sold: number;
+  revenue: number;
 };
 type UsageReportSummary = {
-    login_count: number;
-    login_failed_count: number;
-    active_user_count: number;
-    action_count: number;
+  login_count: number;
+  login_failed_count: number;
+  active_user_count: number;
+  action_count: number;
 };
 type UsageByUserRow = {
-    profile_id: string;
-    full_name: string;
-    role: string | null;
-    last_login_at: string | null;
-    action_count: number;
+  profile_id: string;
+  full_name: string;
+  role: string | null;
+  last_login_at: string | null;
+  action_count: number;
 };
 type CustomersReportSummary = {
-    total_customers: number;
-    new_customers: number;
-    repeat_customers: number;
-    avg_orders_per_customer: number;
+  total_customers: number;
+  new_customers: number;
+  repeat_customers: number;
+  avg_orders_per_customer: number;
 };
 type CustomersByAgencyRow = {
-    agency_id: string;
-    agency_name: string;
-    order_count: number;
-    total_amount: number;
-    last_order_at: string | null;
+  agency_id: string;
+  agency_name: string;
+  order_count: number;
+  total_amount: number;
+  last_order_at: string | null;
 };
 type MonthlyOverview = {
-    revenue: number;
-    order_count: number;
-    new_customers: number;
-    total_debt: number;
-    agency_count: number;
-    avg_order_value: number;
-    delivery_count: number;
-    revenue_by_payment_method: Record<string, number>;
-    revenue_by_product_type: Record<string, number>;
+  revenue: number;
+  order_count: number;
+  new_customers: number;
+  total_debt: number;
+  agency_count: number;
+  avg_order_value: number;
+  delivery_count: number;
+  revenue_by_payment_method: Record<string, number>;
+  revenue_by_product_type: Record<string, number>;
 };
 
-export { type AccountingCode7Seg, type Address, type AddressPayload, type AgencyKind, type AppRole, type ApproveDisbursementPayload, type ApproveVoidPayload, type AssignDeliveryPayload, type BankRowMatchStatus, type BankStatement, type BankStatementRow, type BankStatementStatus, type CancelOrderPayload, type CompleteDeliveryPayload, type ConfirmRoutePayload, type CreateBankStatementPayload, type CreateDisbursementGroupItem, type CreateDisbursementGroupPayload, type CreateOrderPayload, type CreateProductPayload, type CustomerGroup, type CustomersByAgencyRow, type CustomersReportSummary, DEFAULT_PAGE_SIZE, type DbAppRole, type Delivery, type DeliveryByDriverRow, type DeliveryDetail, type DeliveryEvidenceRow, type DeliveryItem, type DeliveryReportSummary, type DeliveryStatus, type DeliveryStatusRow, type DeliveryStatusSummaryRow, type DeliveryType, type DisbursementApprovalConfig, type DisbursementApprovalConfigUpsertPayload, type DisbursementApprovalStep, type DisbursementEmailOutboxRow, type DisbursementEventType, type DisbursementExportBatch, type DisbursementGroup, type DisbursementGroupListFilters, type DisbursementItem, type DisbursementKind, type DisbursementPaymentChannel, type DisbursementStatus, type DisbursementTimelineEvent, type Document, type DocumentStatus, type DocumentType, type EligibleReceivable, type EligibleReceivablesFilters, type EmailOutboxStatus, type ExportedData, type FacultyCreditorAccount, type FacultyCreditorUpsertPayload, type GenerateRoutePayload, type InvoiceReportRow, type InvoiceReportSummary, MAX_PAGE_SIZE, type MarkReadPayload, type MonthlyOverview, type MoveStopPayload, type Notification, type NotificationChannel, type NotificationType, type Order, type OrderItem, type OrderStatus, type OrdersReportRow, type OrdersReportSummary, PAGE_SIZE_OPTIONS, type PageSize, type PaginatedResponse, type PaginationParams, type PaymentMethod, type PaymentsByMethodRow, type PaymentsReportSummary, type Product, type ProductPrice, type Profile, type PushSubscriptionPayload, type QrMonthlySummary, type QrPaymentFilters, type QrPaymentRow, type QrPaymentStatusFilter, type QrPaymentsSummary, type QrSummaryStatus, type ReceiptUsageFilters, type ReceiptUsageRow, type ReceiptUsageSummary, type ReceivableDetailRow, type ReceivableRow, type RejectDisbursementPayload, type RejectVoidPayload, type ReorderStopsPayload, type ReportDateRangeFilters, type ReturnBottlesPayload, type RoutePlan, type RoutePlanStop, type RouteStatus, type SalesByProductRow, type SalesDailyRow, type SalesReportSummary, type SearchParams, type SendNotificationPayload, type SendToAgencyPayload, type SendToAgencyResult, type ServerStatus, type ServerStatusBucket, type ServerStatusTable, type SettleDebtPayload, type StockLevelRow, type StockMovementRow, type Transaction, type TreasuryExportPayload, type TreasuryExportResult, type UpdateDeliveryStatusPayload, type UpdateDisbursementItemPayload, type UpdateProductPayload, type UpdateProfilePayload, type UsageByUserRow, type UsageReportSummary, type VoidRequest, clampPageSize, todayISO };
+export {
+  type AccountingCode7Seg,
+  type Address,
+  type AddressPayload,
+  type AgencyKind,
+  type AppRole,
+  type ApproveDisbursementPayload,
+  type ApproveVoidPayload,
+  type AssignDeliveryPayload,
+  type BankRowMatchStatus,
+  type BankStatement,
+  type BankStatementRow,
+  type BankStatementStatus,
+  type CancelOrderPayload,
+  type CompleteDeliveryPayload,
+  type ConfirmRoutePayload,
+  type CreateBankStatementPayload,
+  type CreateDisbursementGroupItem,
+  type CreateDisbursementGroupPayload,
+  type CreateOrderPayload,
+  type CreateProductPayload,
+  type CustomerGroup,
+  type CustomersByAgencyRow,
+  type CustomersReportSummary,
+  DEFAULT_PAGE_SIZE,
+  type DbAppRole,
+  type Delivery,
+  type DeliveryByDriverRow,
+  type DeliveryDetail,
+  type DeliveryEvidenceRow,
+  type DeliveryItem,
+  type DeliveryReportSummary,
+  type DeliveryStatus,
+  type DeliveryStatusRow,
+  type DeliveryStatusSummaryRow,
+  type DeliveryType,
+  type DisbursementApprovalConfig,
+  type DisbursementApprovalConfigUpsertPayload,
+  type DisbursementApprovalStep,
+  type DisbursementEmailOutboxRow,
+  type DisbursementEventType,
+  type DisbursementExportBatch,
+  type DisbursementGroup,
+  type DisbursementGroupListFilters,
+  type DisbursementItem,
+  type DisbursementKind,
+  type DisbursementPaymentChannel,
+  type DisbursementStatus,
+  type DisbursementTimelineEvent,
+  type Document,
+  type DocumentStatus,
+  type DocumentType,
+  type EligibleReceivable,
+  type EligibleReceivablesFilters,
+  type EmailOutboxStatus,
+  type ExportedData,
+  type FacultyCreditorAccount,
+  type FacultyCreditorUpsertPayload,
+  type GenerateRoutePayload,
+  type InvoiceReportRow,
+  type InvoiceReportSummary,
+  MAX_PAGE_SIZE,
+  type MarkReadPayload,
+  type MonthlyOverview,
+  type MoveStopPayload,
+  type Notification,
+  type NotificationChannel,
+  type NotificationType,
+  type Order,
+  type OrderItem,
+  type OrderStatus,
+  type OrdersReportRow,
+  type OrdersReportSummary,
+  PAGE_SIZE_OPTIONS,
+  type PageSize,
+  type PaginatedResponse,
+  type PaginationParams,
+  type PaymentMethod,
+  type PaymentsByMethodRow,
+  type PaymentsReportSummary,
+  type Product,
+  type ProductPrice,
+  type Profile,
+  type PushSubscriptionPayload,
+  type QrMonthlySummary,
+  type QrPaymentFilters,
+  type QrPaymentRow,
+  type QrPaymentStatusFilter,
+  type QrPaymentsSummary,
+  type QrSummaryStatus,
+  type ReceiptUsageFilters,
+  type ReceiptUsageRow,
+  type ReceiptUsageSummary,
+  type ReceivableDetailRow,
+  type ReceivableRow,
+  type RejectDisbursementPayload,
+  type RejectVoidPayload,
+  type ReorderStopsPayload,
+  type ReportDateRangeFilters,
+  type ReturnBottlesPayload,
+  type RoutePlan,
+  type RoutePlanStop,
+  type RouteStatus,
+  type SalesByProductRow,
+  type SalesDailyRow,
+  type SalesReportSummary,
+  type SearchParams,
+  type SendNotificationPayload,
+  type SendToAgencyPayload,
+  type SendToAgencyResult,
+  type ServerStatus,
+  type ServerStatusBucket,
+  type ServerStatusTable,
+  type SettleDebtPayload,
+  type StockLevelRow,
+  type StockMovementRow,
+  type Transaction,
+  type TreasuryExportPayload,
+  type TreasuryExportResult,
+  type UpdateDeliveryStatusPayload,
+  type UpdateDisbursementItemPayload,
+  type UpdateProductPayload,
+  type UpdateProfilePayload,
+  type UsageByUserRow,
+  type UsageReportSummary,
+  type VoidRequest,
+  clampPageSize,
+  todayISO,
+};
