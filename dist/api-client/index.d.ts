@@ -270,7 +270,7 @@ declare const productsApi: {
 };
 
 type AdminAppRole = DbAppRole;
-type AccountStatus = 'pending_approval' | 'active' | 'suspended';
+type AccountStatus = "pending_approval" | "active" | "suspended";
 interface UpdateStatusPayload {
     status: AccountStatus;
     reason?: string;
@@ -355,6 +355,10 @@ declare const usersAdminApi: {
     updateStatus: (userId: string, payload: UpdateStatusPayload) => Promise<{
         user_id: string;
         account_status: AccountStatus;
+    }>;
+    rejectUser: (userId: string) => Promise<{
+        ok: boolean;
+        user_id: string;
     }>;
     listRoles: (userId: string) => Promise<{
         role: AdminAppRole;
@@ -697,6 +701,14 @@ interface SettingsMap {
     };
     /** เพดานรวมแพ็ค/วันส่ง (ทุกสินค้า) — 0 = ไม่จำกัด; คู่กับ daily_order_limits */
     daily_delivery_cap?: number;
+    /** เปิด/ปิดอนุมัติออเดอร์อัตโนมัติรายวัน (ค่าเริ่มต้น true) */
+    order_auto_approve_enabled?: boolean;
+    /** เวลาอนุมัติอัตโนมัติรายวัน "HH:MM" เวลาไทย (ค่าเริ่มต้น "16:00") */
+    order_auto_approve_time?: string;
+    /** บริษัทน้ำยกเลิกใบส่งของได้ */
+    vendor_can_cancel_delivery?: boolean;
+    /** คนขับปฏิเสธการส่งได้ */
+    driver_can_reject_delivery?: boolean;
     /** อีเมลกองคลังรับแจ้งเตือนเอกสารเบิกจ่ายถึง (Phase 1) */
     treasury_notify_emails?: string[];
     /** true = การเงินต้อง confirm สรุปยอด QR ก่อนข้ามให้บัญชี approve (false = ข้ามขั้น) */

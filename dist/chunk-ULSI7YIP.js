@@ -166,8 +166,14 @@ var usersAdminApi = {
     `/users/admin/${userId}/status`,
     payload
   ),
-  listRoles: (userId) => get(`/users/admin/${userId}/roles`),
-  assignRole: (userId, role) => post(`/users/admin/${userId}/roles`, { role }),
+  rejectUser: (userId) => del(`/users/admin/${userId}/reject`),
+  listRoles: (userId) => get(
+    `/users/admin/${userId}/roles`
+  ),
+  assignRole: (userId, role) => post(
+    `/users/admin/${userId}/roles`,
+    { role }
+  ),
   revokeRole: (userId, role) => del(`/users/admin/${userId}/roles/${role}`),
   listPurchaseRights: (userId) => get(`/users/admin/${userId}/purchase-rights`),
   assignPurchaseRight: (userId, payload) => post(`/users/admin/${userId}/purchase-rights`, payload),
@@ -549,4 +555,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-B4TOD54O.js.map
+//# sourceMappingURL=chunk-ULSI7YIP.js.map
