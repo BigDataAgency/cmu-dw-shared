@@ -699,7 +699,7 @@ interface SettingsMap {
     sticker_config?: {
         org_tag?: string;
     };
-    /** เพดานรวมแพ็ค/วันส่ง (ทุกสินค้า) — 0 = ไม่จำกัด; คู่กับ daily_order_limits */
+    /** เพดานรวมแพ็ค/ถังต่อวันส่ง (ทุกสินค้า) — 0 = ไม่จำกัด; คู่กับ daily_order_limits */
     daily_delivery_cap?: number;
     /** เปิด/ปิดอนุมัติออเดอร์อัตโนมัติรายวัน (ค่าเริ่มต้น true) */
     order_auto_approve_enabled?: boolean;

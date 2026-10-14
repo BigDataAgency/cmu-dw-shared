@@ -27,6 +27,12 @@ export type Delivery = {
   completed_at: string | null
   created_at: string
   updated_at: string
+  /** GET /deliveries (list) — driver full_name via profiles!deliveries_driver_id_fkey */
+  driver?: { full_name: string } | null
+  /** GET /deliveries (list) — assigned vehicle plate via vehicles!deliveries_vehicle_id_fkey */
+  vehicle?: { plate_number: string } | null
+  /** GET /deliveries (list) — recipient phone via orders!deliveries_order_id_fkey (orders.delivery_phone) */
+  orders?: { delivery_phone: string | null } | null
 }
 
 /** GET /deliveries/:id — expanded response with order info + product flags (v1.20.0) */
