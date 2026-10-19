@@ -14,8 +14,6 @@ export interface SettingsMap {
   admin_same_day_order?: boolean;
   holiday_order_policy?: HolidayOrderPolicy;
   holiday_notify_days_before?: number;
-  route_plan_cutoff_time?: string;
-  route_plan_auto_generate?: boolean;
   route_plan_target_days_ahead?: number;
   office_contact?: Record<string, string>;
   registration_contact?: Record<string, string>;
