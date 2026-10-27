@@ -16,11 +16,13 @@ export type Product = {
   image_url: string | null;
   is_active: boolean;
   stock_qty: number;
+  empty_tank_qty?: number;
+  is_returnable?: boolean;
   low_stock_threshold: number | null;
   price: number | null;
   deposit_price: number | null;
   pos_stock_exempt?: boolean;
-  is_pos_sellable?: boolean; // F5: ขาย/รับที่ สนง.ทรัพย์สิน ได้ไหม (POS counter + customer pickup; ถัง = false)
+  is_pos_sellable?: boolean;
   size?: string | null; // ขนาดสินค้า (v1.50)
   unit?: string | null; // หน่วยนับ กล่อง/แพค/โหล/ลัง/ถัง (v1.50)
   vendor_id?: string | null; // บริษัทผู้ส่งเจ้าของสินค้า

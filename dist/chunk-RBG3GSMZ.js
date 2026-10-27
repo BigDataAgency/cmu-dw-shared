@@ -122,6 +122,8 @@ var productsApi = {
   update: (id, payload) => patch(`/products/${id}`, payload),
   updateStock: (id, payload) => patch(`/products/${id}/stock`, payload),
   adjustStock: (id, payload) => patch(`/products/${id}/stock`, { qty: payload.qty, type: "adjust", notes: payload.notes }),
+  /** ถังเปล่าของ vendor — qty บวก = เพิ่ม · ลบ = ลด (27 ต.ค. 2026) */
+  adjustEmptyTanks: (id, payload) => patch(`/products/${id}/empty-tanks`, payload),
   internalUse: (id, payload) => post(`/products/${id}/internal-use`, payload)
 };
 
@@ -555,4 +557,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-XP5FDVXP.js.map
+//# sourceMappingURL=chunk-RBG3GSMZ.js.map

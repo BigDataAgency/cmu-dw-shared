@@ -1,44 +1,65 @@
-import { get, post, patch } from './fetch'
-import type { Product, CreateProductPayload, UpdateProductPayload } from '../types/product'
-import type { PaginationParams, SearchParams, PaginatedResponse } from '../types/pagination'
+import { get, post, patch } from "./fetch";
+import type {
+  Product,
+  CreateProductPayload,
+  UpdateProductPayload,
+} from "../types/product";
+import type {
+  PaginationParams,
+  SearchParams,
+  PaginatedResponse,
+} from "../types/pagination";
 
-export type ProductFilters = PaginationParams & SearchParams & {
-  category?: string
-  is_active?: boolean
-  pos_stock_exempt?: boolean
-  pos_sellable?: boolean
-}
+export type ProductFilters = PaginationParams &
+  SearchParams & {
+    category?: string;
+    is_active?: boolean;
+    pos_stock_exempt?: boolean;
+    pos_sellable?: boolean;
+  };
 
 export type UpdateStockPayload = {
-  qty: number
-  type: 'stock_in' | 'stock_out' | 'adjust' | 'return' | 'internal_use' | 'pickup_out'
-  notes?: string
-}
+  qty: number;
+  type:
+    | "stock_in"
+    | "stock_out"
+    | "adjust"
+    | "return"
+    | "internal_use"
+    | "pickup_out";
+  notes?: string;
+};
 
 export type AdjustStockPayload = {
-  qty: number
-  notes: string
-}
+  qty: number;
+  notes: string;
+};
+
+export type EmptyTankAdjustResult = {
+  product_id: string;
+  name: string;
+  before: number;
+  after: number;
+};
 
 export type InternalUsePayload = {
-  qty: number
-  reason: string
-}
+  qty: number;
+  reason: string;
+};
 
 export type InternalUseResult = {
-  success: boolean
-  product: Pick<Product, 'id' | 'sku' | 'name' | 'stock_qty'>
-}
+  success: boolean;
+  product: Pick<Product, "id" | "sku" | "name" | "stock_qty">;
+};
 
 export const productsApi = {
   list: (filters?: ProductFilters): Promise<PaginatedResponse<Product>> =>
-    get('/products', filters as Record<string, unknown>),
+    get("/products", filters as Record<string, unknown>),
 
-  getById: (id: string): Promise<Product> =>
-    get(`/products/${id}`),
+  getById: (id: string): Promise<Product> => get(`/products/${id}`),
 
   create: (payload: CreateProductPayload): Promise<Product> =>
-    post('/products', payload),
+    post("/products", payload),
 
   update: (id: string, payload: UpdateProductPayload): Promise<Product> =>
     patch(`/products/${id}`, payload),
@@ -47,8 +68,21 @@ export const productsApi = {
     patch(`/products/${id}/stock`, payload),
 
   adjustStock: (id: string, payload: AdjustStockPayload): Promise<void> =>
-    patch(`/products/${id}/stock`, { qty: payload.qty, type: 'adjust', notes: payload.notes }),
+    patch(`/products/${id}/stock`, {
+      qty: payload.qty,
+      type: "adjust",
+      notes: payload.notes,
+    }),
 
-  internalUse: (id: string, payload: InternalUsePayload): Promise<InternalUseResult> =>
+  adjustEmptyTanks: (
+    id: string,
+    payload: AdjustStockPayload
+  ): Promise<EmptyTankAdjustResult> =>
+    patch(`/products/${id}/empty-tanks`, payload),
+
+  internalUse: (
+    id: string,
+    payload: InternalUsePayload
+  ): Promise<InternalUseResult> =>
     post(`/products/${id}/internal-use`, payload),
-}
+};

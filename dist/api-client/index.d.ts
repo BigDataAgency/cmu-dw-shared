@@ -251,6 +251,12 @@ type AdjustStockPayload = {
     qty: number;
     notes: string;
 };
+type EmptyTankAdjustResult = {
+    product_id: string;
+    name: string;
+    before: number;
+    after: number;
+};
 type InternalUsePayload = {
     qty: number;
     reason: string;
@@ -266,6 +272,8 @@ declare const productsApi: {
     update: (id: string, payload: UpdateProductPayload) => Promise<Product>;
     updateStock: (id: string, payload: UpdateStockPayload) => Promise<void>;
     adjustStock: (id: string, payload: AdjustStockPayload) => Promise<void>;
+    /** ถังเปล่าของ vendor — qty บวก = เพิ่ม · ลบ = ลด (27 ต.ค. 2026) */
+    adjustEmptyTanks: (id: string, payload: AdjustStockPayload) => Promise<EmptyTankAdjustResult>;
     internalUse: (id: string, payload: InternalUsePayload) => Promise<InternalUseResult>;
 };
 

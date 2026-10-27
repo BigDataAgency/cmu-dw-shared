@@ -102,6 +102,8 @@ type Product = {
     image_url: string | null;
     is_active: boolean;
     stock_qty: number;
+    empty_tank_qty?: number;
+    is_returnable?: boolean;
     low_stock_threshold: number | null;
     price: number | null;
     deposit_price: number | null;
