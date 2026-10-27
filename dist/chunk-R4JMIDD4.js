@@ -138,8 +138,9 @@ var usersApi = {
   getPurchaseRights: () => get("/users/me/purchase-rights"),
   // v1.49 — anti-scrape: check whether the current user is mapped (has access)
   getMyAccess: () => get("/users/me/access"),
-  // 27 ต.ค. 2026 — login ลิงก์เดียว: แอปที่ต้องไปหลัง login (admin ก่อน · ไม่งั้นสิทธิ์แรก)
   getHomeApp: () => get("/users/me/home-app"),
+  // 27 ต.ค. 2026 — ลงทะเบียนผู้ใช้งานทั่วไป (สาธารณะ · ไม่ต้องตั้งรหัส) · อีเมลซ้ำ → 409
+  register: (payload) => post("/users/register", payload),
   // v1.43 — user reads own rights list (for Profile preference page)
   getMyPurchaseRightsList: () => get("/users/me/purchase-rights-list"),
   // v1.43 — user sets their own default customer_group for ordering
@@ -562,4 +563,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-WHPU3A7S.js.map
+//# sourceMappingURL=chunk-R4JMIDD4.js.map

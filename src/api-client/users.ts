@@ -27,6 +27,19 @@ export type UserFilters = PaginationParams &
     status?: string;
   };
 
+export type RegisterPayload = {
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone?: string;
+};
+
+export type RegisterResult = {
+  id: string;
+  account_status: string | null;
+  invite_email: "queued" | "skipped" | "failed" | null;
+};
+
 export type HomeApp = "admin" | "pos" | "vendor" | "driver" | "customer";
 
 export const usersApi = {
@@ -46,6 +59,9 @@ export const usersApi = {
 
   getHomeApp: (): Promise<{ app: HomeApp; roles: string[] }> =>
     get("/users/me/home-app"),
+
+  register: (payload: RegisterPayload): Promise<RegisterResult> =>
+    post("/users/register", payload),
 
   // v1.43 — user reads own rights list (for Profile preference page)
   getMyPurchaseRightsList: (): Promise<

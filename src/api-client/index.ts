@@ -6,7 +6,7 @@ export type { BatchCompletePayload, BatchCompleteResult } from "./deliveries";
 export { routesApi } from "./routes";
 export { productsApi } from "./products";
 export { usersApi } from "./users";
-export type { HomeApp } from "./users";
+export type { HomeApp, RegisterPayload, RegisterResult } from "./users";
 export { usersAdminApi } from "./users-admin";
 export type {
   AdminAppRole,
