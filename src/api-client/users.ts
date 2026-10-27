@@ -1,57 +1,74 @@
-import { get, post, patch, del } from './fetch'
-import type { Profile, UpdateProfilePayload, AddressPayload, Address, ExportedData } from '../types/user'
-import type { UserPurchaseRightRow } from './users-admin'
-import type { Order } from '../types/order'
-import type { PaginationParams, SearchParams, PaginatedResponse } from '../types/pagination'
+import { get, post, patch, del } from "./fetch";
+import type {
+  Profile,
+  UpdateProfilePayload,
+  AddressPayload,
+  Address,
+  ExportedData,
+} from "../types/user";
+import type { UserPurchaseRightRow } from "./users-admin";
+import type { Order } from "../types/order";
+import type {
+  PaginationParams,
+  SearchParams,
+  PaginatedResponse,
+} from "../types/pagination";
 
 export interface BillingInfoRow {
-  billing_name: string | null
-  billing_address: string | null
-  billing_tax_id: string | null
-  document_preference: 'receipt' | 'voucher'
+  billing_name: string | null;
+  billing_address: string | null;
+  billing_tax_id: string | null;
+  document_preference: "receipt" | "voucher";
 }
 
-export type UserFilters = PaginationParams & SearchParams & {
-  role?: string
-  status?: string
-}
+export type UserFilters = PaginationParams &
+  SearchParams & {
+    role?: string;
+    status?: string;
+  };
+
+export type HomeApp = "admin" | "pos" | "vendor" | "driver" | "customer";
 
 export const usersApi = {
   list: (filters?: UserFilters): Promise<PaginatedResponse<Profile>> =>
-    get('/users', filters as Record<string, unknown>),
+    get("/users", filters as Record<string, unknown>),
 
-  getMe: (): Promise<Profile> =>
-    get('/users/me'),
+  getMe: (): Promise<Profile> => get("/users/me"),
 
   updateMe: (payload: UpdateProfilePayload): Promise<Profile> =>
-    patch('/users/me', payload),
+    patch("/users/me", payload),
 
   getPurchaseRights: (): Promise<{ can_purchase: boolean; reason?: string }> =>
-    get('/users/me/purchase-rights'),
+    get("/users/me/purchase-rights"),
 
   // v1.49 — anti-scrape: check whether the current user is mapped (has access)
-  getMyAccess: (): Promise<{ can_access: boolean }> =>
-    get('/users/me/access'),
+  getMyAccess: (): Promise<{ can_access: boolean }> => get("/users/me/access"),
+
+  getHomeApp: (): Promise<{ app: HomeApp; roles: string[] }> =>
+    get("/users/me/home-app"),
 
   // v1.43 — user reads own rights list (for Profile preference page)
-  getMyPurchaseRightsList: (): Promise<import('./users-admin').UserPurchaseRightRow[]> =>
-    get('/users/me/purchase-rights-list'),
+  getMyPurchaseRightsList: (): Promise<
+    import("./users-admin").UserPurchaseRightRow[]
+  > => get("/users/me/purchase-rights-list"),
 
   // v1.43 — user sets their own default customer_group for ordering
-  setDefaultPurchaseRight: (customerGroupId: string): Promise<{ right_id: string; customer_group_id: string }> =>
-    patch('/users/me/default-right', { customer_group_id: customerGroupId }),
+  setDefaultPurchaseRight: (
+    customerGroupId: string
+  ): Promise<{ right_id: string; customer_group_id: string }> =>
+    patch("/users/me/default-right", { customer_group_id: customerGroupId }),
 
-  getMyOrders: (): Promise<Order[]> =>
-    get('/users/me/orders'),
+  getMyOrders: (): Promise<Order[]> => get("/users/me/orders"),
 
-  getAddresses: (): Promise<Address[]> =>
-    get('/users/me/addresses'),
+  getAddresses: (): Promise<Address[]> => get("/users/me/addresses"),
 
   addAddress: (payload: AddressPayload): Promise<Address> =>
-    post('/users/me/addresses', payload),
+    post("/users/me/addresses", payload),
 
-  updateAddress: (id: string, payload: Partial<AddressPayload>): Promise<Address> =>
-    patch(`/users/me/addresses/${id}`, payload),
+  updateAddress: (
+    id: string,
+    payload: Partial<AddressPayload>
+  ): Promise<Address> => patch(`/users/me/addresses/${id}`, payload),
 
   deleteAddress: (id: string): Promise<void> =>
     del(`/users/me/addresses/${id}`),
@@ -59,13 +76,15 @@ export const usersApi = {
   setDefaultAddress: (id: string): Promise<void> =>
     patch(`/users/me/addresses/${id}/set-default`, {}),
 
-  exportMyData: (): Promise<ExportedData> =>
-    get('/users/me/export-data'),
+  exportMyData: (): Promise<ExportedData> => get("/users/me/export-data"),
 
   // POS / Admin proxy — read another user's purchase rights (staff_property+)
   getPurchaseRightsFor: (userId: string): Promise<UserPurchaseRightRow[]> =>
     get(`/users/${userId}/purchase-rights`),
 
-  resolveBillingFor: (userId: string, rightId: string): Promise<BillingInfoRow | null> =>
+  resolveBillingFor: (
+    userId: string,
+    rightId: string
+  ): Promise<BillingInfoRow | null> =>
     get(`/users/${userId}/billing-info`, { right_id: rightId }),
-}
+};

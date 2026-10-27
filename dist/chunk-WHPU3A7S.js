@@ -121,8 +121,11 @@ var productsApi = {
   create: (payload) => post("/products", payload),
   update: (id, payload) => patch(`/products/${id}`, payload),
   updateStock: (id, payload) => patch(`/products/${id}/stock`, payload),
-  adjustStock: (id, payload) => patch(`/products/${id}/stock`, { qty: payload.qty, type: "adjust", notes: payload.notes }),
-  /** ถังเปล่าของ vendor — qty บวก = เพิ่ม · ลบ = ลด (27 ต.ค. 2026) */
+  adjustStock: (id, payload) => patch(`/products/${id}/stock`, {
+    qty: payload.qty,
+    type: "adjust",
+    notes: payload.notes
+  }),
   adjustEmptyTanks: (id, payload) => patch(`/products/${id}/empty-tanks`, payload),
   internalUse: (id, payload) => post(`/products/${id}/internal-use`, payload)
 };
@@ -135,6 +138,8 @@ var usersApi = {
   getPurchaseRights: () => get("/users/me/purchase-rights"),
   // v1.49 — anti-scrape: check whether the current user is mapped (has access)
   getMyAccess: () => get("/users/me/access"),
+  // 27 ต.ค. 2026 — login ลิงก์เดียว: แอปที่ต้องไปหลัง login (admin ก่อน · ไม่งั้นสิทธิ์แรก)
+  getHomeApp: () => get("/users/me/home-app"),
   // v1.43 — user reads own rights list (for Profile preference page)
   getMyPurchaseRightsList: () => get("/users/me/purchase-rights-list"),
   // v1.43 — user sets their own default customer_group for ordering
@@ -557,4 +562,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-RBG3GSMZ.js.map
+//# sourceMappingURL=chunk-WHPU3A7S.js.map
