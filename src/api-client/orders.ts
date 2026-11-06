@@ -147,6 +147,18 @@ export const ordersApi = {
   edit: (id: string, payload: EditOrderPayload): Promise<unknown> =>
     patch(`/orders/${id}`, payload),
 
+  /** บริษัทผู้ส่งขอยกเลิกออเดอร์ที่ยืนยันแล้ว — มีผลเมื่อแอดมินทรัพย์สินยืนยัน */
+  requestCancel: (id: string, reason: string): Promise<{ request_id: string }> =>
+    post(`/orders/${id}/cancel-request`, { reason }),
+
+  /** แอดมินทรัพย์สินตัดสินคำขอยกเลิกออเดอร์ */
+  resolveCancelRequest: (
+    requestId: string,
+    approve: boolean,
+    note?: string
+  ): Promise<{ request_id: string; status: string; order_status: string | null }> =>
+    post(`/orders/cancel-requests/${requestId}/${approve ? "approve" : "deny"}`, { note }),
+
   /**
    * ชื่อโครงการที่จะติดไปบนใบเสร็จ/ใบสำคัญรับเงิน
    */
