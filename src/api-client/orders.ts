@@ -1,4 +1,4 @@
-import { get, post, patch } from "./fetch";
+import { get, post, patch, del } from "./fetch";
 import type { Order } from "../types/order";
 import type {
   PaginationParams,
@@ -41,6 +41,13 @@ export type CreateOrderPayload = {
 
 export type CancelOrderPayload = {
   reason: string;
+};
+
+// ลูกค้าแก้ออเดอร์ที่ยังรอยืนยัน — ทั้งตะกร้าใหม่ · null = คงค่าเดิม
+export type EditOrderPayload = {
+  items: { product_id: string; quantity: number }[];
+  scheduled_date?: string | null;
+  address_id?: string | null;
 };
 
 export type ReturnBottlesPayload = {
@@ -128,6 +135,17 @@ export const ordersApi = {
 
   cancel: (id: string, payload: CancelOrderPayload): Promise<void> =>
     patch(`/orders/${id}/cancel`, payload),
+
+  /** เปิดหน้าแก้ = จองไม่ให้ยืนยันรับออเดอร์ (หมดเวลาเอง) */
+  beginEdit: (id: string): Promise<{ locked_until: string }> =>
+    post(`/orders/${id}/edit-lock`),
+
+  /** ออกจากหน้าแก้ = ปลดการจอง */
+  endEdit: (id: string): Promise<{ success: boolean }> =>
+    del(`/orders/${id}/edit-lock`),
+
+  edit: (id: string, payload: EditOrderPayload): Promise<unknown> =>
+    patch(`/orders/${id}`, payload),
 
   /**
    * ชื่อโครงการที่จะติดไปบนใบเสร็จ/ใบสำคัญรับเงิน
