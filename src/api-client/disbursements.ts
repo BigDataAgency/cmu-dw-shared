@@ -137,7 +137,7 @@ export const disbursementsApi = {
    */
   financeApprove: (
     id: string,
-    payload?: { issued_to_name?: string | null },
+    payload?: { issued_to_name?: string | null; transfer_date?: string | null },
   ): Promise<DisbursementGroup> =>
     post(`/finance/disbursement/groups/${id}/finance-approve`, payload ?? {}),
 
