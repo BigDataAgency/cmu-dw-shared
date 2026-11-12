@@ -30,7 +30,7 @@ export type MyDocumentRow = {
   group_name: string | null;
   parent_group_name: string | null;
   is_mine: boolean;
-  download_url: string;
+  download_url: string | null;
 };
 
 export type DocumentFilters = PaginationParams &
@@ -71,7 +71,12 @@ export type UpdateIssuedToPayload = {
   reason?: string;
 };
 
+export type DocumentDownload = { url: string; is_copy: boolean };
+
 export const documentsApi = {
+  download: (id: string): Promise<DocumentDownload> =>
+    post(`/documents/${id}/download`),
+
   listMine: (
     filters: MyDocumentFilters
   ): Promise<PaginatedResponse<MyDocumentRow>> =>
