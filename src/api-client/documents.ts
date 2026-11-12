@@ -1,51 +1,60 @@
-import { get, post, patch } from './fetch'
-import type { Document, DocumentType } from '../types/finance'
-import type { PaginationParams, SearchParams, PaginatedResponse } from '../types/pagination'
+import { get, post, patch } from "./fetch";
+import type { Document, DocumentType } from "../types/finance";
+import type {
+  PaginationParams,
+  SearchParams,
+  PaginatedResponse,
+} from "../types/pagination";
 
-export type MyDocumentType = 'delivery_note' | 'receipt'
+export type MyDocumentType = "delivery_note" | "receipt";
 
 export type MyDocumentFilters = {
-  type: MyDocumentType
-  q?: string
-  page?: number
-  pageSize?: number
-}
+  type: MyDocumentType;
+  q?: string;
+  page?: number;
+  pageSize?: number;
+};
 
 /** Public projection only; storage paths and staff/customer identifiers stay server-side. */
 export type MyDocumentRow = {
-  id: string
-  document_number: string
-  type: MyDocumentType
-  amount: number
-  created_at: string
-  issued_at: string | null
-  order_id: string
-  order_number: string | null
-  project_name: string | null
-  download_url: string
-}
+  id: string;
+  document_number: string;
+  type: MyDocumentType;
+  amount: number;
+  created_at: string;
+  issued_at: string | null;
+  order_id: string;
+  order_number: string | null;
+  project_name: string | null;
+  orderer_name: string | null;
+  group_name: string | null;
+  parent_group_name: string | null;
+  is_mine: boolean;
+  download_url: string;
+};
 
-export type DocumentFilters = PaginationParams & SearchParams & {
-  type?: string         // accepts comma-list e.g. 'receipt,voucher'
-  status?: string       // accepts comma-list e.g. 'issued,void'
-  date_from?: string
-  date_to?: string
-}
+export type DocumentFilters = PaginationParams &
+  SearchParams & {
+    type?: string; // accepts comma-list e.g. 'receipt,voucher'
+    status?: string; // accepts comma-list e.g. 'issued,void'
+    date_from?: string;
+    date_to?: string;
+  };
 
 export type GeneratePdfPayload = {
-  document_id: string
-  type: DocumentType
-  delivery_id?: string
-}
+  document_id: string;
+  type: DocumentType;
+  delivery_id?: string;
+};
 
 export type BatchPrintResult = {
-  urls: string[]
-  errors: Array<{ id: string; message: string }>
-  total: number
-}
+  urls: string[];
+  errors: Array<{ id: string; message: string }>;
+  total: number;
+};
 
 // v1.39.0: sticker pivoted to per-container — batch-print only supports delivery_note
-export type BatchPrintDocType = 'delivery_note'
+export type BatchPrintDocType = "delivery_note";
 
 export type GenerateDocumentResult = {
   document_id: string;
@@ -63,37 +72,46 @@ export type UpdateIssuedToPayload = {
 };
 
 export const documentsApi = {
-  listMine: (filters: MyDocumentFilters): Promise<PaginatedResponse<MyDocumentRow>> =>
-    get('/documents/mine', filters as Record<string, unknown>),
+  listMine: (
+    filters: MyDocumentFilters
+  ): Promise<PaginatedResponse<MyDocumentRow>> =>
+    get("/documents/mine", filters as Record<string, unknown>),
 
   list: (filters?: DocumentFilters): Promise<PaginatedResponse<Document>> =>
-    get('/documents', filters as Record<string, unknown>),
+    get("/documents", filters as Record<string, unknown>),
 
   // ออกเอกสารจาก order — migrate จาก supabase.rpc('generate_document')
   generate: (
     orderId: string,
-    docType: 'receipt' | 'voucher',
+    docType: "receipt" | "voucher"
   ): Promise<GenerateDocumentResult> =>
-    post('/documents/generate', { order_id: orderId, doc_type: docType }),
+    post("/documents/generate", { order_id: orderId, doc_type: docType }),
 
   // แก้ชื่อ/ที่อยู่บนเอกสารที่ออกไปแล้ว — มี audit log ในตัว
   updateIssuedTo: (
     documentId: string,
-    payload: UpdateIssuedToPayload,
-  ): Promise<{ document_id: string; document_number: string; issued_to_name: string }> =>
-    patch(`/documents/${documentId}/issued-to`, payload),
+    payload: UpdateIssuedToPayload
+  ): Promise<{
+    document_id: string;
+    document_number: string;
+    issued_to_name: string;
+  }> => patch(`/documents/${documentId}/issued-to`, payload),
 
-  generatePdf: (payload: GeneratePdfPayload): Promise<{ url: string; encrypted: boolean }> =>
-    post('/documents/pdf', payload),
+  generatePdf: (
+    payload: GeneratePdfPayload
+  ): Promise<{ url: string; encrypted: boolean }> =>
+    post("/documents/pdf", payload),
 
-  getById: (id: string): Promise<Document> =>
-    get(`/documents/${id}`),
+  getById: (id: string): Promise<Document> => get(`/documents/${id}`),
 
   batchPrint: (
     deliveryIds: string[],
-    docType: BatchPrintDocType = 'delivery_note',
+    docType: BatchPrintDocType = "delivery_note"
   ): Promise<BatchPrintResult> =>
-    post('/documents/batch-print', { delivery_ids: deliveryIds, doc_type: docType }),
+    post("/documents/batch-print", {
+      delivery_ids: deliveryIds,
+      doc_type: docType,
+    }),
 
   // Voiding goes through the Edge Function so it gets a role check and an audit
   // row; admin used to UPDATE the table straight from the browser.
@@ -102,5 +120,5 @@ export const documentsApi = {
 
   // v1.39.0: per-container TK label print (sticker pivot)
   printContainerLabels: (containerIds: string[]): Promise<BatchPrintResult> =>
-    post('/documents/print-container-labels', { container_ids: containerIds }),
-}
+    post("/documents/print-container-labels", { container_ids: containerIds }),
+};
