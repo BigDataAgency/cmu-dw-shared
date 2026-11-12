@@ -2,6 +2,29 @@ import { get, post, patch } from './fetch'
 import type { Document, DocumentType } from '../types/finance'
 import type { PaginationParams, SearchParams, PaginatedResponse } from '../types/pagination'
 
+export type MyDocumentType = 'delivery_note' | 'receipt'
+
+export type MyDocumentFilters = {
+  type: MyDocumentType
+  q?: string
+  page?: number
+  pageSize?: number
+}
+
+/** Public projection only; storage paths and staff/customer identifiers stay server-side. */
+export type MyDocumentRow = {
+  id: string
+  document_number: string
+  type: MyDocumentType
+  amount: number
+  created_at: string
+  issued_at: string | null
+  order_id: string
+  order_number: string | null
+  project_name: string | null
+  download_url: string
+}
+
 export type DocumentFilters = PaginationParams & SearchParams & {
   type?: string         // accepts comma-list e.g. 'receipt,voucher'
   status?: string       // accepts comma-list e.g. 'issued,void'
@@ -40,6 +63,9 @@ export type UpdateIssuedToPayload = {
 };
 
 export const documentsApi = {
+  listMine: (filters: MyDocumentFilters): Promise<PaginatedResponse<MyDocumentRow>> =>
+    get('/documents/mine', filters as Record<string, unknown>),
+
   list: (filters?: DocumentFilters): Promise<PaginatedResponse<Document>> =>
     get('/documents', filters as Record<string, unknown>),
 
