@@ -31,6 +31,9 @@ export {
 } from "./containers";
 export type {
   ContainerScanType,
+  ScanSource,
+  ScanCheckPayload,
+  ScanCheckResult,
   BatchScanPayload,
   UpdateContainerStatusPayload,
   DriverCollectCustomer,

@@ -19,11 +19,32 @@ export type ContainerScanType =
   | 'audit'
   | 'unload_truck'
 
+export type ScanSource = 'manual' | 'camera'
+export type ScanCheckPayload = {
+  qr_code: string
+  scan_type: ContainerScanType
+  vehicle_id?: string | null
+  customer_id?: string | null
+}
+export type ScanCheckResult = {
+  qr_code: string
+  status: string
+  current_customer_id: string | null
+  customer_name: string | null
+  last_scanned_at: string | null
+  already_done: boolean
+  requires_return_confirmation: boolean
+  return_version: string
+}
+
 export type BatchScanPayload = {
   qr_codes: string[]
   scan_type: ContainerScanType
   vehicle_id?: string | null
   delivery_id?: string | null
+  scan_sources?: Record<string, ScanSource>
+  confirmed_return_codes?: string[]
+  confirmed_return_versions?: Record<string, string>
 }
 
 export type UpdateContainerStatusPayload = {
@@ -43,6 +64,7 @@ export type DriverCollectCustomer = {
 export type UnloadPayload = {
   qr_codes: string[]
   vehicle_id?: string | null
+  scan_sources?: Record<string, ScanSource>
 }
 
 export type UnloadResult = {
@@ -110,6 +132,9 @@ export const containersApi = {
 
   getScanHistory: (id: string): Promise<unknown[]> =>
     get(`/containers/${id}/scan-history`),
+
+  scanCheck: (payload: ScanCheckPayload): Promise<ScanCheckResult> =>
+    post('/containers/scan-check', payload),
 
   scan: (payload: BatchScanPayload): Promise<unknown[]> =>
     post('/containers/scan', payload),

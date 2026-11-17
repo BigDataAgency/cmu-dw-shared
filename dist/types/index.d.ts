@@ -1,136 +1,3 @@
-type AppRole = 'customer' | 'driver' | 'vendor' | 'pos' | 'admin' | 'superadmin';
-type Profile = {
-    id: string;
-    email: string | null;
-    full_name: string | null;
-    phone_number: string | null;
-    avatar_url: string | null;
-    billing_name: string | null;
-    billing_address: string | null;
-    billing_tax_id: string | null;
-    roles: string[];
-    created_at: string;
-    updated_at: string;
-};
-type UpdateProfilePayload = {
-    full_name?: string;
-    phone_number?: string;
-    email?: string;
-    avatar_url?: string;
-    billing_name?: string;
-    billing_address?: string;
-    billing_tax_id?: string;
-};
-type AddressPayload = {
-    label: string;
-    address: string;
-    recipient_name?: string;
-    phone?: string;
-    subdistrict?: string;
-    district?: string;
-    province?: string;
-    postal_code?: string;
-    lat?: number;
-    lng?: number;
-    is_default?: boolean;
-    delivery_notes?: string;
-};
-type Address = {
-    id: string;
-    label: string;
-    address: string;
-    recipient_name: string | null;
-    phone: string | null;
-    subdistrict: string | null;
-    district: string | null;
-    province: string | null;
-    postal_code: string | null;
-    lat: number | null;
-    lng: number | null;
-    is_default: boolean;
-    delivery_notes: string | null;
-};
-interface ExportedData {
-    exported_at: string;
-    profile: {
-        id: string;
-        full_name: string | null;
-        email: string | null;
-        phone_number: string | null;
-        avatar_url: string | null;
-        account_status: string;
-        created_at: string;
-    } | null;
-    addresses: {
-        label: string;
-        recipient_name: string | null;
-        recipient_phone: string | null;
-        address_line: string;
-        district: string | null;
-        province: string | null;
-        postal_code: string | null;
-    }[];
-    orders: {
-        id: string;
-        order_number: string;
-        status: string;
-        total_amount: number;
-        created_at: string;
-    }[];
-    consent_history: {
-        accepted_at: string;
-        ip_address: string | null;
-        consent_version: string;
-        consent_type: string;
-        consent_title: string;
-    }[];
-}
-
-type CustomerGroup = "general" | "university" | "wholesale" | "vip";
-type ProductPrice = {
-    id: string;
-    customer_group: CustomerGroup;
-    price: number;
-    unit: string;
-};
-type Product = {
-    id: string;
-    name: string;
-    sku: string | null;
-    category: string | null;
-    description: string | null;
-    image_url: string | null;
-    is_active: boolean;
-    stock_qty: number;
-    empty_tank_qty?: number;
-    is_returnable?: boolean;
-    low_stock_threshold: number | null;
-    price: number | null;
-    deposit_price: number | null;
-    pos_stock_exempt?: boolean;
-    is_pos_sellable?: boolean;
-    size?: string | null;
-    unit?: string | null;
-    vendor_id?: string | null;
-    vendors?: {
-        brand_name: string;
-    } | null;
-    prices: ProductPrice[];
-    created_at: string;
-    updated_at: string;
-};
-type CreateProductPayload = {
-    name: string;
-    description?: string;
-    image_url?: string;
-    is_active?: boolean;
-    size?: string | null;
-    unit?: string | null;
-    is_pos_sellable?: boolean;
-    prices?: Omit<ProductPrice, "id">[];
-};
-type UpdateProductPayload = Partial<CreateProductPayload>;
-
 type OrderStatus = 'pending' | 'confirmed' | 'preparing' | 'ready' | 'delivering' | 'delivered' | 'cancelled' | 'overdue';
 type PaymentMethod = 'cash' | 'qr_promptpay' | 'payroll_deduction' | 'invoice_billing';
 type DeliveryType = 'delivery' | 'pickup';
@@ -187,6 +54,35 @@ type CancelOrderPayload = {
 type ReturnBottlesPayload = {
     bottles_returned: number;
 };
+
+declare const DEFAULT_PAGE_SIZE = 20;
+declare const MAX_PAGE_SIZE = 100;
+declare const PAGE_SIZE_OPTIONS: readonly [20, 50, 100];
+type PageSize = typeof PAGE_SIZE_OPTIONS[number];
+type PaginationParams = {
+    page?: number;
+    pageSize?: number;
+};
+type SearchParams = {
+    q?: string;
+};
+type PaginatedResponse<T> = {
+    data: T[];
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+};
+declare function clampPageSize(n: number | undefined): number;
+/**
+ * "Today" in Asia/Bangkok (UTC+7) as YYYY-MM-DD.
+ *
+ * Must NOT use toISOString(), which is UTC: between 00:00 and 07:00 ICT that
+ * returns YESTERDAY's date. Driver job lists query `scheduled_date = todayISO()`,
+ * so a UTC value showed drivers an empty job list at the very start of a shift.
+ * en-CA formatting yields YYYY-MM-DD directly.
+ */
+declare function todayISO(): string;
 
 type DeliveryStatus = 'pending' | 'assigned' | 'in_progress' | 'completed' | 'cancelled';
 
@@ -295,165 +191,50 @@ type MoveStopPayload = {
     target_route_plan_id: string;
 };
 
-type DocumentType = 'invoice' | 'receipt' | 'voucher' | 'delivery_note' | 'sticker';
-type DocumentStatus = 'draft' | 'issued' | 'void';
-type Document = {
+type CustomerGroup = "general" | "university" | "wholesale" | "vip";
+type ProductPrice = {
     id: string;
-    document_number: string;
-    type: DocumentType;
-    status: DocumentStatus;
-    amount: number;
-    issued_to_name: string;
-    issued_to_address: string | null;
-    tax_id: string | null;
-    agency_id: string | null;
-    profile_id: string | null;
-    order_id: string | null;
-    delivery_id: string | null;
-    template_id: string | null;
-    issued_at: string | null;
-    issued_by: string | null;
-    pdf_url: string | null;
-    void_reason: string | null;
-    voided_document_id: string | null;
-    reissue_reason: string | null;
-    created_at: string;
+    customer_group: CustomerGroup;
+    price: number;
+    unit: string;
 };
-type Transaction = {
+type Product = {
     id: string;
-    document_id: string;
-    amount: number;
-    payment_method: string;
-    reference: string | null;
-    created_at: string;
-};
-type VoidRequest = {
-    id: string;
-    document_id: string;
-    reason: string;
-    status: 'pending' | 'approved' | 'rejected';
-    requested_by: string;
-    reviewed_by: string | null;
-    created_at: string;
-};
-type ApproveVoidPayload = {
-    void_request_id: string;
-    reissue: boolean;
-};
-type RejectVoidPayload = {
-    void_request_id: string;
-    reason: string;
-};
-type SettleDebtPayload = {
-    customer_id: string;
-    amount: number;
-    payment_method: string;
-    reference?: string;
-};
-
-type NotificationChannel = 'push' | 'email' | 'in_app';
-type NotificationType = 'order_update' | 'delivery_update' | 'payment_reminder' | 'subscription_reminder' | 'route_plan_ready' | 'system';
-type Notification = {
-    id: string;
-    user_id: string;
-    type: NotificationType;
-    title: string;
-    body: string;
-    data: Record<string, unknown> | null;
-    read_at: string | null;
-    created_at: string;
-};
-type SendNotificationPayload = {
-    user_id: string;
-    type: NotificationType;
-    title: string;
-    body: string;
-    channels?: NotificationChannel[];
-    data?: Record<string, unknown>;
-};
-type MarkReadPayload = {
-    notification_id: string;
-};
-type PushSubscriptionPayload = {
-    endpoint: string;
-    keys: {
-        p256dh: string;
-        auth: string;
-    };
-};
-type SendToAgencyPayload = {
-    agency_id: string;
-    type: string;
-    title: string;
-    body: string;
-    channels?: ('push' | 'in_app')[];
-    data?: Record<string, unknown>;
-};
-type SendToAgencyResult = {
-    sent_count: number;
-    skipped_count: number;
-    agency_id: string;
-    warning?: string;
-};
-
-interface ServerStatusBucket {
     name: string;
-    size_bytes: number;
-    size_human: string;
-    file_count: number;
-}
-interface ServerStatusTable {
+    sku: string | null;
+    category: string | null;
+    description: string | null;
+    image_url: string | null;
+    is_active: boolean;
+    stock_qty: number;
+    empty_tank_qty?: number;
+    is_returnable?: boolean;
+    low_stock_threshold: number | null;
+    price: number | null;
+    deposit_price: number | null;
+    pos_stock_exempt?: boolean;
+    is_pos_sellable?: boolean;
+    size?: string | null;
+    unit?: string | null;
+    vendor_id?: string | null;
+    vendors?: {
+        brand_name: string;
+    } | null;
+    prices: ProductPrice[];
+    created_at: string;
+    updated_at: string;
+};
+type CreateProductPayload = {
     name: string;
-    size_bytes: number;
-    size_human: string;
-    row_estimate: number;
-}
-interface ServerStatus {
-    database: {
-        size_bytes: number;
-        size_human: string;
-        active_connections: number;
-        max_connections: number;
-        uptime_since: string;
-        cache_hit_ratio: number;
-    };
-    storage: {
-        total_bytes: number;
-        total_human: string;
-        buckets: ServerStatusBucket[];
-    };
-    tables: ServerStatusTable[];
-    timestamp: string;
-}
-
-declare const DEFAULT_PAGE_SIZE = 20;
-declare const MAX_PAGE_SIZE = 100;
-declare const PAGE_SIZE_OPTIONS: readonly [20, 50, 100];
-type PageSize = typeof PAGE_SIZE_OPTIONS[number];
-type PaginationParams = {
-    page?: number;
-    pageSize?: number;
+    description?: string;
+    image_url?: string;
+    is_active?: boolean;
+    size?: string | null;
+    unit?: string | null;
+    is_pos_sellable?: boolean;
+    prices?: Omit<ProductPrice, "id">[];
 };
-type SearchParams = {
-    q?: string;
-};
-type PaginatedResponse<T> = {
-    data: T[];
-    total: number;
-    page: number;
-    pageSize: number;
-    totalPages: number;
-};
-declare function clampPageSize(n: number | undefined): number;
-/**
- * "Today" in Asia/Bangkok (UTC+7) as YYYY-MM-DD.
- *
- * Must NOT use toISOString(), which is UTC: between 00:00 and 07:00 ICT that
- * returns YESTERDAY's date. Driver job lists query `scheduled_date = todayISO()`,
- * so a UTC value showed drivers an empty job list at the very start of a shift.
- * en-CA formatting yields YYYY-MM-DD directly.
- */
-declare function todayISO(): string;
+type UpdateProductPayload = Partial<CreateProductPayload>;
 
 type AgencyKind = "faculty" | "office" | "external";
 type DisbursementKind = "faculty" | "office";
@@ -698,6 +479,225 @@ type DisbursementEmailOutboxRow = {
     created_at: string;
     sent_at: string | null;
 };
+
+type AppRole = 'customer' | 'driver' | 'vendor' | 'pos' | 'admin' | 'superadmin';
+type Profile = {
+    id: string;
+    email: string | null;
+    full_name: string | null;
+    phone_number: string | null;
+    avatar_url: string | null;
+    billing_name: string | null;
+    billing_address: string | null;
+    billing_tax_id: string | null;
+    roles: string[];
+    created_at: string;
+    updated_at: string;
+};
+type UpdateProfilePayload = {
+    full_name?: string;
+    phone_number?: string;
+    email?: string;
+    avatar_url?: string;
+    billing_name?: string;
+    billing_address?: string;
+    billing_tax_id?: string;
+};
+type AddressPayload = {
+    label: string;
+    address: string;
+    recipient_name?: string;
+    phone?: string;
+    subdistrict?: string;
+    district?: string;
+    province?: string;
+    postal_code?: string;
+    lat?: number;
+    lng?: number;
+    is_default?: boolean;
+    delivery_notes?: string;
+};
+type Address = {
+    id: string;
+    label: string;
+    address: string;
+    recipient_name: string | null;
+    phone: string | null;
+    subdistrict: string | null;
+    district: string | null;
+    province: string | null;
+    postal_code: string | null;
+    lat: number | null;
+    lng: number | null;
+    is_default: boolean;
+    delivery_notes: string | null;
+};
+interface ExportedData {
+    exported_at: string;
+    profile: {
+        id: string;
+        full_name: string | null;
+        email: string | null;
+        phone_number: string | null;
+        avatar_url: string | null;
+        account_status: string;
+        created_at: string;
+    } | null;
+    addresses: {
+        label: string;
+        recipient_name: string | null;
+        recipient_phone: string | null;
+        address_line: string;
+        district: string | null;
+        province: string | null;
+        postal_code: string | null;
+    }[];
+    orders: {
+        id: string;
+        order_number: string;
+        status: string;
+        total_amount: number;
+        created_at: string;
+    }[];
+    consent_history: {
+        accepted_at: string;
+        ip_address: string | null;
+        consent_version: string;
+        consent_type: string;
+        consent_title: string;
+    }[];
+}
+
+type DocumentType = 'invoice' | 'receipt' | 'voucher' | 'delivery_note' | 'sticker';
+type DocumentStatus = 'draft' | 'issued' | 'void';
+type Document = {
+    id: string;
+    document_number: string;
+    type: DocumentType;
+    status: DocumentStatus;
+    amount: number;
+    issued_to_name: string;
+    issued_to_address: string | null;
+    tax_id: string | null;
+    agency_id: string | null;
+    profile_id: string | null;
+    order_id: string | null;
+    delivery_id: string | null;
+    template_id: string | null;
+    issued_at: string | null;
+    issued_by: string | null;
+    pdf_url: string | null;
+    void_reason: string | null;
+    voided_document_id: string | null;
+    reissue_reason: string | null;
+    created_at: string;
+};
+type Transaction = {
+    id: string;
+    document_id: string;
+    amount: number;
+    payment_method: string;
+    reference: string | null;
+    created_at: string;
+};
+type VoidRequest = {
+    id: string;
+    document_id: string;
+    reason: string;
+    status: 'pending' | 'approved' | 'rejected';
+    requested_by: string;
+    reviewed_by: string | null;
+    created_at: string;
+};
+type ApproveVoidPayload = {
+    void_request_id: string;
+    reissue: boolean;
+};
+type RejectVoidPayload = {
+    void_request_id: string;
+    reason: string;
+};
+type SettleDebtPayload = {
+    customer_id: string;
+    amount: number;
+    payment_method: string;
+    reference?: string;
+};
+
+type NotificationChannel = 'push' | 'email' | 'in_app';
+type NotificationType = 'order_update' | 'delivery_update' | 'payment_reminder' | 'subscription_reminder' | 'route_plan_ready' | 'system';
+type Notification = {
+    id: string;
+    user_id: string;
+    type: NotificationType;
+    title: string;
+    body: string;
+    data: Record<string, unknown> | null;
+    read_at: string | null;
+    created_at: string;
+};
+type SendNotificationPayload = {
+    user_id: string;
+    type: NotificationType;
+    title: string;
+    body: string;
+    channels?: NotificationChannel[];
+    data?: Record<string, unknown>;
+};
+type MarkReadPayload = {
+    notification_id: string;
+};
+type PushSubscriptionPayload = {
+    endpoint: string;
+    keys: {
+        p256dh: string;
+        auth: string;
+    };
+};
+type SendToAgencyPayload = {
+    agency_id: string;
+    type: string;
+    title: string;
+    body: string;
+    channels?: ('push' | 'in_app')[];
+    data?: Record<string, unknown>;
+};
+type SendToAgencyResult = {
+    sent_count: number;
+    skipped_count: number;
+    agency_id: string;
+    warning?: string;
+};
+
+interface ServerStatusBucket {
+    name: string;
+    size_bytes: number;
+    size_human: string;
+    file_count: number;
+}
+interface ServerStatusTable {
+    name: string;
+    size_bytes: number;
+    size_human: string;
+    row_estimate: number;
+}
+interface ServerStatus {
+    database: {
+        size_bytes: number;
+        size_human: string;
+        active_connections: number;
+        max_connections: number;
+        uptime_since: string;
+        cache_hit_ratio: number;
+    };
+    storage: {
+        total_bytes: number;
+        total_human: string;
+        buckets: ServerStatusBucket[];
+    };
+    tables: ServerStatusTable[];
+    timestamp: string;
+}
 
 type QrPaymentStatusFilter = "paid" | "pending";
 type QrPaymentRow = {

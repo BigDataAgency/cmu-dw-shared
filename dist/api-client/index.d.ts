@@ -39,6 +39,14 @@ type CreateOrderPayload = {
 type CancelOrderPayload = {
     reason: string;
 };
+type EditOrderPayload = {
+    items: {
+        product_id: string;
+        quantity: number;
+    }[];
+    scheduled_date?: string | null;
+    address_id?: string | null;
+};
 type ReturnBottlesPayload = {
     return_items: {
         order_item_id: string;
@@ -116,6 +124,25 @@ declare const ordersApi: {
     getById: (id: string) => Promise<Order>;
     create: (payload: CreateOrderPayload) => Promise<Order>;
     cancel: (id: string, payload: CancelOrderPayload) => Promise<void>;
+    /** เปิดหน้าแก้ = จองไม่ให้ยืนยันรับออเดอร์ (หมดเวลาเอง) */
+    beginEdit: (id: string) => Promise<{
+        locked_until: string;
+    }>;
+    /** ออกจากหน้าแก้ = ปลดการจอง */
+    endEdit: (id: string) => Promise<{
+        success: boolean;
+    }>;
+    edit: (id: string, payload: EditOrderPayload) => Promise<unknown>;
+    /** บริษัทผู้ส่งขอยกเลิกออเดอร์ที่ยืนยันแล้ว — มีผลเมื่อแอดมินทรัพย์สินยืนยัน */
+    requestCancel: (id: string, reason: string) => Promise<{
+        request_id: string;
+    }>;
+    /** แอดมินทรัพย์สินตัดสินคำขอยกเลิกออเดอร์ */
+    resolveCancelRequest: (requestId: string, approve: boolean, note?: string) => Promise<{
+        request_id: string;
+        status: string;
+        order_status: string | null;
+    }>;
     /**
      * ชื่อโครงการที่จะติดไปบนใบเสร็จ/ใบสำคัญรับเงิน
      */
@@ -500,6 +527,30 @@ declare const notificationsApi: {
     sendToAgency: (payload: SendToAgencyPayload) => Promise<SendToAgencyResult>;
 };
 
+type MyDocumentType = "delivery_note" | "receipt";
+type MyDocumentFilters = {
+    type: MyDocumentType;
+    q?: string;
+    page?: number;
+    pageSize?: number;
+};
+/** Public projection only; storage paths and staff/customer identifiers stay server-side. */
+type MyDocumentRow = {
+    id: string;
+    document_number: string;
+    type: MyDocumentType;
+    amount: number;
+    created_at: string;
+    issued_at: string | null;
+    order_id: string;
+    order_number: string | null;
+    project_name: string | null;
+    orderer_name: string | null;
+    group_name: string | null;
+    parent_group_name: string | null;
+    is_mine: boolean;
+    download_url: string | null;
+};
 type DocumentFilters = PaginationParams & SearchParams & {
     type?: string;
     status?: string;
@@ -519,7 +570,7 @@ type BatchPrintResult = {
     }>;
     total: number;
 };
-type BatchPrintDocType = 'delivery_note';
+type BatchPrintDocType = "delivery_note";
 type GenerateDocumentResult = {
     document_id: string;
     document_number: string;
@@ -533,7 +584,13 @@ type UpdateIssuedToPayload = {
     tax_id?: string;
     reason?: string;
 };
+type DocumentDownload = {
+    url: string;
+    is_copy: boolean;
+};
 declare const documentsApi: {
+    download: (id: string) => Promise<DocumentDownload>;
+    listMine: (filters: MyDocumentFilters) => Promise<PaginatedResponse<MyDocumentRow>>;
     list: (filters?: DocumentFilters) => Promise<PaginatedResponse<Document>>;
     generate: (orderId: string, docType: "receipt" | "voucher") => Promise<GenerateDocumentResult>;
     updateIssuedTo: (documentId: string, payload: UpdateIssuedToPayload) => Promise<{
@@ -560,11 +617,31 @@ type ContainerFilters = PaginationParams & SearchParams & {
     dateTo?: string;
 };
 type ContainerScanType = 'load_truck' | 'deliver' | 'collect_return' | 'pos_return' | 'receive_depot' | 'audit' | 'unload_truck';
+type ScanSource = 'manual' | 'camera';
+type ScanCheckPayload = {
+    qr_code: string;
+    scan_type: ContainerScanType;
+    vehicle_id?: string | null;
+    customer_id?: string | null;
+};
+type ScanCheckResult = {
+    qr_code: string;
+    status: string;
+    current_customer_id: string | null;
+    customer_name: string | null;
+    last_scanned_at: string | null;
+    already_done: boolean;
+    requires_return_confirmation: boolean;
+    return_version: string;
+};
 type BatchScanPayload = {
     qr_codes: string[];
     scan_type: ContainerScanType;
     vehicle_id?: string | null;
     delivery_id?: string | null;
+    scan_sources?: Record<string, ScanSource>;
+    confirmed_return_codes?: string[];
+    confirmed_return_versions?: Record<string, string>;
 };
 type UpdateContainerStatusPayload = {
     new_status: string;
@@ -579,6 +656,7 @@ type DriverCollectCustomer = {
 type UnloadPayload = {
     qr_codes: string[];
     vehicle_id?: string | null;
+    scan_sources?: Record<string, ScanSource>;
 };
 type UnloadResult = {
     container_id: string;
@@ -626,6 +704,7 @@ declare const containersApi: {
     list: (filters?: ContainerFilters) => Promise<PaginatedResponse<unknown>>;
     getSummary: () => Promise<unknown[]>;
     getScanHistory: (id: string) => Promise<unknown[]>;
+    scanCheck: (payload: ScanCheckPayload) => Promise<ScanCheckResult>;
     scan: (payload: BatchScanPayload) => Promise<unknown[]>;
     updateStatus: (id: string, payload: UpdateContainerStatusPayload) => Promise<void>;
     genQr: (payload: CreateContainersBatchPayload) => Promise<ContainerBatchResult[]>;
@@ -934,6 +1013,7 @@ declare const disbursementsApi: {
      */
     financeApprove: (id: string, payload?: {
         issued_to_name?: string | null;
+        transfer_date?: string | null;
     }) => Promise<DisbursementGroup>;
     /** หมายเหตุ "ออกใบสำคัญรับเงินในนาม…" (เช็ค/โอนผ่านบัญชี ช่องเดียว) */
     setIssueNote: (id: string, issueNote: string | null) => Promise<DisbursementGroup>;
@@ -1317,4 +1397,4 @@ declare const treasuryApi: {
     monthlyOverview: (filters?: ReportDateRangeFilters) => Promise<MonthlyOverview>;
 };
 
-export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApprovalRule, type ApprovalTemplateStep, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type AuditLogEnvelope, type AuditLogListParams, type AuditLogRow, BankStatement, BankStatementRow, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type CancellationReportRow, type CancelledOrderRow, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, CreateBankStatementPayload, type CreateContainersBatchPayload, type CreateCustomerGroupPayload, type CreateDisbursementGroupV2Payload, type CreateExternalUserPayload, type CreateExternalUserResult, type CreateHolidayPayload, type CustomerGroupListParams, type CustomerGroupLite, type CustomerGroupLiteParams, type CustomerGroupProductRow, type CustomerGroupRow, type CustomerGroupWithStats, CustomersByAgencyRow, CustomersReportSummary, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, DeliveryByDriverRow, DeliveryEvidenceRow, DeliveryReportSummary, DeliveryStatusRow, DeliveryStatusSummaryRow, type DisbursementApproverRow, type DocumentPreference, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type HomeApp, InvoiceReportRow, InvoiceReportSummary, type MapUserPayload, type MapUserResult, MonthlyOverview, type NotificationConfig, type OfficeItemSegments, type OrderFilters, type OrderQuote, type OrderQuotePayload, OrdersReportRow, OrdersReportSummary, type PaymentMethodConfig, PaymentsByMethodRow, PaymentsReportSummary, type PendingDelivery, QrMonthlySummary, QrPaymentFilters, QrPaymentRow, QrPaymentsSummary, QrSummaryStatus, ReceiptUsageFilters, ReceiptUsageRow, ReceiptUsageSummary, ReceivableDetailRow, ReceivableRow, type RecipientStrategy, type RegisterPayload, type RegisterResult, ReportDateRangeFilters, SalesByProductRow, SalesDailyRow, SalesReportSummary, type SavedAccountingCode, type SettingsMap, StockLevelRow, StockMovementRow, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateCustomerGroupPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, UsageByUserRow, UsageReportSummary, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, auditApi, configure, configureApproveClient, containersApi, customerGroupsApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, treasuryApi, usersAdminApi, usersApi };
+export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApprovalRule, type ApprovalTemplateStep, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type AuditLogEnvelope, type AuditLogListParams, type AuditLogRow, BankStatement, BankStatementRow, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type CancellationReportRow, type CancelledOrderRow, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, CreateBankStatementPayload, type CreateContainersBatchPayload, type CreateCustomerGroupPayload, type CreateDisbursementGroupV2Payload, type CreateExternalUserPayload, type CreateExternalUserResult, type CreateHolidayPayload, type CustomerGroupListParams, type CustomerGroupLite, type CustomerGroupLiteParams, type CustomerGroupProductRow, type CustomerGroupRow, type CustomerGroupWithStats, CustomersByAgencyRow, CustomersReportSummary, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, DeliveryByDriverRow, DeliveryEvidenceRow, DeliveryReportSummary, DeliveryStatusRow, DeliveryStatusSummaryRow, type DisbursementApproverRow, type DocumentPreference, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type HomeApp, InvoiceReportRow, InvoiceReportSummary, type MapUserPayload, type MapUserResult, MonthlyOverview, type NotificationConfig, type OfficeItemSegments, type OrderFilters, type OrderQuote, type OrderQuotePayload, OrdersReportRow, OrdersReportSummary, type PaymentMethodConfig, PaymentsByMethodRow, PaymentsReportSummary, type PendingDelivery, QrMonthlySummary, QrPaymentFilters, QrPaymentRow, QrPaymentsSummary, QrSummaryStatus, ReceiptUsageFilters, ReceiptUsageRow, ReceiptUsageSummary, ReceivableDetailRow, ReceivableRow, type RecipientStrategy, type RegisterPayload, type RegisterResult, ReportDateRangeFilters, SalesByProductRow, SalesDailyRow, SalesReportSummary, type SavedAccountingCode, type ScanCheckPayload, type ScanCheckResult, type ScanSource, type SettingsMap, StockLevelRow, StockMovementRow, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateCustomerGroupPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, UsageByUserRow, UsageReportSummary, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, auditApi, configure, configureApproveClient, containersApi, customerGroupsApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, treasuryApi, usersAdminApi, usersApi };
