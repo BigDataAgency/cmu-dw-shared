@@ -37,6 +37,8 @@ export type CreateOrderPayload = {
   delivery_type?: DeliveryType;
   /** Admin proxy: when set, order is created on behalf of this user. Caller must have staff_property/admin_property/super_admin role. */
   target_user_id?: string;
+  /** Property officer orders directly in an active agency context; actual caller remains orderer. Mutually exclusive with purchase right/target user. */
+  customer_group_id?: string;
 };
 
 export type CancelOrderPayload = {
