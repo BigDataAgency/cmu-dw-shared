@@ -48,6 +48,7 @@ export type GeneratePdfPayload = {
 };
 
 export type BatchPrintResult = {
+  html_url?: string;
   urls: string[];
   errors: Array<{ id: string; message: string }>;
   total: number;
@@ -111,11 +112,13 @@ export const documentsApi = {
 
   batchPrint: (
     deliveryIds: string[],
-    docType: BatchPrintDocType = "delivery_note"
+    docType: BatchPrintDocType = "delivery_note",
+    format?: "pdf" | "html"
   ): Promise<BatchPrintResult> =>
     post("/documents/batch-print", {
       delivery_ids: deliveryIds,
       doc_type: docType,
+      ...(format ? { format } : {}),
     }),
 
   // Voiding goes through the Edge Function so it gets a role check and an audit

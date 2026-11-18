@@ -35,6 +35,8 @@ type CreateOrderPayload = {
     delivery_type?: DeliveryType;
     /** Admin proxy: when set, order is created on behalf of this user. Caller must have staff_property/admin_property/super_admin role. */
     target_user_id?: string;
+    /** Property officer orders directly in an active agency context; actual caller remains orderer. Mutually exclusive with purchase right/target user. */
+    customer_group_id?: string;
 };
 type CancelOrderPayload = {
     reason: string;
@@ -563,6 +565,7 @@ type GeneratePdfPayload = {
     delivery_id?: string;
 };
 type BatchPrintResult = {
+    html_url?: string;
     urls: string[];
     errors: Array<{
         id: string;
@@ -603,7 +606,7 @@ declare const documentsApi: {
         encrypted: boolean;
     }>;
     getById: (id: string) => Promise<Document>;
-    batchPrint: (deliveryIds: string[], docType?: BatchPrintDocType) => Promise<BatchPrintResult>;
+    batchPrint: (deliveryIds: string[], docType?: BatchPrintDocType, format?: "pdf" | "html") => Promise<BatchPrintResult>;
     void: (id: string, reason: string) => Promise<{
         success: boolean;
     }>;
