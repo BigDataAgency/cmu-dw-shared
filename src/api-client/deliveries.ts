@@ -47,6 +47,16 @@ export type BatchCompleteResult = {
   failed: number
 }
 
+/** 046 — POST /deliveries/factory-handover (ใบส่งของรับที่โรงงาน ไม่มีรถ/คนขับ) */
+export type FactoryHandoverResult = {
+  id: string
+  delivery_note_number: string | null
+  status: string
+  scheduled_date: string | null
+  vendor_id: string
+  order_id: string
+}
+
 export type DeliveryFilters = PaginationParams & SearchParams & {
   driver_id?: string
   status?: string
@@ -83,4 +93,8 @@ export const deliveriesApi = {
 
   completeBatch: (payload: BatchCompletePayload): Promise<BatchCompleteResult> =>
     post('/deliveries/batch-complete', payload),
+
+  /** 046 — admin_vendor สร้างใบส่งของรับที่โรงงาน (409 ถ้ามีแล้ว · 403 คนละบริษัท · 400 ไม่ใช่ factory_pickup) */
+  factoryHandover: (orderId: string): Promise<FactoryHandoverResult> =>
+    post('/deliveries/factory-handover', { order_id: orderId }),
 }

@@ -13,7 +13,10 @@ declare class ApiError extends Error {
 
 type OrderSource = "pos_walkin" | "pos_delivery" | "online" | "phone" | "agent";
 type PaymentMethod = "cash" | "qr_promptpay" | "payroll_deduction" | "invoice_billing";
-type DeliveryType = "delivery" | "pickup";
+/** `factory_pickup` (รับที่โรงงาน) ใช้ได้เฉพาะ `vendor_urgent === true` (admin_vendor สั่งแทนหน่วยงาน) */
+type DeliveryType = "delivery" | "pickup" | "factory_pickup";
+/** 046 — ช่วงวันของ vendor urgent; ฝั่ง backend รับเฉพาะ admin_vendor (คนอื่นตอบ 403) */
+type AvailableDatesMode = "vendor_delivery" | "vendor_factory_pickup";
 type CreateOrderPayload = {
     items: {
         product_id: string;
@@ -24,6 +27,12 @@ type CreateOrderPayload = {
         address?: string;
         lat?: number;
         lng?: number;
+        /** ชื่อผู้รับ (ส่งถึงที่) หรือชื่อผู้มารับ (factory_pickup) */
+        recipient_name?: string;
+        /** เบอร์ผู้รับ — คีย์เดิมที่ create_order อ่าน (`p_address->>'phone'`) */
+        phone?: string;
+        /** เบอร์ผู้รับตาม CONTRACT-046 — ส่งคู่กับ `phone` ค่าเดียวกัน */
+        recipient_phone?: string;
     };
     payment: PaymentMethod;
     source?: OrderSource;
@@ -37,6 +46,42 @@ type CreateOrderPayload = {
     target_user_id?: string;
     /** Property officer orders directly in an active agency context; actual caller remains orderer. Mutually exclusive with purchase right/target user. */
     customer_group_id?: string;
+    /**
+     * 046 — admin_vendor สั่งด่วนในนามหน่วยงาน: ต้องมี `customer_group_id`, `source: "agent"`,
+     * `scheduled_date` (YYYY-MM-DD เวลาไทย) และห้ามมี `target_user_id` / `purchase_right_id` / `address.address_id`
+     */
+    vendor_urgent?: boolean;
+};
+/** 046 — GET /orders/proxy-groups item (property roles + admin_vendor) */
+type ProxyGroup = {
+    id: string;
+    name: string;
+    code: string | null;
+    agency_id: string | null;
+    /** กลุ่มแม่ (คณะ) — null = กลุ่มระดับบนสุด */
+    parent_id: string | null;
+    /** ที่อยู่ปลายทางเดิมของ proxy (สนง.ทรัพย์สินใช้ที่อยู่ที่ตั้งค่าไว้) */
+    address?: string | null;
+    recipient_name?: string | null;
+    phone?: string | null;
+    agency_address: string | null;
+    agency_phone: string | null;
+    agency_contact_person: string | null;
+    allowed_payment_methods: PaymentMethod[];
+    is_office?: boolean;
+};
+type ProxyGroupsParams = {
+    q?: string;
+    code?: string;
+    page?: number;
+    pageSize?: number;
+};
+type ProxyGroupsResponse = {
+    groups: ProxyGroup[];
+    total: number;
+    page: number;
+    page_size: number;
+    has_more: boolean;
 };
 type CancelOrderPayload = {
     reason: string;
@@ -158,7 +203,8 @@ declare const ordersApi: {
         start: string;
         end: string;
         customer_group_id?: string | null;
-    }) => Promise<DeliveryAvailability>;
+    }, mode?: AvailableDatesMode) => Promise<DeliveryAvailability>;
+    proxyGroups: (params?: ProxyGroupsParams) => Promise<ProxyGroupsResponse>;
     datesCapacity: (payload: DatesCapacityPayload) => Promise<DatesCapacityResult>;
     quote: (payload: OrderQuotePayload) => Promise<OrderQuote>;
     listCreditNotes: (id: string) => Promise<OrderCreditNote[]>;
@@ -224,6 +270,15 @@ type BatchCompleteResult = {
     success: number;
     failed: number;
 };
+/** 046 — POST /deliveries/factory-handover (ใบส่งของรับที่โรงงาน ไม่มีรถ/คนขับ) */
+type FactoryHandoverResult = {
+    id: string;
+    delivery_note_number: string | null;
+    status: string;
+    scheduled_date: string | null;
+    vendor_id: string;
+    order_id: string;
+};
 type DeliveryFilters = PaginationParams & SearchParams & {
     driver_id?: string;
     status?: string;
@@ -242,6 +297,8 @@ declare const deliveriesApi: {
     updateItemQty: (itemId: string, payload: UpdateDeliveredQtyPayload) => Promise<void>;
     assignDriver: (id: string, payload: AssignDriverPayload) => Promise<void>;
     completeBatch: (payload: BatchCompletePayload) => Promise<BatchCompleteResult>;
+    /** 046 — admin_vendor สร้างใบส่งของรับที่โรงงาน (409 ถ้ามีแล้ว · 403 คนละบริษัท · 400 ไม่ใช่ factory_pickup) */
+    factoryHandover: (orderId: string) => Promise<FactoryHandoverResult>;
 };
 
 type RouteFilters = {
@@ -1400,4 +1457,4 @@ declare const treasuryApi: {
     monthlyOverview: (filters?: ReportDateRangeFilters) => Promise<MonthlyOverview>;
 };
 
-export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApprovalRule, type ApprovalTemplateStep, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type AuditLogEnvelope, type AuditLogListParams, type AuditLogRow, BankStatement, BankStatementRow, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type CancellationReportRow, type CancelledOrderRow, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, CreateBankStatementPayload, type CreateContainersBatchPayload, type CreateCustomerGroupPayload, type CreateDisbursementGroupV2Payload, type CreateExternalUserPayload, type CreateExternalUserResult, type CreateHolidayPayload, type CustomerGroupListParams, type CustomerGroupLite, type CustomerGroupLiteParams, type CustomerGroupProductRow, type CustomerGroupRow, type CustomerGroupWithStats, CustomersByAgencyRow, CustomersReportSummary, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, DeliveryByDriverRow, DeliveryEvidenceRow, DeliveryReportSummary, DeliveryStatusRow, DeliveryStatusSummaryRow, type DisbursementApproverRow, type DocumentPreference, type DriverCollectCustomer, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type HomeApp, InvoiceReportRow, InvoiceReportSummary, type MapUserPayload, type MapUserResult, MonthlyOverview, type NotificationConfig, type OfficeItemSegments, type OrderFilters, type OrderQuote, type OrderQuotePayload, OrdersReportRow, OrdersReportSummary, type PaymentMethodConfig, PaymentsByMethodRow, PaymentsReportSummary, type PendingDelivery, QrMonthlySummary, QrPaymentFilters, QrPaymentRow, QrPaymentsSummary, QrSummaryStatus, ReceiptUsageFilters, ReceiptUsageRow, ReceiptUsageSummary, ReceivableDetailRow, ReceivableRow, type RecipientStrategy, type RegisterPayload, type RegisterResult, ReportDateRangeFilters, SalesByProductRow, SalesDailyRow, SalesReportSummary, type SavedAccountingCode, type ScanCheckPayload, type ScanCheckResult, type ScanSource, type SettingsMap, StockLevelRow, StockMovementRow, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateCustomerGroupPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, UsageByUserRow, UsageReportSummary, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, auditApi, configure, configureApproveClient, containersApi, customerGroupsApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, treasuryApi, usersAdminApi, usersApi };
+export { type AccountStatus, type AddSundaysResult, type AdminAppRole, type AdminUserPaymentResponse, type AgencyPaymentResponse, ApiError, type ApprovalRule, type ApprovalTemplateStep, type ApproveSummary, type ApproverInput, type AssignPurchaseRightPayload, type AuditLogEnvelope, type AuditLogListParams, type AuditLogRow, type AvailableDatesMode, BankStatement, BankStatementRow, type BatchCompletePayload, type BatchCompleteResult, type BatchPrintResult, type BatchScanPayload, CONTAINER_QR_PATTERN, type CancellationReportRow, type CancelledOrderRow, type ContainerBatchResult, type ContainerQrData, type ContainerScanType, CreateBankStatementPayload, type CreateContainersBatchPayload, type CreateCustomerGroupPayload, type CreateDisbursementGroupV2Payload, type CreateExternalUserPayload, type CreateExternalUserResult, type CreateHolidayPayload, type CustomerGroupListParams, type CustomerGroupLite, type CustomerGroupLiteParams, type CustomerGroupProductRow, type CustomerGroupRow, type CustomerGroupWithStats, CustomersByAgencyRow, CustomersReportSummary, type DebtFilters, type DebtRow, type DecisionPayload, type DecisionResult, type DelegateApproverPayload, DeliveryByDriverRow, DeliveryEvidenceRow, DeliveryReportSummary, DeliveryStatusRow, DeliveryStatusSummaryRow, type DisbursementApproverRow, type DocumentPreference, type DriverCollectCustomer, type FactoryHandoverResult, type Holiday, type HolidayOrderPolicy, type HolidaySettings, type HomeApp, InvoiceReportRow, InvoiceReportSummary, type MapUserPayload, type MapUserResult, MonthlyOverview, type NotificationConfig, type OfficeItemSegments, type OrderFilters, type OrderQuote, type OrderQuotePayload, OrdersReportRow, OrdersReportSummary, type PaymentMethodConfig, PaymentsByMethodRow, PaymentsReportSummary, type PendingDelivery, type ProxyGroup, type ProxyGroupsParams, type ProxyGroupsResponse, QrMonthlySummary, QrPaymentFilters, QrPaymentRow, QrPaymentsSummary, QrSummaryStatus, ReceiptUsageFilters, ReceiptUsageRow, ReceiptUsageSummary, ReceivableDetailRow, ReceivableRow, type RecipientStrategy, type RegisterPayload, type RegisterResult, ReportDateRangeFilters, SalesByProductRow, SalesDailyRow, SalesReportSummary, type SavedAccountingCode, type ScanCheckPayload, type ScanCheckResult, type ScanSource, type SettingsMap, StockLevelRow, StockMovementRow, type SupportFeeFilters, type SupportFeeRow, type SyncGoogleResult, type UnloadPayload, type UnloadResult, type UpdateContainerStatusPayload, type UpdateCustomerGroupPayload, type UpdateHolidayPayload, type UpdateNotificationConfigPayload, type UpdateSettingPayload, type UpdateStatusPayload, UsageByUserRow, UsageReportSummary, type UserPaymentMethodsResponse, type UserPurchaseRightRow, approveApi, auditApi, configure, configureApproveClient, containersApi, customerGroupsApi, deliveriesApi, disbursementsApi, documentsApi, financeApi, holidaysApi, isValidContainerQR, notificationConfigsApi, notificationsApi, ordersApi, paymentMethodsApi, productsApi, routesApi, serverStatusApi, settingsApi, treasuryApi, usersAdminApi, usersApi };

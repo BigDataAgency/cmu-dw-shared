@@ -1,6 +1,6 @@
 type OrderStatus = 'pending' | 'confirmed' | 'preparing' | 'ready' | 'delivering' | 'delivered' | 'cancelled' | 'overdue';
 type PaymentMethod = 'cash' | 'qr_promptpay' | 'payroll_deduction' | 'invoice_billing';
-type DeliveryType = 'delivery' | 'pickup';
+type DeliveryType = 'delivery' | 'pickup' | 'factory_pickup';
 type OrderItem = {
     id: string;
     product_id: string;

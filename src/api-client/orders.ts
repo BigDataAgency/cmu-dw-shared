@@ -17,7 +17,11 @@ export type PaymentMethod =
   | "qr_promptpay"
   | "payroll_deduction"
   | "invoice_billing";
-export type DeliveryType = "delivery" | "pickup";
+/** `factory_pickup` (รับที่โรงงาน) ใช้ได้เฉพาะ `vendor_urgent === true` (admin_vendor สั่งแทนหน่วยงาน) */
+export type DeliveryType = "delivery" | "pickup" | "factory_pickup";
+
+/** 046 — ช่วงวันของ vendor urgent; ฝั่ง backend รับเฉพาะ admin_vendor (คนอื่นตอบ 403) */
+export type AvailableDatesMode = "vendor_delivery" | "vendor_factory_pickup";
 
 export type CreateOrderPayload = {
   items: { product_id: string; quantity: number }[];
@@ -26,6 +30,12 @@ export type CreateOrderPayload = {
     address?: string;
     lat?: number;
     lng?: number;
+    /** ชื่อผู้รับ (ส่งถึงที่) หรือชื่อผู้มารับ (factory_pickup) */
+    recipient_name?: string;
+    /** เบอร์ผู้รับ — คีย์เดิมที่ create_order อ่าน (`p_address->>'phone'`) */
+    phone?: string;
+    /** เบอร์ผู้รับตาม CONTRACT-046 — ส่งคู่กับ `phone` ค่าเดียวกัน */
+    recipient_phone?: string;
   };
   payment: PaymentMethod;
   source?: OrderSource;
@@ -39,6 +49,45 @@ export type CreateOrderPayload = {
   target_user_id?: string;
   /** Property officer orders directly in an active agency context; actual caller remains orderer. Mutually exclusive with purchase right/target user. */
   customer_group_id?: string;
+  /**
+   * 046 — admin_vendor สั่งด่วนในนามหน่วยงาน: ต้องมี `customer_group_id`, `source: "agent"`,
+   * `scheduled_date` (YYYY-MM-DD เวลาไทย) และห้ามมี `target_user_id` / `purchase_right_id` / `address.address_id`
+   */
+  vendor_urgent?: boolean;
+};
+
+/** 046 — GET /orders/proxy-groups item (property roles + admin_vendor) */
+export type ProxyGroup = {
+  id: string;
+  name: string;
+  code: string | null;
+  agency_id: string | null;
+  /** กลุ่มแม่ (คณะ) — null = กลุ่มระดับบนสุด */
+  parent_id: string | null;
+  /** ที่อยู่ปลายทางเดิมของ proxy (สนง.ทรัพย์สินใช้ที่อยู่ที่ตั้งค่าไว้) */
+  address?: string | null;
+  recipient_name?: string | null;
+  phone?: string | null;
+  agency_address: string | null;
+  agency_phone: string | null;
+  agency_contact_person: string | null;
+  allowed_payment_methods: PaymentMethod[];
+  is_office?: boolean;
+};
+
+export type ProxyGroupsParams = {
+  q?: string;
+  code?: string;
+  page?: number;
+  pageSize?: number;
+};
+
+export type ProxyGroupsResponse = {
+  groups: ProxyGroup[];
+  total: number;
+  page: number;
+  page_size: number;
+  has_more: boolean;
 };
 
 export type CancelOrderPayload = {
@@ -181,12 +230,23 @@ export const ordersApi = {
   ): Promise<unknown> => post(`/orders/${id}/return-bottles`, payload),
 
   // F2/F3 — วันจัดส่งได้ (วันหยุด + วันจัดส่งประจำกลุ่ม)
-  availableDates: (params: {
-    start: string;
-    end: string;
-    customer_group_id?: string | null;
-  }): Promise<DeliveryAvailability> =>
-    get("/orders/available-dates", params as Record<string, unknown>),
+  // 046 — mode ใช้ได้เฉพาะ admin_vendor (ส่งด่วน / รับที่โรงงาน)
+  availableDates: (
+    params: {
+      start: string;
+      end: string;
+      customer_group_id?: string | null;
+    },
+    mode?: AvailableDatesMode
+  ): Promise<DeliveryAvailability> =>
+    get("/orders/available-dates", {
+      ...params,
+      ...(mode ? { mode } : {}),
+    } as Record<string, unknown>),
+
+  // 046 — หน่วยงานที่สั่งในนามได้ (property roles + admin_vendor) พร้อมคณะแม่และที่อยู่หน่วยงาน
+  proxyGroups: (params?: ProxyGroupsParams): Promise<ProxyGroupsResponse> =>
+    get("/orders/proxy-groups", params as Record<string, unknown> | undefined),
 
   // F3 — วัน "ใกล้เต็ม"/"เต็ม" ตามโควตา daily_order_limits เทียบสินค้าในตะกร้า
   datesCapacity: (

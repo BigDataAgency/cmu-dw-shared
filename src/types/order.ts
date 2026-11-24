@@ -9,7 +9,7 @@ export type OrderStatus =
   | 'overdue'
 
 export type PaymentMethod = 'cash' | 'qr_promptpay' | 'payroll_deduction' | 'invoice_billing'
-export type DeliveryType = 'delivery' | 'pickup'
+export type DeliveryType = 'delivery' | 'pickup' | 'factory_pickup'
 
 export type OrderItem = {
   id: string

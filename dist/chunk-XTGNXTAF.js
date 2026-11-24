@@ -87,7 +87,13 @@ var ordersApi = {
   updateStatus: (id, payload) => patch(`/orders/${id}/status`, payload),
   returnBottles: (id, payload) => post(`/orders/${id}/return-bottles`, payload),
   // F2/F3 — วันจัดส่งได้ (วันหยุด + วันจัดส่งประจำกลุ่ม)
-  availableDates: (params) => get("/orders/available-dates", params),
+  // 046 — mode ใช้ได้เฉพาะ admin_vendor (ส่งด่วน / รับที่โรงงาน)
+  availableDates: (params, mode) => get("/orders/available-dates", {
+    ...params,
+    ...mode ? { mode } : {}
+  }),
+  // 046 — หน่วยงานที่สั่งในนามได้ (property roles + admin_vendor) พร้อมคณะแม่และที่อยู่หน่วยงาน
+  proxyGroups: (params) => get("/orders/proxy-groups", params),
   // F3 — วัน "ใกล้เต็ม"/"เต็ม" ตามโควตา daily_order_limits เทียบสินค้าในตะกร้า
   datesCapacity: (payload) => post("/orders/dates-capacity", payload),
   // F4 — ราคา + ส่วนลด (server-side SSOT, ใช้โชว์ preview ก่อนสั่ง)
@@ -107,7 +113,9 @@ var deliveriesApi = {
   cancel: (id, payload) => patch(`/deliveries/${id}/cancel`, payload),
   updateItemQty: (itemId, payload) => patch(`/deliveries/items/${itemId}/qty`, payload),
   assignDriver: (id, payload) => patch(`/deliveries/${id}/assign`, payload),
-  completeBatch: (payload) => post("/deliveries/batch-complete", payload)
+  completeBatch: (payload) => post("/deliveries/batch-complete", payload),
+  /** 046 — admin_vendor สร้างใบส่งของรับที่โรงงาน (409 ถ้ามีแล้ว · 403 คนละบริษัท · 400 ไม่ใช่ factory_pickup) */
+  factoryHandover: (orderId) => post("/deliveries/factory-handover", { order_id: orderId })
 };
 
 // src/api-client/routes.ts
@@ -229,9 +237,10 @@ var documentsApi = {
   updateIssuedTo: (documentId, payload) => patch(`/documents/${documentId}/issued-to`, payload),
   generatePdf: (payload) => post("/documents/pdf", payload),
   getById: (id) => get(`/documents/${id}`),
-  batchPrint: (deliveryIds, docType = "delivery_note") => post("/documents/batch-print", {
+  batchPrint: (deliveryIds, docType = "delivery_note", format) => post("/documents/batch-print", {
     delivery_ids: deliveryIds,
-    doc_type: docType
+    doc_type: docType,
+    ...format ? { format } : {}
   }),
   // Voiding goes through the Edge Function so it gets a role check and an audit
   // row; admin used to UPDATE the table straight from the browser.
@@ -247,6 +256,7 @@ var containersApi = {
   list: (filters) => get("/containers", filters),
   getSummary: () => get("/containers/summary"),
   getScanHistory: (id) => get(`/containers/${id}/scan-history`),
+  scanCheck: (payload) => post("/containers/scan-check", payload),
   scan: (payload) => post("/containers/scan", payload),
   updateStatus: (id, payload) => patch(`/containers/${id}/status`, payload),
   // v1.15.0 req-02: Vendor Gen QR batch
@@ -576,4 +586,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-IJUI6ZKF.js.map
+//# sourceMappingURL=chunk-XTGNXTAF.js.map
