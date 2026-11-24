@@ -1,10 +1,8 @@
 import {
   ApiError,
   CONTAINER_QR_PATTERN,
-  approveApi,
   auditApi,
   configure,
-  configureApproveClient,
   containersApi,
   customerGroupsApi,
   deliveriesApi,
@@ -24,14 +22,12 @@ import {
   treasuryApi,
   usersAdminApi,
   usersApi
-} from "../chunk-XTGNXTAF.js";
+} from "../chunk-7U4JQWIQ.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,
-  approveApi,
   auditApi,
   configure,
-  configureApproveClient,
   containersApi,
   customerGroupsApi,
   deliveriesApi,

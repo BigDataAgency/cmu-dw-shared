@@ -8,10 +8,8 @@ import {
 import {
   ApiError,
   CONTAINER_QR_PATTERN,
-  approveApi,
   auditApi,
   configure,
-  configureApproveClient,
   containersApi,
   customerGroupsApi,
   deliveriesApi,
@@ -31,18 +29,16 @@ import {
   treasuryApi,
   usersAdminApi,
   usersApi
-} from "./chunk-XTGNXTAF.js";
+} from "./chunk-7U4JQWIQ.js";
 export {
   ApiError,
   CONTAINER_QR_PATTERN,
   DEFAULT_PAGE_SIZE,
   MAX_PAGE_SIZE,
   PAGE_SIZE_OPTIONS,
-  approveApi,
   auditApi,
   clampPageSize,
   configure,
-  configureApproveClient,
   containersApi,
   customerGroupsApi,
   deliveriesApi,

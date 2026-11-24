@@ -449,60 +449,6 @@ var disbursementsApi = {
   )
 };
 
-// src/api-client/approve.ts
-var _baseUrl2 = "";
-var _anonKey2 = "";
-function configureApproveClient(options) {
-  _baseUrl2 = options.baseUrl;
-  _anonKey2 = options.anonKey;
-}
-function publicHeaders() {
-  const h = { "Content-Type": "application/json" };
-  if (_anonKey2) {
-    h["apikey"] = _anonKey2;
-    h["Authorization"] = `Bearer ${_anonKey2}`;
-  }
-  return h;
-}
-async function handle(res) {
-  if (!res.ok) {
-    const body = await res.json().catch(() => null);
-    const message = body?.error ?? body?.message ?? res.statusText;
-    throw new ApiError(res.status, message);
-  }
-  if (res.status === 204) return void 0;
-  return res.json();
-}
-var approveApi = {
-  /**
-   * v1.57 — Direct URL of the disbursement preview PDF for a magic-link token.
-   * The approve EF is deployed with verify_jwt=false, so this URL works as a
-   * plain <a href>/window.open target with no headers — token is the credential.
-   * Repeated views are safe (server-side validation has no side effects).
-   */
-  getPdfUrl: (token) => `${_baseUrl2}/approve/${encodeURIComponent(token)}/pdf`,
-  /**
-   * Fetch the approver-safe summary for a magic-link token.
-   * Side effect: marks the approver row as 'opened' on first call.
-   */
-  getByToken: async (token) => {
-    const res = await fetch(`${_baseUrl2}/approve/${encodeURIComponent(token)}`, {
-      method: "GET",
-      headers: publicHeaders()
-    });
-    return handle(res);
-  },
-  /** Submit approve or reject decision. Single-use — server rejects replays with 410. */
-  decide: async (token, payload) => {
-    const res = await fetch(`${_baseUrl2}/approve/${encodeURIComponent(token)}/decide`, {
-      method: "POST",
-      headers: publicHeaders(),
-      body: JSON.stringify(payload)
-    });
-    return handle(res);
-  }
-};
-
 // src/api-client/customer-groups.ts
 var customerGroupsApi = {
   list: (params) => get("/customer-groups", params),
@@ -581,9 +527,7 @@ export {
   notificationConfigsApi,
   serverStatusApi,
   disbursementsApi,
-  configureApproveClient,
-  approveApi,
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-XTGNXTAF.js.map
+//# sourceMappingURL=chunk-7U4JQWIQ.js.map
