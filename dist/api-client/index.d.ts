@@ -1,4 +1,4 @@
-import { PaginationParams, SearchParams, PaginatedResponse, Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, DbAppRole, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, Document, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, DocumentType, PaymentMethod as PaymentMethod$1, NotificationChannel, ServerStatus, DisbursementPaymentChannel, EligibleReceivablesFilters, EligibleReceivable, DisbursementGroupListFilters, DisbursementGroup, DisbursementTimelineEvent, CreateDisbursementGroupPayload, ApproveDisbursementPayload, RejectDisbursementPayload, UpdateDisbursementItemPayload, DisbursementItem, TreasuryExportPayload, TreasuryExportResult, DisbursementExportBatch, FacultyCreditorAccount, FacultyCreditorUpsertPayload, DisbursementApprovalConfig, DisbursementApprovalConfigUpsertPayload, EmailOutboxStatus, DisbursementEmailOutboxRow, QrPaymentFilters, QrPaymentRow, QrPaymentsSummary, QrSummaryStatus, QrMonthlySummary, BankStatement, BankStatementRow, CreateBankStatementPayload, ReceiptUsageFilters, ReceiptUsageRow, ReceiptUsageSummary, ReceivableRow, ReceivableDetailRow, ReportDateRangeFilters, DeliveryReportSummary, DeliveryByDriverRow, StockLevelRow, StockMovementRow, OrdersReportSummary, OrdersReportRow, PaymentsReportSummary, PaymentsByMethodRow, InvoiceReportRow, InvoiceReportSummary, DeliveryEvidenceRow, DeliveryStatusSummaryRow, DeliveryStatusRow, SalesReportSummary, SalesByProductRow, SalesDailyRow, UsageReportSummary, UsageByUserRow, CustomersReportSummary, CustomersByAgencyRow, MonthlyOverview } from '../types/index.js';
+import { PaginationParams, SearchParams, PaginatedResponse, Order, Delivery, DeliveryDetail, RoutePlan, GenerateRoutePayload, ConfirmRoutePayload, ReorderStopsPayload, MoveStopPayload, Product, CreateProductPayload, UpdateProductPayload, DbAppRole, Profile, UpdateProfilePayload, Address, AddressPayload, ExportedData, SendNotificationPayload, Notification, PushSubscriptionPayload, SendToAgencyPayload, SendToAgencyResult, Document, DocumentType, PaymentMethod as PaymentMethod$1, NotificationChannel, ServerStatus, DisbursementPaymentChannel, EligibleReceivablesFilters, EligibleReceivable, DisbursementGroupListFilters, DisbursementGroup, DisbursementTimelineEvent, CreateDisbursementGroupPayload, ApproveDisbursementPayload, RejectDisbursementPayload, UpdateDisbursementItemPayload, DisbursementItem, TreasuryExportPayload, TreasuryExportResult, DisbursementExportBatch, FacultyCreditorAccount, FacultyCreditorUpsertPayload, DisbursementApprovalConfig, DisbursementApprovalConfigUpsertPayload, EmailOutboxStatus, DisbursementEmailOutboxRow, QrPaymentFilters, QrPaymentRow, QrPaymentsSummary, QrSummaryStatus, QrMonthlySummary, BankStatement, BankStatementRow, CreateBankStatementPayload, ReceiptUsageFilters, ReceiptUsageRow, ReceiptUsageSummary, ReceivableRow, ReceivableDetailRow, ReportDateRangeFilters, DeliveryReportSummary, DeliveryByDriverRow, StockLevelRow, StockMovementRow, OrdersReportSummary, OrdersReportRow, PaymentsReportSummary, PaymentsByMethodRow, InvoiceReportRow, InvoiceReportSummary, DeliveryEvidenceRow, DeliveryStatusSummaryRow, DeliveryStatusRow, SalesReportSummary, SalesByProductRow, SalesDailyRow, UsageReportSummary, UsageByUserRow, CustomersReportSummary, CustomersByAgencyRow, MonthlyOverview } from '../types/index.js';
 export { BankRowMatchStatus, BankStatementStatus, QrPaymentStatusFilter } from '../types/index.js';
 
 declare function configure(options: {
@@ -533,10 +533,6 @@ type DebtRow = {
     tax_id?: string | null;
 };
 type DebtFilters = PaginationParams & SearchParams;
-type DocumentFilters$1 = {
-    customer_id?: string;
-    status?: string;
-};
 type ApproveVoidPayload = {
     void_request_id: string;
     corrections?: Record<string, unknown>;
@@ -568,8 +564,6 @@ type SupportFeeRow = {
     total_cost: number;
 };
 declare const financeApi: {
-    listInvoices: (filters?: DocumentFilters$1) => Promise<Document[]>;
-    listReceipts: (filters?: DocumentFilters$1) => Promise<Document[]>;
     approveVoidReissue: (payload: ApproveVoidPayload) => Promise<unknown>;
     rejectVoidReissue: (payload: RejectVoidPayload) => Promise<void>;
     settleDebt: (payload: SettleDebtPayload) => Promise<unknown>;

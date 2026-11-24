@@ -207,8 +207,6 @@ var usersAdminApi = {
 
 // src/api-client/finance.ts
 var financeApi = {
-  listInvoices: (filters) => get("/finance/invoices", filters),
-  listReceipts: (filters) => get("/finance/receipts", filters),
   approveVoidReissue: (payload) => post("/finance/void-reissue/approve", payload),
   rejectVoidReissue: (payload) => post("/finance/void-reissue/reject", payload),
   settleDebt: (payload) => post("/finance/settle-debt", payload),
@@ -530,4 +528,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-7U4JQWIQ.js.map
+//# sourceMappingURL=chunk-OEQECYNW.js.map

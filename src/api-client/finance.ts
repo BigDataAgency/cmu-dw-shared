@@ -1,5 +1,4 @@
 import { get, post } from './fetch'
-import type { Document } from '../types/finance'
 import type { PaginationParams, SearchParams, PaginatedResponse } from '../types/pagination'
 
 export type DebtRow = {
@@ -12,11 +11,6 @@ export type DebtRow = {
 }
 
 export type DebtFilters = PaginationParams & SearchParams
-
-export type DocumentFilters = {
-  customer_id?: string
-  status?: string
-}
 
 export type ApproveVoidPayload = {
   void_request_id: string
@@ -54,12 +48,6 @@ export type SupportFeeRow = {
 }
 
 export const financeApi = {
-  listInvoices: (filters?: DocumentFilters): Promise<Document[]> =>
-    get('/finance/invoices', filters as Record<string, unknown>),
-
-  listReceipts: (filters?: DocumentFilters): Promise<Document[]> =>
-    get('/finance/receipts', filters as Record<string, unknown>),
-
   approveVoidReissue: (payload: ApproveVoidPayload): Promise<unknown> =>
     post('/finance/void-reissue/approve', payload),
 
