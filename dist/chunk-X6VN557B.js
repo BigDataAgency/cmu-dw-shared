@@ -133,6 +133,8 @@ var routesApi = {
 
 // src/api-client/products.ts
 var productsApi = {
+  /** 047 — limit 1–200 (ค่าเริ่มต้น 20) */
+  listStockTransactions: (limit = 20) => get("/products/stock-transactions", { limit }),
   list: (filters) => get("/products", filters),
   getById: (id) => get(`/products/${id}`),
   create: (payload) => post("/products", payload),
@@ -528,4 +530,4 @@ export {
   customerGroupsApi,
   treasuryApi
 };
-//# sourceMappingURL=chunk-OEQECYNW.js.map
+//# sourceMappingURL=chunk-X6VN557B.js.map

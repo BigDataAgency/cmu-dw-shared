@@ -52,7 +52,25 @@ export type InternalUseResult = {
   product: Pick<Product, "id" | "sku" | "name" | "stock_qty">;
 };
 
+/** 047 — GET /products/stock-transactions: ประวัติสต็อกสำนักงานล่าสุด (admin_property, staff_property, super_admin) */
+export type StockTransactionRow = {
+  id: string;
+  type: string;
+  quantity: number;
+  notes: string | null;
+  created_at: string;
+  product_id: string;
+  product_name: string | null;
+  /** office_delivery_receipt = รับเข้าจากใบส่งของ · office_delivery_reversal = คืนสต็อกจากการยกเลิก */
+  reference_type: string | null;
+  delivery_note_number: string | null;
+};
+
 export const productsApi = {
+  /** 047 — limit 1–200 (ค่าเริ่มต้น 20) */
+  listStockTransactions: (limit = 20): Promise<StockTransactionRow[]> =>
+    get("/products/stock-transactions", { limit }),
+
   list: (filters?: ProductFilters): Promise<PaginatedResponse<Product>> =>
     get("/products", filters as Record<string, unknown>),
 

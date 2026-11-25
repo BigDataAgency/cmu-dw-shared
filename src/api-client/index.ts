@@ -17,6 +17,7 @@ export type {
 } from "./deliveries";
 export { routesApi } from "./routes";
 export { productsApi } from "./products";
+export type { StockTransactionRow } from "./products";
 export { usersApi } from "./users";
 export type { HomeApp, RegisterPayload, RegisterResult } from "./users";
 export { usersAdminApi } from "./users-admin";
