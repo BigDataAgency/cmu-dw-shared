@@ -18,6 +18,9 @@ export interface CustomerGroupRow {
   billing_name: string | null
   billing_address: string | null
   billing_tax_id: string | null
+  delivery_address: string | null
+  delivery_phone: string | null
+  agencies?: { address: string | null; phone: string | null } | null
   document_preference: DocumentPreference | null
   parent_id: string | null
   is_prepay: boolean | null
@@ -87,6 +90,8 @@ export type CreateCustomerGroupPayload = {
   billing_name?: string | null
   billing_address?: string | null
   billing_tax_id?: string | null
+  delivery_address?: string | null
+  delivery_phone?: string | null
   document_preference?: DocumentPreference
 }
 

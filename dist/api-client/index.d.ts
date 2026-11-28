@@ -60,6 +60,7 @@ type ProxyGroup = {
     agency_id: string | null;
     /** กลุ่มแม่ (คณะ) — null = กลุ่มระดับบนสุด */
     parent_id: string | null;
+    parent_name: string | null;
     /** ที่อยู่ปลายทางเดิมของ proxy (สนง.ทรัพย์สินใช้ที่อยู่ที่ตั้งค่าไว้) */
     address?: string | null;
     recipient_name?: string | null;
@@ -67,12 +68,15 @@ type ProxyGroup = {
     agency_address: string | null;
     agency_phone: string | null;
     agency_contact_person: string | null;
+    delivery_address: string | null;
+    delivery_phone: string | null;
     allowed_payment_methods: PaymentMethod[];
     is_office?: boolean;
 };
 type ProxyGroupsParams = {
     q?: string;
     code?: string;
+    parent_id?: string;
     page?: number;
     pageSize?: number;
 };
@@ -1273,6 +1277,12 @@ interface CustomerGroupRow {
     billing_name: string | null;
     billing_address: string | null;
     billing_tax_id: string | null;
+    delivery_address: string | null;
+    delivery_phone: string | null;
+    agencies?: {
+        address: string | null;
+        phone: string | null;
+    } | null;
     document_preference: DocumentPreference | null;
     parent_id: string | null;
     is_prepay: boolean | null;
@@ -1334,6 +1344,8 @@ type CreateCustomerGroupPayload = {
     billing_name?: string | null;
     billing_address?: string | null;
     billing_tax_id?: string | null;
+    delivery_address?: string | null;
+    delivery_phone?: string | null;
     document_preference?: DocumentPreference;
 };
 type UpdateCustomerGroupPayload = Partial<CreateCustomerGroupPayload>;
